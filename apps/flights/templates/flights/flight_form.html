@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}{% if editing %}编辑航班{% else %}创建航班{% endif %} — 新帆航空{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-md-8">
+<div class="card p-4">
+<h3 class="mb-3">{% if editing %}编辑 {{ flight.flight_number }}{% else %}创建新航班{% endif %}</h3>
+<form method="post">
+    {% csrf_token %}
+    <div class="row g-3">
+        <div class="col-sm-6"><label class="form-label">航班号 *</label><input type="text" name="flight_number" class="form-control" value="{{ flight.flight_number|default:'' }}" required></div>
+        <div class="col-sm-6"><label class="form-label">机型</label><input type="text" name="aircraft" class="form-control" value="{{ flight.aircraft|default:'A320neo' }}"></div>
+        <div class="col-sm-6"><label class="form-label">出发地 *</label><input type="text" name="origin" class="form-control" value="{{ flight.origin|default:'' }}" required></div>
+        <div class="col-sm-6"><label class="form-label">目的地 *</label><input type="text" name="destination" class="form-control" value="{{ flight.destination|default:'' }}" required></div>
+        <div class="col-sm-6"><label class="form-label">计划起飞 *</label><input type="datetime-local" name="departure_time" class="form-control" value="{{ flight.departure_time|date:'Y-m-d\TH:i' }}" required></div>
+        <div class="col-sm-6"><label class="form-label">计划到达 *</label><input type="datetime-local" name="arrival_time" class="form-control" value="{{ flight.arrival_time|date:'Y-m-d\TH:i' }}" required></div>
+        <div class="col-sm-4"><label class="form-label">登机口</label><input type="text" name="gate" class="form-control" value="{{ flight.gate|default:'' }}"></div>
+        <div class="col-sm-4"><label class="form-label">航线类型</label><select name="route_type" class="form-select"><option value="domestic" {% if flight.route_type == 'domestic' %}selected{% endif %}>国内</option><option value="international" {% if flight.route_type == 'international' %}selected{% endif %}>国际</option></select></div>
+        <div class="col-sm-4"><label class="form-label">状态</label><select name="status" class="form-select"><option value="scheduled" {% if flight.status == 'scheduled' %}selected{% endif %}>已排班</option><option value="boarding">登机中</option><option value="departed">已起飞</option><option value="arrived">已到达</option><option value="cancelled">已取消</option></select></div>
+        <div class="col-12"><label class="form-label">备注</label><textarea name="notes" class="form-control" rows="2">{{ flight.notes|default:'' }}</textarea></div>
+    </div>
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">{% if editing %}保存修改{% else %}创建航班{% endif %}</button>
+        <a href="{% if editing %}{% url 'flight_detail' flight.pk %}{% else %}{% url 'flight_list' %}{% endif %}" class="btn btn-outline-secondary">取消</a>
+    </div>
+</form>
+</div>
+</div></div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}个人中心 — 新帆航空{% endblock %}
+{% block content %}
+<h2 class="mb-4">👤 个人中心</h2>
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card p-4 text-center">
+            <i class="bi bi-person-circle display-1 text-primary"></i>
+            <h4 class="mt-2">{{ user.username }}</h4>
+            <span class="badge bg-primary fs-6">{{ user.profile.get_role_display }}</span>
+            <p class="text-muted mt-2 mb-1">{{ user.email }}</p>
+            {% if user.profile.phone %}<p class="text-muted">📱 {{ user.profile.phone }}</p>{% endif %}
+            {% if user.profile.bio %}<p class="text-muted small">{{ user.profile.bio }}</p>{% endif %}
+            <a href="{% url 'profile_edit' %}" class="btn btn-outline-primary btn-sm mt-2">编辑资料</a>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card p-4 mb-3">
+            <h5>✈️ 累计里程</h5>
+            <p class="display-6 text-primary mb-0">{{ user.profile.miles|default:0 }} <small class="fs-6 text-muted">英里</small></p>
+        </div>
+        <div class="card p-4 mb-3">
+            <h5>📅 最近活动</h5>
+            <p class="text-muted">注册时间：{{ user.date_joined|date:"Y-m-d H:i" }}</p>
+            <a href="{% url 'mileage_list' %}" class="btn btn-sm btn-outline-primary">查看里程记录</a>
+            <a href="{% url 'my_applications' %}" class="btn btn-sm btn-outline-primary">我的申请</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

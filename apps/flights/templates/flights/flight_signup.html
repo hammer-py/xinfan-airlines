@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}航班报名 — 新帆航空{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-md-5"><div class="card p-4">
+<h4 class="mb-3">报名参加 {{ flight.flight_number }}</h4>
+<p class="text-muted">{{ flight.origin }} → {{ flight.destination }} | {{ flight.departure_time|date:"Y-m-d H:i" }}</p>
+<form method="post">{% csrf_token %}
+    <div class="mb-3"><label class="form-label">选择角色</label>
+        <select name="role" class="form-select" required>
+            <option value="">-- 请选择 --</option>
+            {% for key, label in crew_roles %}<option value="{{ key }}">{{ label }}</option>{% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">提交报名</button>
+</form>
+</div></div></div>
+{% endblock %}

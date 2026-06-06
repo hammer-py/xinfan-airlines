@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}公司介绍 — 新帆航空{% endblock %}
+{% block content %}
+<h2 class="mb-4">关于新帆航空</h2>
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card p-4 mb-4">
+            <h4>公司简介</h4>
+            <p>新帆航空（Xinfan Airlines）是一家成立于 Roblox 平台的虚拟航空公司，致力于为 Roblox 玩家提供真实、专业的虚拟航空体验。我们模拟真实航空公司的运营模式，提供定期航班、机组人员招募、里程积累等服务。</p>
+            <p>无论是想体验飞行员驾驶乐趣的玩家，还是想要担任空乘、地勤的航空爱好者，都可以在新帆航空找到适合自己的角色。</p>
+        </div>
+        <div class="card p-4 mb-4">
+            <h4>我们的机队</h4>
+            <div class="row g-3 mt-2">
+                <div class="col-sm-4"><div class="border rounded p-3 text-center"><i class="bi bi-airplane display-4 text-primary"></i><p class="fw-bold mt-2 mb-0">A320neo</p><small class="text-muted">中短程主力</small></div></div>
+                <div class="col-sm-4"><div class="border rounded p-3 text-center"><i class="bi bi-airplane display-4 text-primary"></i><p class="fw-bold mt-2 mb-0">B787-9</p><small class="text-muted">远程旗舰</small></div></div>
+                <div class="col-sm-4"><div class="border rounded p-3 text-center"><i class="bi bi-airplane display-4 text-primary"></i><p class="fw-bold mt-2 mb-0">A350-900</p><small class="text-muted">洲际航线</small></div></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card p-4 mb-3"><h5>📊 运营数据</h5><ul class="list-unstyled mb-0"><li>✈️ 3 架飞机</li><li>🌍 20+ 目的地</li><li>👥 活跃成员</li></ul></div>
+        <div class="card p-4 mb-3"><h5>📍 总部基地</h5><p class="mb-0">Roblox — 新帆国际机场 (XFIA)</p></div>
+        <div class="card p-4"><h5>📧 联系我们</h5><p class="mb-0">Discord: discord.gg/xinfan</p><p class="mb-0">Roblox Group: 新帆航空</p></div>
+    </div>
+</div>
+{% endblock %}

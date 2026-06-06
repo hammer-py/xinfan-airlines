@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}发放里程 — 新帆航空{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-md-5"><div class="card p-4">
+<h4 class="mb-3">发放里程</h4>
+<form method="post">{% csrf_token %}
+    <div class="mb-3"><label class="form-label">目标用户名</label><input type="text" name="username" class="form-control" required></div>
+    <div class="mb-3"><label class="form-label">里程数</label><input type="number" name="amount" class="form-control" required></div>
+    <div class="mb-3"><label class="form-label">说明</label><input type="text" name="description" class="form-control" value="管理员发放"></div>
+    <button type="submit" class="btn btn-primary w-100">发放里程</button>
+</form>
+</div></div></div>
+<a href="{% url 'admin_panel' %}" class="btn btn-outline-secondary mt-3 d-block text-center">← 返回管理后台</a>
+{% endblock %}

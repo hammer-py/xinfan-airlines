@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}我的航班报名 — 新帆航空{% endblock %}
+{% block content %}
+<h3 class="mb-3">我的航班报名</h3>
+<div class="card p-3">
+<table class="table table-hover mb-0"><thead><tr><th>航班</th><th>路线</th><th>角色</th><th>状态</th><th>时间</th></tr></thead>
+<tbody>
+{% for s in signups %}
+<tr>
+    <td><a href="{% url 'flight_detail' s.flight.pk %}">{{ s.flight.flight_number }}</a></td>
+    <td>{{ s.flight.origin }} → {{ s.flight.destination }}</td>
+    <td>{{ s.get_role_display }}</td>
+    <td><span class="badge {% if s.status == 'approved' %}bg-success{% elif s.status == 'rejected' %}bg-danger{% else %}bg-warning{% endif %}">{{ s.get_status_display }}</span></td>
+    <td>{{ s.signed_up_at|date:"Y-m-d" }}</td>
+</tr>
+{% empty %}<tr><td colspan="5" class="text-center py-4 text-muted">暂无报名记录</td></tr>{% endfor %}
+</tbody></table>
+</div>
+{% endblock %}

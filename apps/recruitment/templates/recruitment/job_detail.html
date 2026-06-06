@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}{{ job.title }} — 新帆航空{% endblock %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card p-4 mb-3">
+            <h3>{{ job.title }}</h3>
+            <div class="mb-3"><span class="badge bg-primary">{{ job.get_department_display }}</span><span class="badge bg-secondary ms-1">{{ job.get_job_type_display }}</span><span class="badge bg-info ms-1">{{ job.location }}</span></div>
+            <h5>职位描述</h5><p>{{ job.description|linebreaks }}</p>
+            <h5>任职要求</h5><p>{{ job.requirements|linebreaks }}</p>
+            {% if job.deadline %}<p class="text-danger">截止日期：{{ job.deadline|date:"Y-m-d" }}</p>{% endif %}
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card p-4">
+            <h5>立即申请</h5>
+            {% if not user.is_authenticated %}<p class="text-muted">请先<a href="{% url 'login' %}">登录</a>后申请</p>
+            {% elif user_applied %}<div class="alert alert-info mb-0">你已经提交了申请</div>
+            {% else %}<a href="{% url 'job_apply' job.pk %}" class="btn btn-primary w-100">提交申请</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}新帆航空 — 首页{% endblock %}
+{% block content %}
+<div class="text-center py-5 mb-4 bg-primary text-white rounded-4" style="background: linear-gradient(135deg, #0d6efd, #0dcaf0) !important;">
+    <h1 class="display-4 fw-bold">✈️ 新帆航空</h1>
+    <p class="lead fs-4 mb-3">Xinfan Airlines — Roblox Virtual Aviation</p>
+    <p class="opacity-75">飞越虚拟天际，开启云端旅程</p>
+    <div class="mt-4">
+        <a href="{% url 'flight_list' %}" class="btn btn-light btn-lg me-2">查看航班</a>
+        <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg">了解我们</a>
+    </div>
+</div>
+
+{% if latest_flights %}
+<div class="mb-5">
+    <h3 class="mb-3">📅 最新航班</h3>
+    <div class="row g-3">
+        {% for flight in latest_flights %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card p-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong class="fs-5">{{ flight.flight_number }}</strong>
+                    <span class="badge {% if flight.status == 'scheduled' %}bg-primary{% elif flight.status == 'arrived' %}bg-success{% elif flight.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}">{{ flight.get_status_display }}</span>
+                </div>
+                <div class="text-muted small">
+                    <p class="mb-1">{{ flight.origin }} → {{ flight.destination }}</p>
+                    <p class="mb-1">🕐 {{ flight.departure_time|date:"Y-m-d H:i" }}</p>
+                    <p class="mb-0">✈️ {{ flight.aircraft }}</p>
+                </div>
+                <a href="{% url 'flight_detail' flight.pk %}" class="stretched-link"></a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-4 text-center">
+    <div class="col-md-4">
+        <div class="card p-4"><i class="bi bi-airplane display-3 text-primary"></i><h5 class="mt-2">定期航班</h5><p class="text-muted">覆盖全球主要枢纽的定期虚拟航班</p></div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4"><i class="bi bi-people display-3 text-primary"></i><h5 class="mt-2">专业团队</h5><p class="text-muted">招募机长、空乘、地勤等虚拟航空人才</p></div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4"><i class="bi bi-star display-3 text-primary"></i><h5 class="mt-2">里程计划</h5><p class="text-muted">每次飞行积累里程，兑换专属权益</p></div>
+    </div>
+</div>
+{% endblock %}

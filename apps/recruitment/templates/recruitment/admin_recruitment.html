@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}招聘管理 — 新帆航空{% endblock %}
+{% block content %}
+<h3 class="mb-3">📋 招聘管理</h3>
+
+<div class="card p-4 mb-4">
+    <h5>发布新职位</h5>
+    <form method="post" class="row g-3">{% csrf_token %}<input type="hidden" name="action" value="create">
+        <div class="col-sm-6"><input type="text" name="title" class="form-control" placeholder="职位名称" required></div>
+        <div class="col-sm-3"><select name="department" class="form-select">{% for k,v in departments %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select></div>
+        <div class="col-sm-3"><select name="job_type" class="form-select">{% for k,v in job_types %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select></div>
+        <div class="col-sm-4"><input type="text" name="location" class="form-control" value="新帆国际机场" placeholder="工作地点"></div>
+        <div class="col-sm-4"><input type="email" name="contact_email" class="form-control" placeholder="联系邮箱" required></div>
+        <div class="col-sm-4"><input type="datetime-local" name="deadline" class="form-control"></div>
+        <div class="col-12"><textarea name="description" class="form-control" rows="2" placeholder="职位描述" required></textarea></div>
+        <div class="col-12"><textarea name="requirements" class="form-control" rows="2" placeholder="任职要求" required></textarea></div>
+        <div class="col-12"><button type="submit" class="btn btn-primary">发布职位</button></div>
+    </form>
+</div>
+
+<h5>已发布职位</h5>
+<div class="card p-3">
+<table class="table table-hover mb-0"><thead><tr><th>职位</th><th>部门</th><th>类型</th><th>状态</th><th>操作</th></tr></thead>
+<tbody>
+{% for job in jobs %}
+<tr>
+    <td>{{ job.title }}</td><td>{{ job.get_department_display }}</td><td>{{ job.get_job_type_display }}</td>
+    <td>{% if job.is_active %}<span class="badge bg-success">开放</span>{% else %}<span class="badge bg-secondary">关闭</span>{% endif %}</td>
+    <td>
+        <form method="post" class="d-flex gap-1">{% csrf_token %}
+            <input type="hidden" name="action" value="toggle"><input type="hidden" name="job_id" value="{{ job.id }}">
+            <button class="btn btn-sm {% if job.is_active %}btn-outline-secondary{% else %}btn-outline-success{% endif %}">{% if job.is_active %}关闭{% else %}开启{% endif %}</button>
+        </form>
+        <form method="post" class="d-inline ms-1">{% csrf_token %}<input type="hidden" name="action" value="delete"><input type="hidden" name="job_id" value="{{ job.id }}"><button class="btn btn-sm btn-outline-danger">删除</button></form>
+    </td>
+</tr>
+{% endfor %}
+</tbody></table>
+</div>
+<a href="{% url 'admin_panel' %}" class="btn btn-outline-secondary mt-3">← 返回管理后台</a>
+{% endblock %}

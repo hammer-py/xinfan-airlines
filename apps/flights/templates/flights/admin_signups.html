@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}审批报名 — 新帆航空{% endblock %}
+{% block content %}
+<h3 class="mb-3">审批航班报名</h3>
+<div class="card p-3">
+<table class="table table-hover mb-0"><thead><tr><th>用户</th><th>航班</th><th>角色</th><th>状态</th><th>时间</th><th>操作</th></tr></thead>
+<tbody>
+{% for s in signups %}
+<tr>
+    <td>{{ s.user.username }}</td><td>{{ s.flight.flight_number }}</td><td>{{ s.get_role_display }}</td>
+    <td><span class="badge {% if s.status == 'approved' %}bg-success{% elif s.status == 'rejected' %}bg-danger{% else %}bg-warning{% endif %}">{{ s.get_status_display }}</span></td>
+    <td>{{ s.signed_up_at|date:"Y-m-d" }}</td>
+    <td>
+        <form method="post" class="d-flex gap-1">{% csrf_token %}
+            <input type="hidden" name="signup_id" value="{{ s.id }}">
+            <button name="action" value="approve" class="btn btn-sm btn-success">通过</button>
+            <button name="action" value="reject" class="btn btn-sm btn-danger">拒绝</button>
+        </form>
+    </td>
+</tr>
+{% empty %}<tr><td colspan="6" class="text-center py-4 text-muted">暂无待审批报名</td></tr>{% endfor %}
+</tbody></table>
+</div>
+<a href="{% url 'admin_panel' %}" class="btn btn-outline-secondary mt-3">← 返回管理后台</a>
+{% endblock %}

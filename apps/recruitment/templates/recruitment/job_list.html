@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}加入我们 — 新帆航空{% endblock %}
+{% block content %}
+<h2 class="mb-4">💼 加入新帆航空</h2>
+<p class="text-muted mb-4">欢迎加入新帆航空团队！以下是当前开放招聘的职位。选择你感兴趣的职位提交申请。</p>
+<div class="row g-3">
+{% for job in jobs %}
+<div class="col-lg-6">
+    <div class="card p-3">
+        <h5>{{ job.title }}</h5>
+        <div class="mb-2">
+            <span class="badge bg-primary">{{ job.get_department_display }}</span>
+            <span class="badge bg-secondary">{{ job.get_job_type_display }}</span>
+            <span class="badge bg-info">{{ job.location }}</span>
+        </div>
+        <p class="text-muted small mb-2">{{ job.description|truncatechars:120 }}</p>
+        <small class="text-muted">发布于 {{ job.created_at|date:"Y-m-d" }}</small>
+        <a href="{% url 'job_detail' job.pk %}" class="stretched-link"></a>
+    </div>
+</div>
+{% empty %}
+<div class="col-12 text-center py-5 text-muted"><i class="bi bi-briefcase display-1"></i><p>暂无开放职位</p></div>
+{% endfor %}
+</div>
+{% endblock %}
