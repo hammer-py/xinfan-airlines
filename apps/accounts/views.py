@@ -121,6 +121,8 @@ def admin_users_view(request):
         new_role = request.POST.get('role')
         target = get_object_or_404(User, id=user_id)
         if new_role in dict(UserProfile.ROLE_CHOICES):
+            if not hasattr(target, 'profile'):
+                UserProfile.objects.create(user=target)
             target.profile.role = new_role
             target.profile.save()
             messages.success(request, f'{target.username} 的角色已更新为 {target.profile.get_role_display()}')
