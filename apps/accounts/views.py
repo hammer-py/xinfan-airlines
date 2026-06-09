@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.db import transaction
+from django.utils.decorators import method_decorator
 from .models import UserProfile
 from .decorators import role_required
 
@@ -113,18 +115,65 @@ def admin_panel_view(request):
     return render(request, 'accounts/admin_panel.html', ctx)
 
 @login_required
-@role_required(['admin'])
+@staff_member_required(login_url='login')
 def admin_users_view(request):
     users = User.objects.select_related('profile').all().order_by('-date_joined')
+    role_choices = dict(UserProfile.ROLE_CHOICES)
+
     if request.method == 'POST':
-        user_id = request.POST.get('user_id')
+        action = request.POST.get('action', 'update_role')
+
+        # ── Create ──────────────────────────────────────
+        if action == 'create_user':
+            username = request.POST.get('username', '').strip()
+            email = request.POST.get('email', '').strip()
+            password = request.POST.get('password', '')
+            target_role = request.POST.get('role', 'economy')
+
+            errors = []
+            if not username or not email or not password:
+                errors.append('请填写所有必填字段')
+            if len(username) < 2:
+                errors.append('用户名至少 2 个字符')
+            if len(password) < 6:
+                errors.append('密码至少 6 个字符')
+            if User.objects.filter(username=username).exists():
+                errors.append('用户名已存在')
+            if User.objects.filter(email=email).exists():
+                errors.append('邮箱已被注册')
+            if target_role not in role_choices:
+                errors.append('无效的角色')
+
+            if errors:
+                for e in errors:
+                    messages.error(request, e)
+            else:
+                with transaction.atomic():
+                    user = User.objects.create_user(username=username, email=email, password=password)
+                    user.profile.role = target_role
+                    user.profile.save()
+                messages.success(request, f'用户 {username} 创建成功（{role_choices[target_role]}）')
+            return redirect('admin_users')
+
+        # ── Delete ──────────────────────────────────────
+        if action == 'delete_user':
+            target = get_object_or_404(User, id=request.POST.get('user_id'))
+            if target == request.user:
+                messages.error(request, '不能删除自己的账户')
+            else:
+                username = target.username
+                target.delete()
+                messages.success(request, f'用户 {username} 已删除')
+            return redirect('admin_users')
+
+        # ── Update Role ─────────────────────────────────
+        target = get_object_or_404(User, id=request.POST.get('user_id'))
         new_role = request.POST.get('role')
-        target = get_object_or_404(User, id=user_id)
-        if new_role in dict(UserProfile.ROLE_CHOICES):
+        if new_role in role_choices:
             if not hasattr(target, 'profile'):
                 UserProfile.objects.create(user=target)
             target.profile.role = new_role
             target.profile.save()
             messages.success(request, f'{target.username} 的角色已更新为 {target.profile.get_role_display()}')
-        return redirect('admin_users')
-    return render(request, 'accounts/admin_users.html', {'users': users})
+
+    return render(request, 'accounts/admin_users.html', {'users': users, 'role_choices': UserProfile.ROLE_CHOICES})

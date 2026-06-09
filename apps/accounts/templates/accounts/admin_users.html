@@ -1,21 +1,83 @@
 {% extends 'base.html' %}
 {% block title %}人员管理 — 新帆航空{% endblock %}
 {% block content %}
-<h2 class="mb-4">👥 人员管理</h2>
+<h2 class="mb-3">👥 人员管理</h2>
+
+<!-- 创建用户 -->
+<div class="mb-4">
+    <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#createUserForm">
+        <i class="bi bi-person-plus"></i> 创建用户
+    </button>
+    <div class="collapse mt-3" id="createUserForm">
+        <div class="card p-3">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create_user">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">用户名</label>
+                        <input type="text" name="username" class="form-control" required minlength="2">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">邮箱</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">密码</label>
+                        <input type="password" name="password" class="form-control" required minlength="6">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">角色</label>
+                        <select name="role" class="form-select">
+                            <optgroup label="—— 用户等级 ——">
+                                <option value="economy">经济舱旅客</option>
+                                <option value="business">商务舱旅客</option>
+                                <option value="first_class">头等舱旅客</option>
+                                <option value="investor">投资者</option>
+                                <option value="top_investor">顶级投资者</option>
+                            </optgroup>
+                            <optgroup label="—— 员工等级（实习） ——">
+                                <option value="trainee_cabin_crew">实习空乘</option>
+                                <option value="trainee_first_officer">实习副驾驶</option>
+                                <option value="trainee_captain">实习机长</option>
+                                <option value="trainee_ground">实习地勤</option>
+                            </optgroup>
+                            <optgroup label="—— 员工等级（正式） ——">
+                                <option value="cabin_crew">正式空乘</option>
+                                <option value="first_officer">正式副驾驶</option>
+                                <option value="captain">正式机长</option>
+                                <option value="ground_staff">正式地勤</option>
+                            </optgroup>
+                            <optgroup label="—— 管理员 ——">
+                                <option value="admin">管理员</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-success w-100">创建</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 用户列表 -->
 <div class="card p-3">
-<table class="table table-hover mb-0">
-<thead><tr><th>ID</th><th>用户名</th><th>邮箱</th><th>角色</th><th>里程</th><th>注册时间</th><th>操作</th></tr></thead>
+<table class="table table-hover mb-0 align-middle">
+<thead><tr><th>ID</th><th>用户名</th><th>邮箱</th><th>角色</th><th>里程</th><th>注册时间</th><th style="min-width:280px">操作</th></tr></thead>
 <tbody>
 {% for u in users %}
 <tr>
     <td>{{ u.id }}</td>
     <td>{{ u.username }}</td>
-    <td>{{ u.email }}</td>
+    <td>{{ u.email|default:'—' }}</td>
     <td><span class="badge {% if u.profile.role == 'admin' %}bg-danger{% elif 'trainee' in u.profile.role %}bg-warning text-dark{% elif u.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif u.profile.role == 'investor' or u.profile.role == 'top_investor' %}bg-info text-dark{% else %}bg-secondary{% endif %}">{{ u.profile.get_role_display }}</span></td>
     <td>{{ u.profile.miles }}</td>
     <td>{{ u.date_joined|date:"Y-m-d" }}</td>
     <td>
         <form method="post" class="d-flex gap-1">{% csrf_token %}
+            <input type="hidden" name="action" value="update_role">
             <input type="hidden" name="user_id" value="{{ u.id }}">
             <select name="role" class="form-select form-select-sm w-auto">
                 <optgroup label="—— 用户等级 ——">
@@ -42,6 +104,11 @@
                 </optgroup>
             </select>
             <button type="submit" class="btn btn-sm btn-primary">更新</button>
+            {% if u.id != request.user.id %}
+            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-user-id="{{ u.id }}" data-username="{{ u.username }}">
+                <i class="bi bi-trash"></i>
+            </button>
+            {% endif %}
         </form>
     </td>
 </tr>
@@ -49,5 +116,41 @@
 </tbody>
 </table>
 </div>
+
 <a href="{% url 'admin_panel' %}" class="btn btn-outline-secondary mt-3">← 返回管理后台</a>
+
+<!-- 删除确认 Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">确认删除</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                确定要删除用户 <strong id="deleteUsername"></strong> 吗？此操作不可撤销。
+            </div>
+            <div class="modal-footer">
+                <form method="post" id="deleteForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete_user">
+                    <input type="hidden" name="user_id" id="deleteUserId">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-danger">确认删除</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function(event) {
+        var btn = event.relatedTarget;
+        document.getElementById('deleteUserId').value = btn.getAttribute('data-user-id');
+        document.getElementById('deleteUsername').textContent = btn.getAttribute('data-username');
+    });
+});
+</script>
 {% endblock %}
