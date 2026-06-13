@@ -59,7 +59,7 @@
         /* ── Typography ───────────────────── */
         h1, h2, h3, h4, h5, h6 { font-weight: 700; letter-spacing: -0.3px; }
         a { color: var(--accent); text-decoration: none; transition: color 0.2s var(--ease); }
-        a:hover { color: var(--accent); text-decoration: underline; }
+        a:hover { color: var(--accent); text-decoration: none; }
         .text-muted { color: var(--text-muted) !important; }
 
         /* ── Navbar ───────────────────────── */
@@ -364,15 +364,7 @@
             color: var(--accent);
         }
 
-        /* ── Glass panel ──────────────────── */
-        .glass-panel {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            backdrop-filter: blur(10px);
-        }
-
-        /* ── Bootstrap overrides for dark theme ── */
+        /* ── Section divider ──────────────── */
         .text-primary { color: var(--accent) !important; }
         .bg-primary { background-color: var(--accent) !important; color: #171717 !important; }
         .bg-light { background-color: var(--surface-light) !important; color: var(--text) !important; }
@@ -381,17 +373,6 @@
         .rounded { border-radius: var(--radius-sm) !important; }
         .rounded-4 { border-radius: var(--radius) !important; }
         .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
-
-        /* ── Green link underline ─────────── */
-        .link-underline {
-            text-decoration: none;
-            background-image: linear-gradient(var(--accent), var(--accent));
-            background-size: 0% 1px;
-            background-position: 0 100%;
-            background-repeat: no-repeat;
-            transition: background-size 0.3s var(--ease);
-        }
-        .link-underline:hover { background-size: 100% 1px; }
 
         /* ── Section divider ──────────────── */
         .section-label {
