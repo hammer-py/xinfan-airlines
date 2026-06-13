@@ -53,11 +53,11 @@ class Command(BaseCommand):
         if Flight.objects.count() == 0:
             admin = User.objects.get(username='admin')
             flights = [
-                ('XF001', '新帆国际机场', '东京羽田机场', '2026-06-10 08:00', '2026-06-10 12:00', 'B787-9', 'international'),
-                ('XF002', '新帆国际机场', '北京首都机场', '2026-06-10 14:00', '2026-06-10 16:30', 'A320neo', 'domestic'),
-                ('XF003', '新帆国际机场', '新加坡樟宜机场', '2026-06-11 09:00', '2026-06-11 14:00', 'A350-900', 'international'),
-                ('XF004', '新帆国际机场', '上海浦东机场', '2026-06-11 16:00', '2026-06-11 18:00', 'A320neo', 'domestic'),
-                ('XF005', '新帆国际机场', '伦敦希思罗机场', '2026-06-12 10:00', '2026-06-12 23:00', 'B787-9', 'international'),
+                ('XF001', '香港国际机场', '东京羽田机场', '2026-06-10 08:00', '2026-06-10 12:00', 'B787-10', 'international'),
+                ('XF002', '香港国际机场', '北京首都机场', '2026-06-10 14:00', '2026-06-10 16:30', 'B737-800', 'domestic'),
+                ('XF003', '香港国际机场', '新加坡樟宜机场', '2026-06-11 09:00', '2026-06-11 14:00', 'A350-900', 'international'),
+                ('XF004', '香港国际机场', '上海浦东机场', '2026-06-11 16:00', '2026-06-11 18:00', 'B737-800', 'domestic'),
+                ('XF005', '香港国际机场', '伦敦希思罗机场', '2026-06-12 10:00', '2026-06-12 23:00', 'B787-10', 'international'),
             ]
             for fn, orig, dest, dep, arr, ac, rtype in flights:
                 Flight.objects.create(
@@ -73,21 +73,21 @@ class Command(BaseCommand):
             admin = User.objects.get(username='admin')
             JobPosting.objects.create(
                 title='A320 机长（正式）', department='flight_dept', job_type='volunteer',
-                location='新帆国际机场',
+                location='香港国际机场',
                 description='负责 A320neo 机型的执飞任务，带领机组团队确保航班安全准时运行。',
                 requirements='1. 需达到实习机长等级后方可申请\n2. 在 Roblox 平台有丰富飞行经验\n3. 熟悉 A320 操作流程\n4. 有团队领导和协作精神',
                 contact_email='hr@xinfan.com', posted_by=admin,
             )
             JobPosting.objects.create(
                 title='空乘人员招募', department='cabin_dept', job_type='volunteer',
-                location='新帆国际机场',
+                location='香港国际机场',
                 description='负责客舱服务，为旅客提供优质的飞行体验，处理客舱内各项事务。',
                 requirements='1. 热情开朗，善于沟通\n2. 有 Roblox 航空社区经验优先\n3. 实习空乘表现优秀可晋升正式空乘',
                 contact_email='hr@xinfan.com', posted_by=admin,
             )
             JobPosting.objects.create(
                 title='地勤人员招募', department='ground_dept', job_type='volunteer',
-                location='新帆国际机场',
+                location='香港国际机场',
                 description='负责航班的地面保障工作，包括行李装卸、加油、推车等。',
                 requirements='1. 责任心强，注重细节\n2. 能够准时到场\n3. 实习地勤表现优秀可晋升正式地勤',
                 contact_email='hr@xinfan.com', posted_by=admin,

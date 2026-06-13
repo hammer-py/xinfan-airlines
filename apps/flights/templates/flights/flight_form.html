@@ -8,7 +8,7 @@
     {% csrf_token %}
     <div class="row g-3">
         <div class="col-sm-6"><label class="form-label">航班号 *</label><input type="text" name="flight_number" class="form-control" value="{{ flight.flight_number|default:'' }}" required></div>
-        <div class="col-sm-6"><label class="form-label">机型</label><input type="text" name="aircraft" class="form-control" value="{{ flight.aircraft|default:'A320neo' }}"></div>
+        <div class="col-sm-6"><label class="form-label">机型</label><input type="text" name="aircraft" class="form-control" value="{{ flight.aircraft|default:'B737-800' }}"></div>
         <div class="col-sm-6"><label class="form-label">出发地 *</label><input type="text" name="origin" class="form-control" value="{{ flight.origin|default:'' }}" required></div>
         <div class="col-sm-6"><label class="form-label">目的地 *</label><input type="text" name="destination" class="form-control" value="{{ flight.destination|default:'' }}" required></div>
         <div class="col-sm-6"><label class="form-label">计划起飞 *</label><input type="datetime-local" name="departure_time" class="form-control" value="{{ flight.departure_time|date:'Y-m-d\TH:i' }}" required></div>
