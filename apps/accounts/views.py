@@ -117,13 +117,26 @@ def admin_panel_view(request):
 @login_required
 @staff_member_required(login_url='login')
 def admin_users_view(request):
-    users = User.objects.select_related('profile').all().order_by('-date_joined')
     role_choices = dict(ROLE_CHOICES)
+
+    # ── Search / Filter (GET) ────────────────────────────
+    search_query = request.GET.get('q', '').strip()
+    role_filter = request.GET.get('role', '')
+
+    users = User.objects.select_related('profile').all()
+    if search_query:
+        users = users.filter(
+            username__icontains=search_query
+        ) | users.filter(email__icontains=search_query)
+        users = users.distinct()
+    if role_filter and role_filter in role_choices:
+        users = users.filter(profile__role=role_filter)
+    users = users.order_by('-date_joined')
 
     if request.method == 'POST':
         action = request.POST.get('action', 'update_role')
 
-        # ── Create ──────────────────────────────────────
+        # ── Create ────────────────────────────────────────
         if action == 'create_user':
             username = request.POST.get('username', '').strip()
             email = request.POST.get('email', '').strip()
@@ -155,7 +168,7 @@ def admin_users_view(request):
                 messages.success(request, f'用户 {username} 创建成功（{role_choices[target_role]}）')
             return redirect('admin_users')
 
-        # ── Delete ──────────────────────────────────────
+        # ── Delete ────────────────────────────────────────
         if action == 'delete_user':
             target = get_object_or_404(User, id=request.POST.get('user_id'))
             if target == request.user:
@@ -166,14 +179,53 @@ def admin_users_view(request):
                 messages.success(request, f'用户 {username} 已删除')
             return redirect('admin_users')
 
-        # ── Update Role ─────────────────────────────────
-        target = get_object_or_404(User, id=request.POST.get('user_id'))
-        new_role = request.POST.get('role')
-        if new_role in role_choices:
-            if not hasattr(target, 'profile'):
-                UserProfile.objects.create(user=target)
-            target.profile.role = new_role
-            target.profile.save()
-            messages.success(request, f'{target.username} 的角色已更新为 {target.profile.get_role_display()}')
+        # ── Update Role ───────────────────────────────────
+        if action == 'update_role':
+            target = get_object_or_404(User, id=request.POST.get('user_id'))
+            new_role = request.POST.get('role')
+            if new_role in role_choices:
+                if not hasattr(target, 'profile'):
+                    UserProfile.objects.create(user=target)
+                target.profile.role = new_role
+                target.profile.save()
+                messages.success(request, f'{target.username} 的角色已更新为 {target.profile.get_role_display()}')
+            return redirect('admin_users')
 
-    return render(request, 'accounts/admin_users.html', {'users': users, 'role_choices': ROLE_CHOICES})
+        # ── Batch Update Role ─────────────────────────────
+        if action == 'batch_update_role':
+            user_ids = request.POST.getlist('user_ids')
+            new_role = request.POST.get('role')
+            if not user_ids:
+                messages.warning(request, '请先选择用户')
+            elif new_role not in role_choices:
+                messages.error(request, '无效的角色')
+            else:
+                count = 0
+                for user in User.objects.filter(id__in=user_ids).exclude(id=request.user.id):
+                    if not hasattr(user, 'profile'):
+                        UserProfile.objects.create(user=user)
+                    user.profile.role = new_role
+                    user.profile.save()
+                    count += 1
+                messages.success(request, f'已将 {count} 个用户的角色更新为 {role_choices[new_role]}')
+            return redirect('admin_users')
+
+        # ── Batch Delete ──────────────────────────────────
+        if action == 'batch_delete':
+            user_ids = request.POST.getlist('user_ids')
+            if not user_ids:
+                messages.warning(request, '请先选择用户')
+            else:
+                qs = User.objects.filter(id__in=user_ids).exclude(id=request.user.id)
+                count = qs.count()
+                qs.delete()
+                messages.success(request, f'已删除 {count} 个用户')
+            return redirect('admin_users')
+
+    ctx = {
+        'users': users,
+        'role_choices': ROLE_CHOICES,
+        'search_query': search_query,
+        'role_filter': role_filter,
+    }
+    return render(request, 'accounts/admin_users.html', ctx)
