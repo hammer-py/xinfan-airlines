@@ -258,6 +258,9 @@
 
         /* ── Alerts ───────────────────────── */
         .alert {
+            --bs-alert-bg: var(--surface-light);
+            --bs-alert-color: var(--text);
+            --bs-alert-border-color: transparent;
             border: none;
             border-radius: var(--radius-sm);
             font-size: 0.88rem;
@@ -265,16 +268,21 @@
             background: var(--surface-light);
             color: var(--text);
         }
-        .alert-success { border-left: 3px solid var(--accent); }
-        .alert-danger { border-left: 3px solid #dc3545; }
-        .alert-warning { border-left: 3px solid #ffc107; color: #171717; }
-        .alert-info { border-left: 3px solid #0dcaf0; }
+        .alert-success { --bs-alert-bg: #0d2814; --bs-alert-color: #17f700; border-left: 3px solid var(--accent); }
+        .alert-danger { --bs-alert-bg: #2b0d0d; --bs-alert-color: #ff6b6b; border-left: 3px solid #dc3545; }
+        .alert-warning { --bs-alert-bg: #2b2000; --bs-alert-color: #ffc107; border-left: 3px solid #ffc107; }
+        .alert-info { --bs-alert-bg: #0d1a2b; --bs-alert-color: #0dcaf0; border-left: 3px solid #0dcaf0; }
 
         /* ── Tables ───────────────────────── */
         .table {
             color: var(--text);
             font-size: 0.88rem;
             margin-bottom: 0;
+            --bs-table-bg: transparent;
+            --bs-table-color: var(--text);
+            --bs-table-border-color: var(--border);
+            --bs-table-striped-bg: rgba(255,255,255,0.02);
+            --bs-table-hover-bg: rgba(255,255,255,0.03);
         }
         .table thead th {
             font-weight: 600;
@@ -282,13 +290,13 @@
             text-transform: uppercase;
             letter-spacing: 0.6px;
             color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
-            padding: 0.75rem 0.75rem;
+            border-bottom-width: 1px;
         }
         .table tbody td {
             border-color: var(--border);
             padding: 0.75rem;
             vertical-align: middle;
+            background: transparent;
         }
         .table-hover tbody tr:hover { background: rgba(255,255,255,0.02); }
 
