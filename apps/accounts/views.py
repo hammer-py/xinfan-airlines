@@ -6,7 +6,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.db import transaction
 from django.utils.decorators import method_decorator
-from .models import UserProfile
+from .models import UserProfile, ROLE_CHOICES
 from .decorators import role_required
 
 def register_view(request):
@@ -118,7 +118,7 @@ def admin_panel_view(request):
 @staff_member_required(login_url='login')
 def admin_users_view(request):
     users = User.objects.select_related('profile').all().order_by('-date_joined')
-    role_choices = dict(UserProfile.ROLE_CHOICES)
+    role_choices = dict(ROLE_CHOICES)
 
     if request.method == 'POST':
         action = request.POST.get('action', 'update_role')
@@ -176,4 +176,4 @@ def admin_users_view(request):
             target.profile.save()
             messages.success(request, f'{target.username} 的角色已更新为 {target.profile.get_role_display()}')
 
-    return render(request, 'accounts/admin_users.html', {'users': users, 'role_choices': UserProfile.ROLE_CHOICES})
+    return render(request, 'accounts/admin_users.html', {'users': users, 'role_choices': ROLE_CHOICES})
