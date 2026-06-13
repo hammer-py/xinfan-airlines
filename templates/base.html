@@ -11,202 +11,312 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f7f7f7;
-            --surface: #ffffff;
-            --dark: #141414;
-            --accent: #00a8e8;
-            --accent-glow: rgba(0,168,232,0.15);
-            --text: #1a1a1a;
+            --bg: #171717;
+            --surface: #1e1e1e;
+            --surface-light: #262626;
+            --accent: #17f700;
+            --accent-dim: rgba(23,247,0,0.12);
+            --text: #f7f7f7;
+            --text-secondary: #999;
             --text-muted: #777;
-            --border: #e8e8e8;
-            --radius: 1.25rem;
-            --radius-sm: 0.75rem;
-            --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
-            --shadow-md: 0 4px 24px rgba(0,0,0,0.06);
-            --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+            --border: rgba(255,255,255,0.06);
+            --radius: 1.5rem;
+            --radius-sm: 0.85rem;
+            --shadow: 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+            --ease: cubic-bezier(0.4,0,0.2,1);
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            background-image: radial-gradient(circle, #ddd 1px, transparent 1px);
-            background-size: 2.5rem 2.5rem;
+            background-color: var(--bg);
             color: var(--text);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
         }
 
-        main { flex: 1; }
+        /* ── Grid dot background ──────────── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 2.5rem 2.5rem;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-        /* ── Nav ──────────────────────────── */
+        main { flex: 1; position: relative; z-index: 1; }
+
+        /* ── Typography ───────────────────── */
+        h1, h2, h3, h4, h5, h6 { font-weight: 700; letter-spacing: -0.3px; }
+        a { color: var(--accent); text-decoration: none; transition: color 0.2s var(--ease); }
+        a:hover { color: var(--accent); text-decoration: underline; }
+        .text-muted { color: var(--text-muted) !important; }
+
+        /* ── Navbar ───────────────────────── */
         .navbar {
-            background: rgba(20,20,20,0.92) !important;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            padding: 0.65rem 0;
+            background: rgba(23,23,23,0.85) !important;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
         .navbar-brand {
             font-weight: 800;
-            font-size: 1.15rem;
-            letter-spacing: -0.3px;
+            font-size: 1.1rem;
+            letter-spacing: -0.2px;
             color: #fff !important;
-        }
-        .navbar-brand .brand-icon {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            width: 32px; height: 32px;
+            gap: 0.5rem;
+        }
+        .navbar-brand .brand-dot {
+            width: 10px; height: 10px;
             background: var(--accent);
-            border-radius: 8px;
-            margin-right: 8px;
-            font-size: 1rem;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--accent);
         }
         .navbar .nav-link {
-            color: rgba(255,255,255,0.7) !important;
+            color: rgba(255,255,255,0.55) !important;
             font-weight: 450;
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem !important;
-            transition: color var(--transition);
+            font-size: 0.85rem;
+            padding: 0.4rem 1rem !important;
+            transition: color 0.2s var(--ease);
         }
         .navbar .nav-link:hover { color: #fff !important; }
+        .navbar-toggler { border-color: rgba(255,255,255,0.15) !important; }
+        .navbar-toggler-icon { filter: invert(1); }
+
         .navbar .btn-outline-light {
-            border-color: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.15);
             color: #fff;
             font-weight: 500;
             border-radius: 8px;
             padding: 0.35rem 1rem;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            transition: all 0.2s var(--ease);
         }
         .navbar .btn-outline-light:hover {
             background: #fff;
-            color: #141414;
+            color: #171717;
             border-color: #fff;
         }
+
         .navbar .dropdown-menu {
             background: #1e1e1e;
-            border: 1px solid rgba(255,255,255,0.08);
+            border: 1px solid var(--border);
             border-radius: var(--radius-sm);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-            padding: 0.4rem 0;
+            box-shadow: var(--shadow-lg);
+            padding: 0.35rem 0;
         }
         .navbar .dropdown-item {
-            color: rgba(255,255,255,0.75);
-            font-size: 0.88rem;
-            padding: 0.5rem 1.2rem;
+            color: rgba(255,255,255,0.65);
+            font-size: 0.85rem;
+            padding: 0.45rem 1.2rem;
+            transition: all 0.15s var(--ease);
         }
-        .navbar .dropdown-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
-        .navbar .dropdown-divider { border-color: rgba(255,255,255,0.08); }
-        .navbar .badge { font-size: 0.7rem; padding: 0.2em 0.55em; border-radius: 6px; font-weight: 500; }
+        .navbar .dropdown-item:hover { background: rgba(255,255,255,0.04); color: #fff; }
+        .navbar .dropdown-divider { border-color: var(--border); }
+        .navbar .badge {
+            font-size: 0.68rem;
+            padding: 0.2em 0.5em;
+            border-radius: 4px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
 
         /* ── Cards ────────────────────────── */
         .card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            transition: box-shadow var(--transition), transform var(--transition);
+            color: var(--text);
+            transition: border-color 0.3s var(--ease), transform 0.3s var(--ease);
         }
-        .card:hover { box-shadow: var(--shadow-md); }
-        .card.card-hover:hover { transform: translateY(-2px); }
+        .card:hover { border-color: rgba(255,255,255,0.1); }
 
         /* ── Buttons ──────────────────────── */
         .btn {
-            border-radius: 8px;
-            font-weight: 500;
-            padding: 0.45rem 1.2rem;
-            transition: all var(--transition);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 0.5rem 1.4rem;
+            transition: all 0.25s var(--ease);
             letter-spacing: 0.1px;
         }
         .btn-primary {
             background: var(--accent);
             border-color: var(--accent);
+            color: #171717 !important;
         }
-        .btn-primary:hover { background: #0090cc; border-color: #0090cc; box-shadow: 0 0 0 4px var(--accent-glow); }
+        .btn-primary:hover {
+            background: #13d800;
+            border-color: #13d800;
+            box-shadow: 0 0 0 5px var(--accent-dim);
+            color: #171717 !important;
+        }
         .btn-outline-primary {
             color: var(--accent);
             border-color: var(--accent);
+            background: transparent;
         }
-        .btn-outline-primary:hover { background: var(--accent); border-color: var(--accent); }
-        .btn-lg { padding: 0.65rem 1.8rem; font-size: 1rem; border-radius: 10px; }
-        .btn-sm { padding: 0.3rem 0.8rem; font-size: 0.82rem; border-radius: 6px; }
+        .btn-outline-primary:hover {
+            background: var(--accent);
+            color: #171717;
+            border-color: var(--accent);
+        }
+        .btn-outline-secondary {
+            color: var(--text-secondary);
+            border-color: rgba(255,255,255,0.12);
+            background: transparent;
+        }
+        .btn-outline-secondary:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border-color: rgba(255,255,255,0.2);
+        }
+        .btn-outline-light {
+            color: #fff;
+            border-color: rgba(255,255,255,0.2);
+            background: transparent;
+        }
+        .btn-outline-light:hover {
+            background: #fff;
+            color: #171717;
+            border-color: #fff;
+        }
+        .btn-light {
+            background: #fff;
+            border-color: #fff;
+            color: #171717;
+            font-weight: 600;
+        }
+        .btn-light:hover { background: #e6e6e6; border-color: #e6e6e6; }
+        .btn-lg { padding: 0.7rem 2rem; font-size: 1rem; border-radius: 12px; }
+        .btn-sm { padding: 0.3rem 0.85rem; font-size: 0.8rem; border-radius: 7px; }
+        .btn-danger {
+            background: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+        .btn-danger:hover { background: #c82333; border-color: #c82333; }
+        .btn-success {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #171717;
+        }
+        .btn-success:hover { background: #13d800; border-color: #13d800; }
 
         /* ── Forms ────────────────────────── */
         .form-control, .form-select {
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            padding: 0.5rem 0.85rem;
+            background: var(--surface-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 0.55rem 0.9rem;
             font-size: 0.9rem;
-            transition: border-color var(--transition), box-shadow var(--transition);
+            color: var(--text);
+            transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
         }
         .form-control:focus, .form-select:focus {
+            background: var(--surface-light);
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
+            box-shadow: 0 0 0 4px var(--accent-dim);
+            color: var(--text);
+            outline: none;
         }
-        .form-label { font-weight: 500; font-size: 0.88rem; color: #555; margin-bottom: 0.3rem; }
+        .form-control::placeholder { color: #555; }
+        .form-label {
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.35rem;
+        }
 
         /* ── Badges ───────────────────────── */
         .badge {
-            font-weight: 500;
-            border-radius: 6px;
-            padding: 0.25em 0.6em;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            border-radius: 5px;
+            padding: 0.25em 0.65em;
+            font-size: 0.78rem;
         }
-        .badge.bg-primary { background: #e0f4ff !important; color: #0077b6 !important; }
-        .badge.bg-success { background: #e0fbe8 !important; color: #1a7a3a !important; }
-        .badge.bg-danger { background: #ffeaea !important; color: #c0392b !important; }
-        .badge.bg-warning { background: #fff4e0 !important; color: #b8860b !important; }
-        .badge.bg-info { background: #e0f0ff !important; color: #1a5fa8 !important; }
-        .badge.bg-secondary { background: #f0f0f0 !important; color: #666 !important; }
-        .badge.bg-dark { background: #1a1a1a !important; color: #fff !important; }
 
         /* ── Alerts ───────────────────────── */
         .alert {
             border: none;
             border-radius: var(--radius-sm);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
+            font-weight: 500;
+            background: var(--surface-light);
+            color: var(--text);
         }
+        .alert-success { border-left: 3px solid var(--accent); }
+        .alert-danger { border-left: 3px solid #dc3545; }
+        .alert-warning { border-left: 3px solid #ffc107; color: #171717; }
+        .alert-info { border-left: 3px solid #0dcaf0; }
 
-        /* ── Table ────────────────────────── */
-        .table { font-size: 0.9rem; }
+        /* ── Tables ───────────────────────── */
+        .table {
+            color: var(--text);
+            font-size: 0.88rem;
+            margin-bottom: 0;
+        }
         .table thead th {
             font-weight: 600;
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #999;
-            border-bottom-width: 1px;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 0.75rem;
         }
+        .table tbody td {
+            border-color: var(--border);
+            padding: 0.75rem;
+            vertical-align: middle;
+        }
+        .table-hover tbody tr:hover { background: rgba(255,255,255,0.02); }
 
         /* ── Footer ───────────────────────── */
         .footer {
-            background: var(--dark);
-            color: #888;
-            padding: 2.5rem 0;
-            margin-top: 4rem;
-            font-size: 0.85rem;
+            background: #111;
+            color: #666;
+            padding: 3rem 0 2rem;
+            margin-top: 5rem;
+            font-size: 0.82rem;
+            border-top: 1px solid var(--border);
         }
-        .footer a { color: #aaa; text-decoration: none; }
-        .footer a:hover { color: #fff; }
+        .footer a { color: #888; }
+        .footer a:hover { color: var(--accent); text-decoration: none; }
 
         /* ── Page heading ─────────────────── */
         .page-heading {
-            font-weight: 800;
-            font-size: 1.75rem;
-            letter-spacing: -0.5px;
+            font-weight: 900;
+            font-size: 2.2rem;
+            letter-spacing: -0.8px;
             margin-bottom: 1.5rem;
         }
 
-        /* ── Hero section ─────────────────── */
+        /* ── Hero ─────────────────────────── */
         .hero {
-            background: linear-gradient(135deg, #141414 0%, #1a2a3a 50%, #0d2137 100%);
-            border-radius: var(--radius);
-            padding: 4rem 2rem;
+            background: linear-gradient(160deg, #1a1a1a 0%, #0f1a0f 60%, #0a1a0a 100%);
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            padding: 5rem 2rem;
             text-align: center;
-            color: #fff;
             position: relative;
             overflow: hidden;
         }
@@ -214,52 +324,106 @@
             content: '';
             position: absolute;
             inset: 0;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
-            background-size: 1.5rem 1.5rem;
+            background-image:
+                radial-gradient(circle, rgba(23,247,0,0.06) 1px, transparent 1px);
+            background-size: 2rem 2rem;
             pointer-events: none;
         }
-        .hero h1 { font-weight: 900; font-size: 2.8rem; letter-spacing: -1px; position: relative; }
-        .hero p { opacity: 0.75; position: relative; }
-        .hero .btn { position: relative; }
-
-        /* ── Stat card ────────────────────── */
-        .stat-card {
-            text-align: center;
-            padding: 1.5rem;
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(23,247,0,0.04) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 80%, rgba(23,247,0,0.02) 0%, transparent 50%);
+            pointer-events: none;
         }
-        .stat-card .stat-icon {
-            width: 56px; height: 56px;
+        .hero h1 {
+            font-weight: 900;
+            font-size: 3.2rem;
+            letter-spacing: -1.5px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero h1 .accent { color: var(--accent); }
+        .hero p { position: relative; z-index: 1; }
+        .hero .btn { position: relative; z-index: 1; }
+
+        /* ── Feature stat ─────────────────── */
+        .stat-icon-circle {
+            width: 52px; height: 52px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: var(--accent-glow);
-            border-radius: 16px;
-            font-size: 1.5rem;
+            background: var(--accent-dim);
+            border-radius: 14px;
+            font-size: 1.4rem;
+            margin-bottom: 0.75rem;
+            color: var(--accent);
+        }
+
+        /* ── Glass panel ──────────────────── */
+        .glass-panel {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            backdrop-filter: blur(10px);
+        }
+
+        /* ── Bootstrap overrides for dark theme ── */
+        .text-primary { color: var(--accent) !important; }
+        .bg-primary { background-color: var(--accent) !important; color: #171717 !important; }
+        .bg-light { background-color: var(--surface-light) !important; color: var(--text) !important; }
+        .bg-white { background-color: var(--surface) !important; }
+        .border { border-color: var(--border) !important; }
+        .rounded { border-radius: var(--radius-sm) !important; }
+        .rounded-4 { border-radius: var(--radius) !important; }
+        .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+
+        /* ── Green link underline ─────────── */
+        .link-underline {
+            text-decoration: none;
+            background-image: linear-gradient(var(--accent), var(--accent));
+            background-size: 0% 1px;
+            background-position: 0 100%;
+            background-repeat: no-repeat;
+            transition: background-size 0.3s var(--ease);
+        }
+        .link-underline:hover { background-size: 100% 1px; }
+
+        /* ── Section divider ──────────────── */
+        .section-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            font-weight: 700;
             margin-bottom: 0.75rem;
         }
-        .stat-card h5 { font-weight: 700; margin-bottom: 0.25rem; }
-        .stat-card p { color: var(--text-muted); font-size: 0.88rem; margin: 0; }
 
-        /* ── Misc ─────────────────────────── */
-        a { color: var(--accent); text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .text-muted { color: var(--text-muted) !important; }
-        hr { border-color: var(--border); opacity: 1; }
+        /* ── Scrollbar ────────────────────── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
 
         @media (max-width: 768px) {
-            .hero { padding: 2.5rem 1rem; border-radius: var(--radius-sm); }
-            .hero h1 { font-size: 1.8rem; }
+            .hero { padding: 3rem 1.2rem; border-radius: 1.25rem; }
+            .hero h1 { font-size: 2rem; }
+            .page-heading { font-size: 1.6rem; }
         }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg sticky-top">
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">
-                <span class="brand-icon">✈</span>新帆航空
+                <span class="brand-dot"></span>新帆航空
             </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -272,7 +436,7 @@
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
                         {% if user.profile.role == 'admin' %}
-                            <li class="nav-item"><a class="nav-link text-warning" href="{% url 'admin_panel' %}">管理后台</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'admin_panel' %}" style="color:var(--accent)!important">管理后台</a></li>
                         {% endif %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#" data-bs-toggle="dropdown">
@@ -304,7 +468,7 @@
             {% for msg in messages %}
                 <div class="alert alert-{{ msg.tags|default:'info' }} alert-dismissible fade show" role="alert">
                     {{ msg }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
                 </div>
             {% endfor %}
         {% endif %}
@@ -313,8 +477,8 @@
 
     <footer class="footer">
         <div class="container text-center">
-            <p class="mb-1">&copy; {% now "Y" %} 新帆航空 Xinfan Airlines — Roblox Virtual Aviation</p>
-            <small>本网站为虚拟航空公司模拟平台，非真实航空公司</small>
+            <p class="mb-1">&copy; {% now "Y" %} 新帆航空 Xinfan Airlines</p>
+            <small>Roblox Virtual Aviation &middot; 本网站为虚拟航空公司模拟平台</small>
         </div>
     </footer>
 

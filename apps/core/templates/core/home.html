@@ -2,30 +2,30 @@
 {% block title %}新帆航空 — 首页{% endblock %}
 {% block content %}
 
-<!-- Hero -->
 <section class="hero mb-5">
-    <h1>新帆航空</h1>
-    <p class="fs-5 mb-0 mt-2 opacity-75">Xinfan Airlines &mdash; Roblox Virtual Aviation</p>
-    <p class="opacity-50 mt-1">飞越虚拟天际，开启云端旅程</p>
+    <p class="section-label">XINFAN AIRLINES</p>
+    <h1>新帆<span class="accent">航空</span></h1>
+    <p class="fs-5 mb-0 mt-2" style="opacity:0.6">Xinfan Airlines &mdash; Roblox Virtual Aviation</p>
+    <p style="opacity:0.35;margin-top:0.35rem">飞越虚拟天际，开启云端旅程</p>
     <div class="mt-4">
         <a href="{% url 'flight_list' %}" class="btn btn-light btn-lg me-2">查看航班</a>
         <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg">了解我们</a>
     </div>
 </section>
 
-<!-- Latest flights -->
 {% if latest_flights %}
 <section class="mb-5">
+    <p class="section-label">Latest Flights</p>
     <h3 class="fw-bold mb-3">最新航班</h3>
     <div class="row g-3">
         {% for flight in latest_flights %}
         <div class="col-md-6 col-lg-4">
-            <div class="card card-hover p-3 position-relative">
+            <div class="card p-3 position-relative">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <strong class="fs-5">{{ flight.flight_number }}</strong>
-                    <span class="badge {% if flight.status == 'scheduled' %}bg-primary{% elif flight.status == 'arrived' %}bg-success{% elif flight.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}">{{ flight.get_status_display }}</span>
+                    <span class="badge {% if flight.status == 'scheduled' %}bg-primary{% elif flight.status == 'arrived' %}bg-success{% elif flight.status == 'cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ flight.get_status_display }}</span>
                 </div>
-                <div class="text-muted small">
+                <div style="color:var(--text-secondary);font-size:0.85rem">
                     <p class="mb-1">{{ flight.origin }} &rarr; {{ flight.destination }}</p>
                     <p class="mb-1">{{ flight.departure_time|date:"Y-m-d H:i" }} &nbsp;|&nbsp; {{ flight.aircraft }}</p>
                 </div>
@@ -37,28 +37,29 @@
 </section>
 {% endif %}
 
-<!-- Feature stats -->
 <section>
+    <p class="section-label">Why Xinfan</p>
+    <h3 class="fw-bold mb-4">我们的服务</h3>
     <div class="row g-3 text-center">
         <div class="col-md-4">
-            <div class="card stat-card">
-                <div class="stat-icon">&#9992;</div>
-                <h5>定期航班</h5>
-                <p>覆盖全球主要枢纽的定期虚拟航班</p>
+            <div class="card p-4">
+                <div class="stat-icon-circle">&#9992;</div>
+                <h5 class="fw-bold">定期航班</h5>
+                <p style="color:var(--text-secondary);font-size:0.88rem">覆盖全球主要枢纽的定期虚拟航班</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card stat-card">
-                <div class="stat-icon">&#128101;</div>
-                <h5>专业团队</h5>
-                <p>招募机长、空乘、地勤等虚拟航空人才</p>
+            <div class="card p-4">
+                <div class="stat-icon-circle">&#128101;</div>
+                <h5 class="fw-bold">专业团队</h5>
+                <p style="color:var(--text-secondary);font-size:0.88rem">招募机长、空乘、地勤等虚拟航空人才</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card stat-card">
-                <div class="stat-icon">&#9733;</div>
-                <h5>里程计划</h5>
-                <p>每次飞行积累里程，兑换专属权益</p>
+            <div class="card p-4">
+                <div class="stat-icon-circle">&#9733;</div>
+                <h5 class="fw-bold">里程计划</h5>
+                <p style="color:var(--text-secondary);font-size:0.88rem">每次飞行积累里程，兑换专属权益</p>
             </div>
         </div>
     </div>
