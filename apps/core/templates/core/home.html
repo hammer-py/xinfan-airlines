@@ -1,49 +1,67 @@
 {% extends 'base.html' %}
 {% block title %}新帆航空 — 首页{% endblock %}
 {% block content %}
-<div class="text-center py-5 mb-4 bg-primary text-white rounded-4" style="background: linear-gradient(135deg, #0d6efd, #0dcaf0) !important;">
-    <h1 class="display-4 fw-bold">✈️ 新帆航空</h1>
-    <p class="lead fs-4 mb-3">Xinfan Airlines — Roblox Virtual Aviation</p>
-    <p class="opacity-75">飞越虚拟天际，开启云端旅程</p>
+
+<!-- Hero -->
+<section class="hero mb-5">
+    <h1>新帆航空</h1>
+    <p class="fs-5 mb-0 mt-2 opacity-75">Xinfan Airlines &mdash; Roblox Virtual Aviation</p>
+    <p class="opacity-50 mt-1">飞越虚拟天际，开启云端旅程</p>
     <div class="mt-4">
         <a href="{% url 'flight_list' %}" class="btn btn-light btn-lg me-2">查看航班</a>
         <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg">了解我们</a>
     </div>
-</div>
+</section>
 
+<!-- Latest flights -->
 {% if latest_flights %}
-<div class="mb-5">
-    <h3 class="mb-3">📅 最新航班</h3>
+<section class="mb-5">
+    <h3 class="fw-bold mb-3">最新航班</h3>
     <div class="row g-3">
         {% for flight in latest_flights %}
         <div class="col-md-6 col-lg-4">
-            <div class="card p-3">
+            <div class="card card-hover p-3 position-relative">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <strong class="fs-5">{{ flight.flight_number }}</strong>
                     <span class="badge {% if flight.status == 'scheduled' %}bg-primary{% elif flight.status == 'arrived' %}bg-success{% elif flight.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}">{{ flight.get_status_display }}</span>
                 </div>
                 <div class="text-muted small">
-                    <p class="mb-1">{{ flight.origin }} → {{ flight.destination }}</p>
-                    <p class="mb-1">🕐 {{ flight.departure_time|date:"Y-m-d H:i" }}</p>
-                    <p class="mb-0">✈️ {{ flight.aircraft }}</p>
+                    <p class="mb-1">{{ flight.origin }} &rarr; {{ flight.destination }}</p>
+                    <p class="mb-1">{{ flight.departure_time|date:"Y-m-d H:i" }} &nbsp;|&nbsp; {{ flight.aircraft }}</p>
                 </div>
                 <a href="{% url 'flight_detail' flight.pk %}" class="stretched-link"></a>
             </div>
         </div>
         {% endfor %}
     </div>
-</div>
+</section>
 {% endif %}
 
-<div class="row g-4 text-center">
-    <div class="col-md-4">
-        <div class="card p-4"><i class="bi bi-airplane display-3 text-primary"></i><h5 class="mt-2">定期航班</h5><p class="text-muted">覆盖全球主要枢纽的定期虚拟航班</p></div>
+<!-- Feature stats -->
+<section>
+    <div class="row g-3 text-center">
+        <div class="col-md-4">
+            <div class="card stat-card">
+                <div class="stat-icon">&#9992;</div>
+                <h5>定期航班</h5>
+                <p>覆盖全球主要枢纽的定期虚拟航班</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stat-card">
+                <div class="stat-icon">&#128101;</div>
+                <h5>专业团队</h5>
+                <p>招募机长、空乘、地勤等虚拟航空人才</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stat-card">
+                <div class="stat-icon">&#9733;</div>
+                <h5>里程计划</h5>
+                <p>每次飞行积累里程，兑换专属权益</p>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <div class="card p-4"><i class="bi bi-people display-3 text-primary"></i><h5 class="mt-2">专业团队</h5><p class="text-muted">招募机长、空乘、地勤等虚拟航空人才</p></div>
-    </div>
-    <div class="col-md-4">
-        <div class="card p-4"><i class="bi bi-star display-3 text-primary"></i><h5 class="mt-2">里程计划</h5><p class="text-muted">每次飞行积累里程，兑换专属权益</p></div>
-    </div>
-</div>
+</section>
+
 {% endblock %}
