@@ -62,7 +62,7 @@ def flight_create_view(request):
                 destination=request.POST.get('destination', '').strip(),
                 departure_time=request.POST.get('departure_time'),
                 arrival_time=request.POST.get('arrival_time'),
-                aircraft=request.POST.get('aircraft', 'A320neo').strip(),
+                aircraft=request.POST.get('aircraft', 'Boeing 737-800').strip(),
                 gate=request.POST.get('gate', '').strip() or None,
                 route_type=request.POST.get('route_type', 'domestic'),
                 status=request.POST.get('status', 'scheduled'),
@@ -166,7 +166,7 @@ def private_flight_request_view(request):
         destination = request.POST.get('destination', '').strip()
         departure_time = request.POST.get('departure_time', '')
         arrival_time = request.POST.get('arrival_time', '')
-        aircraft = request.POST.get('aircraft', 'B737-800').strip()
+        aircraft = request.POST.get('aircraft', 'Gulf Stream 650').strip()
         route_type = request.POST.get('route_type', 'domestic')
         purpose = request.POST.get('purpose', '').strip()
         passenger_count = request.POST.get('passenger_count', '1')

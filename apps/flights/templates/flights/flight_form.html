@@ -8,7 +8,22 @@
     {% csrf_token %}
     <div class="row g-3">
         <div class="col-sm-6"><label class="form-label">航班号 *</label><input type="text" name="flight_number" class="form-control" value="{{ flight.flight_number|default:'' }}" required></div>
-        <div class="col-sm-6"><label class="form-label">机型</label><input type="text" name="aircraft" class="form-control" value="{{ flight.aircraft|default:'B737-800' }}"></div>
+        <div class="col-sm-6"><label class="form-label">机型</label>
+            <select name="aircraft" class="form-select">
+                <option value="Boeing 737-100" {% if flight.aircraft == 'Boeing 737-100' %}selected{% endif %}>Boeing 737-100</option>
+                <option value="Boeing 737-800" {% if flight.aircraft == 'Boeing 737-800' or not flight.aircraft %}selected{% endif %}>Boeing 737-800</option>
+                <option value="Boeing 757-300" {% if flight.aircraft == 'Boeing 757-300' %}selected{% endif %}>Boeing 757-300</option>
+                <option value="Boeing 787-10" {% if flight.aircraft == 'Boeing 787-10' %}selected{% endif %}>Boeing 787-10</option>
+                <option value="Boeing 747-200" {% if flight.aircraft == 'Boeing 747-200' %}selected{% endif %}>Boeing 747-200</option>
+                <option value="Airbus 318 CEO" {% if flight.aircraft == 'Airbus 318 CEO' %}selected{% endif %}>Airbus 318 CEO</option>
+                <option value="Airbus 220-300" {% if flight.aircraft == 'Airbus 220-300' %}selected{% endif %}>Airbus 220-300</option>
+                <option value="Airbus 321CEO" {% if flight.aircraft == 'Airbus 321CEO' %}selected{% endif %}>Airbus 321CEO</option>
+                <option value="Airbus 350-900" {% if flight.aircraft == 'Airbus 350-900' %}selected{% endif %}>Airbus 350-900</option>
+                <option value="Airbus 320CEO" {% if flight.aircraft == 'Airbus 320CEO' %}selected{% endif %}>Airbus 320CEO</option>
+                <option value="DCH-6" {% if flight.aircraft == 'DCH-6' %}selected{% endif %}>DCH-6</option>
+                <option value="Concorde" {% if flight.aircraft == 'Concorde' %}selected{% endif %}>Concorde</option>
+                <option value="EMB-120" {% if flight.aircraft == 'EMB-120' %}selected{% endif %}>EMB-120</option>
+            </select></div>
         <div class="col-sm-6"><label class="form-label">出发地 *</label><input type="text" name="origin" class="form-control" value="{{ flight.origin|default:'' }}" required></div>
         <div class="col-sm-6"><label class="form-label">目的地 *</label><input type="text" name="destination" class="form-control" value="{{ flight.destination|default:'' }}" required></div>
         <div class="col-sm-6"><label class="form-label">计划起飞 *</label><input type="datetime-local" name="departure_time" class="form-control" value="{{ flight.departure_time|date:'Y-m-d\TH:i' }}" required></div>

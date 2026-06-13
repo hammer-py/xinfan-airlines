@@ -13,32 +13,48 @@
             <p class="mb-0" style="color:var(--text-secondary)">无论是想体验飞行员驾驶乐趣的玩家，还是想要担任空乘、地勤的航空爱好者，都可以在新帆航空找到适合自己的角色。</p>
         </div>
 
-        <div class="card p-4">
-            <h5 class="fw-bold mb-3">我们的机队</h5>
-            <div class="row g-3">
-                <div class="col-sm-4">
-                    <div class="text-center p-3" style="border:1px solid var(--border);border-radius:var(--radius)">
-                        <div class="stat-icon-circle">&#9992;</div>
-                        <p class="fw-bold mb-0">B787-10</p>
-                        <small style="color:var(--text-muted)">洲际旗舰</small>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="text-center p-3" style="border:1px solid var(--border);border-radius:var(--radius)">
-                        <div class="stat-icon-circle">&#9992;</div>
-                        <p class="fw-bold mb-0">A350-900</p>
-                        <small style="color:var(--text-muted)">远程主力</small>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="text-center p-3" style="border:1px solid var(--border);border-radius:var(--radius)">
-                        <div class="stat-icon-circle">&#9992;</div>
-                        <p class="fw-bold mb-0">B737-800</p>
-                        <small style="color:var(--text-muted)">短途航线</small>
-                    </div>
-                </div>
+        <div class="card p-4 mb-4">
+            <h5 class="fw-bold mb-3">主航机队</h5>
+            <div class="row g-2">
+                {% for ac in main_fleet %}
+                <div class="col-4 col-md-3"><span style="color:var(--text-secondary);font-size:0.88rem">&#9992; {{ ac }}</span></div>
+                {% endfor %}
             </div>
         </div>
+
+        <div class="card p-4 mb-4">
+            <h5 class="fw-bold mb-3">私人航班机队</h5>
+            <div class="row g-2">
+                {% for ac in private_fleet %}
+                <div class="col-4 col-md-3"><span style="color:var(--text-secondary);font-size:0.88rem">&#9992; {{ ac }}</span></div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if future_fleet or maintenance_fleet %}
+        <div class="row g-4">
+            {% if future_fleet %}
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3">未来计划投入</h5>
+                    {% for ac in future_fleet %}
+                    <span class="badge me-1 mb-1" style="background:var(--accent-dim);color:var(--accent)">{{ ac }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% if maintenance_fleet %}
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3">厂内维修</h5>
+                    {% for ac in maintenance_fleet %}
+                    <span class="badge me-1 mb-1 bg-warning text-dark">{{ ac }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
 
     <div class="col-lg-4">
@@ -51,8 +67,19 @@
             </ul>
         </div>
         <div class="card p-4 mb-3">
-            <h6 class="fw-bold">总部基地</h6>
-            <p class="mb-0" style="color:var(--text-secondary);font-size:0.88rem">Roblox — 香港国际机场 (HKG)</p>
+            <h6 class="fw-bold">枢纽机场</h6>
+            <ul class="list-unstyled mb-0" style="color:var(--text-secondary);font-size:0.85rem">
+                <li class="mb-2"><strong style="color:var(--text)">亚洲</strong><br>香港国际机场 (HKG)</li>
+                <li class="mb-2"><strong style="color:var(--text)">西欧</strong><br>巴黎戴高乐国际机场 (CDG)</li>
+                <li><strong style="color:var(--text)">北美</strong><br><span style="color:var(--text-muted)">待定</span></li>
+            </ul>
+        </div>
+        <div class="card p-4 mb-3">
+            <h6 class="fw-bold">澳大利亚分司</h6>
+            <p class="mb-0" style="color:var(--text-secondary);font-size:0.85rem">新帆航空澳大利亚分司运营中，执飞机型：</p>
+            <span class="badge me-1 mt-1 bg-secondary">B737-800</span>
+            <span class="badge me-1 mt-1 bg-secondary">EMB 120</span>
+            <span class="badge me-1 mt-1 bg-secondary">CRJ-100</span>
         </div>
         <div class="card p-4">
             <h6 class="fw-bold">联系我们</h6>

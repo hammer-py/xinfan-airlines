@@ -19,7 +19,7 @@ class Flight(models.Model):
     destination = models.CharField(max_length=100, verbose_name='目的地')
     departure_time = models.DateTimeField(verbose_name='计划起飞')
     arrival_time = models.DateTimeField(verbose_name='计划到达')
-    aircraft = models.CharField(max_length=50, default='A320neo', verbose_name='机型')
+    aircraft = models.CharField(max_length=50, default='Boeing 737-800', verbose_name='机型')
     gate = models.CharField(max_length=10, blank=True, null=True, verbose_name='登机口')
     route_type = models.CharField(max_length=20, choices=ROUTE_CHOICES, default='domestic', verbose_name='航线类型')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='scheduled', verbose_name='状态')
