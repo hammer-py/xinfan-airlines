@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}我的私人航班申请 — 新帆航空{% endblock %}
+{% block content %}
+
+<p class="section-label">My Requests</p>
+<h2 class="page-heading">我的私人航班申请</h2>
+
+<div class="mb-3">
+    <a href="{% url 'private_flight_request' %}" class="btn btn-primary">+ 新建申请</a>
+</div>
+
+<div class="card p-3">
+<table class="table table-hover mb-0">
+<thead><tr><th>航班号</th><th>路线</th><th>机型</th><th>起飞时间</th><th>状态</th><th>审批备注</th><th>申请时间</th></tr></thead>
+<tbody>
+{% for r in requests %}
+<tr>
+    <td><strong>{{ r.flight_number }}</strong></td>
+    <td>{{ r.origin }} → {{ r.destination }}</td>
+    <td>{{ r.aircraft }}</td>
+    <td>{{ r.departure_time|date:"Y-m-d H:i" }}</td>
+    <td>
+        <span class="badge {% if r.status == 'approved' %}bg-success{% elif r.status == 'rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ r.get_status_display }}</span>
+    </td>
+    <td>{{ r.review_note|default:'—' }}</td>
+    <td>{{ r.created_at|date:"Y-m-d" }}</td>
+</tr>
+{% empty %}
+<tr><td colspan="7" class="text-center py-4" style="color:var(--text-muted)">暂无私人航班申请</td></tr>
+{% endfor %}
+</tbody></table>
+</div>
+{% endblock %}

@@ -10,4 +10,7 @@ urlpatterns = [
     path('<int:pk>/signup/', views.flight_signup_view, name='flight_signup'),
     path('my-signups/', views.my_signups_view, name='my_signups'),
     path('admin-signups/', views.admin_signups_view, name='admin_signups'),
+    path('private/request/', views.private_flight_request_view, name='private_flight_request'),
+    path('private/my/', views.my_private_requests_view, name='my_private_requests'),
+    path('admin/private-requests/', views.admin_private_requests_view, name='admin_private_requests'),
 ]

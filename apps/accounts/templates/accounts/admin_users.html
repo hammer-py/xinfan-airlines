@@ -55,7 +55,7 @@
                                 <option value="business">商务舱旅客</option>
                                 <option value="first_class">头等舱旅客</option>
                                 <option value="investor">投资者</option>
-                                <option value="top_investor">顶级投资者</option>
+                                <option value="uinv">顶级投资者</option>
                             </optgroup>
                             <optgroup label="—— 员工等级（实习） ——">
                                 <option value="trainee_cabin_crew">实习空乘</option>
@@ -93,7 +93,7 @@
             <option value="business">商务舱旅客</option>
             <option value="first_class">头等舱旅客</option>
             <option value="investor">投资者</option>
-            <option value="top_investor">顶级投资者</option>
+            <option value="uinv">顶级投资者</option>
         </optgroup>
         <optgroup label="—— 员工等级（实习） ——">
             <option value="trainee_cabin_crew">实习空乘</option>
@@ -133,7 +133,7 @@
     <td>{{ u.id }}</td>
     <td>{{ u.username }}</td>
     <td>{{ u.email|default:'—' }}</td>
-    <td><span class="badge {% if u.profile.role == 'admin' %}bg-danger{% elif 'trainee' in u.profile.role %}bg-warning text-dark{% elif u.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif u.profile.role == 'investor' or u.profile.role == 'top_investor' %}bg-info text-dark{% else %}bg-secondary{% endif %}">{{ u.profile.get_role_display }}</span></td>
+    <td><span class="badge {% if u.profile.role == 'admin' %}bg-danger{% elif 'trainee' in u.profile.role %}bg-warning text-dark{% elif u.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif u.profile.role == 'investor' or u.profile.role == 'uinv' %}bg-info text-dark{% else %}bg-secondary{% endif %}">{{ u.profile.get_role_display }}</span></td>
     <td>{{ u.profile.miles }}</td>
     <td>{{ u.date_joined|date:"Y-m-d" }}</td>
     <td>
@@ -146,7 +146,7 @@
                     <option value="business" {% if u.profile.role == 'business' %}selected{% endif %}>商务舱旅客</option>
                     <option value="first_class" {% if u.profile.role == 'first_class' %}selected{% endif %}>头等舱旅客</option>
                     <option value="investor" {% if u.profile.role == 'investor' %}selected{% endif %}>投资者</option>
-                    <option value="top_investor" {% if u.profile.role == 'top_investor' %}selected{% endif %}>顶级投资者</option>
+                    <option value="uinv" {% if u.profile.role == 'uinv' %}selected{% endif %}>顶级投资者</option>
                 </optgroup>
                 <optgroup label="—— 员工等级（实习） ——">
                     <option value="trainee_cabin_crew" {% if u.profile.role == 'trainee_cabin_crew' %}selected{% endif %}>实习空乘</option>

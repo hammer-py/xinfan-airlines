@@ -38,7 +38,7 @@ class Command(BaseCommand):
             ('biz001', 'business@xinfan.com', 'user123', 'business', '商务舱旅客', 1200),
             ('first001', 'first@xinfan.com', 'user123', 'first_class', '头等舱旅客', 3000),
             ('investor01', 'investor@xinfan.com', 'user123', 'investor', '投资者', 10000),
-            ('vip001', 'vip@xinfan.com', 'user123', 'top_investor', '顶级投资者', 50000),
+            ('vip001', 'vip@xinfan.com', 'user123', 'uinv', '顶级投资者', 50000),
         ]
         for uname, email, pw, role, dname, miles in passengers:
             if not User.objects.filter(username=uname).exists():

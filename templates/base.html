@@ -422,7 +422,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#" data-bs-toggle="dropdown">
                                 {{ user.username }}
-                                <span class="badge {% if user.profile.role == 'admin' %}bg-danger{% elif 'trainee' in user.profile.role %}bg-warning text-dark{% elif user.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif user.profile.role == 'investor' or user.profile.role == 'top_investor' %}bg-info text-dark{% else %}bg-secondary{% endif %}">{{ user.profile.get_role_display }}</span>
+                                <span class="badge {% if user.profile.role == 'admin' %}bg-danger{% elif 'trainee' in user.profile.role %}bg-warning text-dark{% elif user.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif user.profile.role == 'investor' or user.profile.role == 'uinv' %}bg-info text-dark{% else %}bg-secondary{% endif %}">{{ user.profile.get_role_display }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="{% url 'profile' %}">个人中心</a></li>

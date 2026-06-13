@@ -9,7 +9,7 @@ ROLE_CHOICES = [
     ('business', '商务舱旅客'),
     ('first_class', '头等舱旅客'),
     ('investor', '投资者'),
-    ('top_investor', '顶级投资者'),
+    ('uinv', '顶级投资者'),
     # 员工等级（实习）
     ('trainee_cabin_crew', '实习空乘'),
     ('trainee_first_officer', '实习副驾驶'),
@@ -24,13 +24,13 @@ ROLE_CHOICES = [
     ('admin', '管理员'),
 ]
 
-USER_ROLES = {'economy', 'business', 'first_class', 'investor', 'top_investor'}
+USER_ROLES = {'economy', 'business', 'first_class', 'investor', 'uinv'}
 EMPLOYEE_ROLES = {
     'trainee_cabin_crew', 'trainee_first_officer', 'trainee_captain', 'trainee_ground',
     'cabin_crew', 'first_officer', 'captain', 'ground_staff',
 }
 TRAINEE_ROLES = {'trainee_cabin_crew', 'trainee_first_officer', 'trainee_captain', 'trainee_ground'}
-STAFF_ROLES = {'cabin_crew', 'first_officer', 'captain', 'ground_staff'}
+PREMIUM_ROLES = {'business', 'first_class', 'investor', 'uinv', 'admin'}
 
 def is_employee(role):
     return role in EMPLOYEE_ROLES or role == 'admin'
