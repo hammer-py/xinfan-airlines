@@ -410,7 +410,11 @@
             .hero { padding: 3rem 1.2rem; border-radius: 1.25rem; }
             .hero h1 { font-size: 2rem; }
             .page-heading { font-size: 1.6rem; }
+            .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+            .card { border-radius: var(--radius-sm); }
+            .table { font-size: 0.78rem; }
         }
+        .btn-light.btn-sm { color: #171717 !important; }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
@@ -420,9 +424,38 @@
             <a class="navbar-brand" href="{% url 'home' %}">
                 <span class="brand-dot"></span>新帆航空
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <div class="d-flex align-items-center gap-1 ms-auto order-lg-last">
+                {% if user.is_authenticated %}
+                    {% if user.profile.role == 'admin' %}
+                        <a class="nav-link d-none d-lg-block" href="{% url 'admin_panel' %}" style="color:var(--accent)!important;padding:0.4rem 0.6rem">管理后台</a>
+                    {% endif %}
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#" data-bs-toggle="dropdown" style="padding:0.4rem 0.6rem">
+                            {{ user.username }}
+                            <span class="badge {% if user.profile.role == 'admin' %}bg-danger{% elif 'trainee' in user.profile.role %}bg-warning text-dark{% elif user.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif user.profile.role == 'investor' or user.profile.role == 'uinv' %}bg-info text-dark{% else %}bg-secondary{% endif %} d-none d-sm-inline">{{ user.profile.get_role_display }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            {% if user.profile.role == 'admin' %}
+                                <li><a class="dropdown-item d-lg-none" href="{% url 'admin_panel' %}">管理后台</a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">个人中心</a></li>
+                            {% if user.profile.is_employee %}
+                                <li><a class="dropdown-item" href="{% url 'my_signups' %}">我的航班报名</a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="{% url 'mileage_list' %}">里程记录</a></li>
+                            <li><a class="dropdown-item" href="{% url 'my_applications' %}">我的申请</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">退出登录</a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a class="btn btn-outline-light btn-sm" href="{% url 'login' %}" style="font-size:0.75rem;padding:0.3rem 0.7rem">登录</a>
+                    <a class="btn btn-light btn-sm ms-1" href="{% url 'register' %}" style="font-size:0.75rem;padding:0.3rem 0.7rem;color:#171717">注册</a>
+                {% endif %}
+                <button class="navbar-toggler border-0 ms-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="padding:0.3rem">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">首页</a></li>
@@ -433,32 +466,6 @@
                     <li class="nav-item"><a class="nav-link" href="https://www.roblox.com/communities/16064021/Xinfan-Airlines#!/about" target="_blank" title="Roblox 社区">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px"><path d="M13.383 14.341l-3.726-.958.959-3.726 3.726.959-.96 3.726zM4.913 0 0 19.088 19.088 24 24 4.912 4.912 0z"/></svg>
                     </a></li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    {% if user.is_authenticated %}
-                        {% if user.profile.role == 'admin' %}
-                            <li class="nav-item"><a class="nav-link" href="{% url 'admin_panel' %}" style="color:var(--accent)!important">管理后台</a></li>
-                        {% endif %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#" data-bs-toggle="dropdown">
-                                {{ user.username }}
-                                <span class="badge {% if user.profile.role == 'admin' %}bg-danger{% elif 'trainee' in user.profile.role %}bg-warning text-dark{% elif user.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif user.profile.role == 'investor' or user.profile.role == 'uinv' %}bg-info text-dark{% else %}bg-secondary{% endif %}">{{ user.profile.get_role_display }}</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{% url 'profile' %}">个人中心</a></li>
-                                {% if user.profile.is_employee %}
-                                    <li><a class="dropdown-item" href="{% url 'my_signups' %}">我的航班报名</a></li>
-                                {% endif %}
-                                <li><a class="dropdown-item" href="{% url 'mileage_list' %}">里程记录</a></li>
-                                <li><a class="dropdown-item" href="{% url 'my_applications' %}">我的申请</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">退出登录</a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">登录</a></li>
-                        <li class="nav-item ms-1"><a class="btn btn-outline-light btn-sm mt-1" href="{% url 'register' %}">注册</a></li>
-                    {% endif %}
                 </ul>
             </div>
         </div>
