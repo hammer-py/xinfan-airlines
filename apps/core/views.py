@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 def verify_txt(request):
-    return HttpResponse('7d13c19ea2635efa621af4db13ff59f9e04643\nff', content_type='text/plain')
+    return HttpResponse('7d13c19ea2635efa621af4db13ff59f9e046433ff', content_type='text/plain')
 
 def home_view(request):
     latest_flights = []
