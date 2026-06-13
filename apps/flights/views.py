@@ -26,10 +26,14 @@ def flight_detail_view(request, pk):
     flight = get_object_or_404(Flight, pk=pk)
     signups = flight.crew_signups.select_related('user').all()
     user_signup = None
+    applicant = None
     if request.user.is_authenticated:
         user_signup = flight.crew_signups.filter(user=request.user).first()
+        if flight.is_private and hasattr(flight, 'source_request'):
+            applicant = flight.source_request.user
     return render(request, 'flights/flight_detail.html', {
-        'flight': flight, 'signups': signups, 'user_signup': user_signup
+        'flight': flight, 'signups': signups, 'user_signup': user_signup,
+        'applicant': applicant,
     })
 
 @login_required

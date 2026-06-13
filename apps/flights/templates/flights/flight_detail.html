@@ -5,9 +5,23 @@
     <div class="col-lg-8">
         <div class="card p-4">
             <div class="d-flex justify-content-between align-items-start mb-3">
-                <h3>{{ flight.flight_number }}</h3>
-                <span class="badge {% if flight.status == 'scheduled' %}bg-primary{% elif flight.status == 'arrived' %}bg-success{% elif flight.status == 'cancelled' %}bg-danger{% elif flight.status == 'departed' %}bg-info{% else %}bg-warning{% endif %} fs-6">{{ flight.get_status_display }}</span>
+                <div>
+                    <h3>{{ flight.flight_number }}
+                        {% if flight.is_private %}<span class="badge ms-2" style="background:var(--accent-dim);color:var(--accent);font-size:0.7rem">私人航班</span>{% endif %}
+                    </h3>
+                </div>
+                <span class="badge {% if flight.status == 'scheduled' %}bg-primary{% elif flight.status == 'arrived' %}bg-success{% elif flight.status == 'cancelled' %}bg-danger{% elif flight.status == 'departed' %}bg-info{% else %}bg-warning text-dark{% endif %} fs-6">{{ flight.get_status_display }}</span>
             </div>
+
+            {% if flight.is_private and applicant and applicant == user %}
+            <div class="p-3 mb-3" style="background:var(--accent-dim);border-radius:var(--radius-sm);font-size:0.88rem">
+                <span style="color:var(--accent);font-weight:600">你的私人航班</span>
+                {% if flight.source_request %}
+                <div class="mt-1" style="color:var(--text-secondary)">飞行目的：{{ flight.source_request.purpose }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+
             <div class="row g-3 mb-3">
                 <div class="col-5 text-center"><h4>{{ flight.origin }}</h4><small class="text-muted">出发地</small></div>
                 <div class="col-2 text-center"><i class="bi bi-arrow-right fs-3 text-primary"></i></div>
@@ -31,7 +45,7 @@
     </div>
     <div class="col-lg-4">
         <div class="card p-4 mb-3">
-            <h5>👥 机组报名</h5>
+            <h5>机组报名</h5>
             {% if signups %}
                 {% for s in signups %}
                 <div class="d-flex justify-content-between py-1 border-bottom"><span>{{ s.user.username }}</span><small class="text-muted">{{ s.get_role_display }}</small></div>
