@@ -4,11 +4,18 @@ from django.contrib import messages
 from django.utils import timezone
 from .models import Flight, FlightCrewSignup, PrivateFlightRequest
 from apps.accounts.decorators import role_required
-from apps.accounts.models import PREMIUM_ROLES
+from apps.accounts.models import PREMIUM_ROLES, EMPLOYEE_ROLES
 
 def flight_list_view(request):
     flights = Flight.objects.select_related('created_by').filter(is_private=False)
-    private_flights = Flight.objects.select_related('created_by').filter(is_private=True, status='scheduled')
+    can_see_private = (
+        request.user.is_authenticated and (
+            request.user.profile.role in PREMIUM_ROLES or
+            request.user.profile.role in EMPLOYEE_ROLES or
+            request.user.profile.role == 'admin'
+        )
+    )
+    private_flights = Flight.objects.select_related('created_by').filter(is_private=True, status='scheduled') if can_see_private else Flight.objects.none()
     status = request.GET.get('status', '')
     route = request.GET.get('route', '')
     if status:
@@ -24,6 +31,14 @@ def flight_list_view(request):
 
 def flight_detail_view(request, pk):
     flight = get_object_or_404(Flight, pk=pk)
+
+    if flight.is_private and (
+        not request.user.is_authenticated or
+        request.user.profile.role == 'economy'
+    ):
+        messages.error(request, '你没有权限查看此航班')
+        return redirect('flight_list')
+
     signups = flight.crew_signups.select_related('user').all()
     user_signup = None
     applicant = None
