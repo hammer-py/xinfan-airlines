@@ -9,5 +9,4 @@ urlpatterns = [
     path('profile/edit/', views.profile_edit_view, name='profile_edit'),
     path('admin-panel/', views.admin_panel_view, name='admin_panel'),
     path('admin-panel/users/', views.admin_users_view, name='admin_users'),
-    path('captcha-refresh/', views.captcha_refresh, name='captcha_refresh'),
 ]

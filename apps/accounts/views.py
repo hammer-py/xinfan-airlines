@@ -6,23 +6,27 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.db import transaction
 from django.utils.decorators import method_decorator
-from django.http import JsonResponse
 from .models import UserProfile, ROLE_CHOICES
 from .decorators import role_required
-import random
+import json
+import urllib.request
+
+TURNSTILE_SECRET = '0x4AAAAAADnKlcEsR3ju3SUhf65od20RxUU'
 
 
-def _generate_captcha(request):
-    a = random.randint(1, 9)
-    b = random.randint(1, 9)
-    op = random.choice(['+', '×'])
-    answer = a + b if op == '+' else a * b
-    request.session['captcha_answer'] = str(answer)
-    return f'{a} {op} {b} = ?'
-
-
-def captcha_refresh(request):
-    return JsonResponse({'question': _generate_captcha(request)})
+def _verify_turnstile(token):
+    if not token:
+        return False
+    data = json.dumps({'secret': TURNSTILE_SECRET, 'response': token}).encode()
+    req = urllib.request.Request(
+        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+        data=data, headers={'Content-Type': 'application/json'}
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            return json.loads(resp.read().decode()).get('success', False)
+    except Exception:
+        return False
 
 
 def register_view(request):
@@ -34,7 +38,7 @@ def register_view(request):
         email = request.POST.get('email', '').strip()
         password = request.POST.get('password', '')
         confirm_password = request.POST.get('confirm_password', '')
-        captcha = request.POST.get('captcha', '').strip()
+        turnstile_token = request.POST.get('cf-turnstile-response', '')
 
         errors = []
         if not username or not email or not password:
@@ -49,25 +53,20 @@ def register_view(request):
             errors.append('用户名已存在')
         if User.objects.filter(email=email).exists():
             errors.append('邮箱已被注册')
-        if captcha != request.session.get('captcha_answer', ''):
-            errors.append('验证码错误')
+        if not _verify_turnstile(turnstile_token):
+            errors.append('人机验证失败，请重试')
 
         if errors:
             for e in errors:
                 messages.error(request, e)
-            return render(request, 'accounts/register.html', {
-                'captcha_question': _generate_captcha(request)
-            })
+            return render(request, 'accounts/register.html')
 
         user = User.objects.create_user(username=username, email=email, password=password)
         login(request, user)
-        request.session.pop('captcha_answer', None)
         messages.success(request, f'欢迎加入新帆航空，{username}！')
         return redirect('home')
 
-    return render(request, 'accounts/register.html', {
-        'captcha_question': _generate_captcha(request)
-    })
+    return render(request, 'accounts/register.html')
 
 
 def login_view(request):
@@ -77,30 +76,22 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '')
-        captcha = request.POST.get('captcha', '').strip()
+        turnstile_token = request.POST.get('cf-turnstile-response', '')
 
-        if captcha != request.session.get('captcha_answer', ''):
-            messages.error(request, '验证码错误')
-            return render(request, 'accounts/login.html', {
-                'captcha_question': _generate_captcha(request)
-            })
+        if not _verify_turnstile(turnstile_token):
+            messages.error(request, '人机验证失败，请重试')
+            return render(request, 'accounts/login.html')
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            request.session.pop('captcha_answer', None)
             messages.success(request, f'欢迎回来，{user.username}！')
             next_url = request.GET.get('next', 'home')
             return redirect(next_url)
         else:
             messages.error(request, '用户名或密码错误')
-            return render(request, 'accounts/login.html', {
-                'captcha_question': _generate_captcha(request)
-            })
 
-    return render(request, 'accounts/login.html', {
-        'captcha_question': _generate_captcha(request)
-    })
+    return render(request, 'accounts/login.html')
 
 
 def logout_view(request):
