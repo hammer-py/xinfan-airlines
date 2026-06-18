@@ -6,8 +6,24 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.db import transaction
 from django.utils.decorators import method_decorator
+from django.http import JsonResponse
 from .models import UserProfile, ROLE_CHOICES
 from .decorators import role_required
+import random
+
+
+def _generate_captcha(request):
+    a = random.randint(1, 9)
+    b = random.randint(1, 9)
+    op = random.choice(['+', '×'])
+    answer = a + b if op == '+' else a * b
+    request.session['captcha_answer'] = str(answer)
+    return f'{a} {op} {b} = ?'
+
+
+def captcha_refresh(request):
+    return JsonResponse({'question': _generate_captcha(request)})
+
 
 def register_view(request):
     if request.user.is_authenticated:
@@ -18,6 +34,7 @@ def register_view(request):
         email = request.POST.get('email', '').strip()
         password = request.POST.get('password', '')
         confirm_password = request.POST.get('confirm_password', '')
+        captcha = request.POST.get('captcha', '').strip()
 
         errors = []
         if not username or not email or not password:
@@ -32,18 +49,26 @@ def register_view(request):
             errors.append('用户名已存在')
         if User.objects.filter(email=email).exists():
             errors.append('邮箱已被注册')
+        if captcha != request.session.get('captcha_answer', ''):
+            errors.append('验证码错误')
 
         if errors:
             for e in errors:
                 messages.error(request, e)
-            return render(request, 'accounts/register.html')
+            return render(request, 'accounts/register.html', {
+                'captcha_question': _generate_captcha(request)
+            })
 
         user = User.objects.create_user(username=username, email=email, password=password)
         login(request, user)
+        request.session.pop('captcha_answer', None)
         messages.success(request, f'欢迎加入新帆航空，{username}！')
         return redirect('home')
 
-    return render(request, 'accounts/register.html')
+    return render(request, 'accounts/register.html', {
+        'captcha_question': _generate_captcha(request)
+    })
+
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -52,27 +77,43 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '')
+        captcha = request.POST.get('captcha', '').strip()
+
+        if captcha != request.session.get('captcha_answer', ''):
+            messages.error(request, '验证码错误')
+            return render(request, 'accounts/login.html', {
+                'captcha_question': _generate_captcha(request)
+            })
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            request.session.pop('captcha_answer', None)
             messages.success(request, f'欢迎回来，{user.username}！')
             next_url = request.GET.get('next', 'home')
             return redirect(next_url)
         else:
             messages.error(request, '用户名或密码错误')
+            return render(request, 'accounts/login.html', {
+                'captcha_question': _generate_captcha(request)
+            })
 
-    return render(request, 'accounts/login.html')
+    return render(request, 'accounts/login.html', {
+        'captcha_question': _generate_captcha(request)
+    })
+
 
 def logout_view(request):
     logout(request)
     messages.success(request, '已退出登录')
     return redirect('home')
 
+
 @login_required
 def profile_view(request):
     profile = request.user.profile
     return render(request, 'accounts/profile.html', {'profile': profile})
+
 
 @login_required
 def profile_edit_view(request):
@@ -85,13 +126,14 @@ def profile_edit_view(request):
         return redirect('profile')
     return render(request, 'accounts/profile_edit.html', {'profile': profile})
 
+
 # ─── Admin Panel ────────────────────────────────────────────
 
 @login_required
 @role_required(['admin'])
 def admin_panel_view(request):
     total_users = User.objects.count()
-    total_flights = 0  # will be set by flights app
+    total_flights = 0
     pending_signups = 0
     pending_applications = 0
     try:
@@ -114,12 +156,12 @@ def admin_panel_view(request):
     }
     return render(request, 'accounts/admin_panel.html', ctx)
 
+
 @login_required
 @staff_member_required(login_url='login')
 def admin_users_view(request):
     role_choices = dict(ROLE_CHOICES)
 
-    # ── Search / Filter (GET) ────────────────────────────
     search_query = request.GET.get('q', '').strip()
     role_filter = request.GET.get('role', '')
 
@@ -136,7 +178,6 @@ def admin_users_view(request):
     if request.method == 'POST':
         action = request.POST.get('action', 'update_role')
 
-        # ── Create ────────────────────────────────────────
         if action == 'create_user':
             username = request.POST.get('username', '').strip()
             email = request.POST.get('email', '').strip()
@@ -168,7 +209,6 @@ def admin_users_view(request):
                 messages.success(request, f'用户 {username} 创建成功（{role_choices[target_role]}）')
             return redirect('admin_users')
 
-        # ── Delete ────────────────────────────────────────
         if action == 'delete_user':
             target = get_object_or_404(User, id=request.POST.get('user_id'))
             if target == request.user:
@@ -179,7 +219,6 @@ def admin_users_view(request):
                 messages.success(request, f'用户 {username} 已删除')
             return redirect('admin_users')
 
-        # ── Update Role ───────────────────────────────────
         if action == 'update_role':
             target = get_object_or_404(User, id=request.POST.get('user_id'))
             new_role = request.POST.get('role')
@@ -191,7 +230,6 @@ def admin_users_view(request):
                 messages.success(request, f'{target.username} 的角色已更新为 {target.profile.get_role_display()}')
             return redirect('admin_users')
 
-        # ── Batch Update Role ─────────────────────────────
         if action == 'batch_update_role':
             user_ids = request.POST.getlist('user_ids')
             new_role = request.POST.get('role')
@@ -210,7 +248,6 @@ def admin_users_view(request):
                 messages.success(request, f'已将 {count} 个用户的角色更新为 {role_choices[new_role]}')
             return redirect('admin_users')
 
-        # ── Batch Delete ──────────────────────────────────
         if action == 'batch_delete':
             user_ids = request.POST.getlist('user_ids')
             if not user_ids:

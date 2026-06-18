@@ -4,13 +4,30 @@
 <div class="row justify-content-center"><div class="col-md-5">
 <div class="card p-4">
 <h3 class="text-center mb-3">登录账户</h3>
-<form method="post">
+<form method="post" id="loginForm">
     {% csrf_token %}
     <div class="mb-3"><label class="form-label">用户名</label><input type="text" name="username" class="form-control" required></div>
     <div class="mb-3"><label class="form-label">密码</label><input type="password" name="password" class="form-control" required></div>
+    <div class="mb-3">
+        <label class="form-label">验证码</label>
+        <div class="input-group">
+            <span class="input-group-text fw-bold" style="font-size:1.1rem;min-width:110px;justify-content:center;background:var(--surface-light);color:var(--accent);border-color:rgba(255,255,255,0.08);letter-spacing:1px" id="captchaQuestion">{{ captcha_question }}</span>
+            <input type="text" name="captcha" class="form-control" placeholder="请输入计算结果" required autocomplete="off" style="border-left:0">
+            <button type="button" class="btn btn-outline-secondary" onclick="refreshCaptcha()" title="换一个"><i class="bi bi-arrow-repeat"></i></button>
+        </div>
+    </div>
     <button type="submit" class="btn btn-primary w-100">登录</button>
 </form>
 <p class="text-center mt-3 mb-0">还没有账户？<a href="{% url 'register' %}">立即注册</a></p>
 </div>
 </div></div>
+{% endblock %}
+{% block extra_js %}
+<script>
+function refreshCaptcha() {
+    fetch('{% url "captcha_refresh" %}')
+        .then(r => r.json())
+        .then(d => { document.getElementById('captchaQuestion').textContent = d.question; });
+}
+</script>
 {% endblock %}
