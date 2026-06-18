@@ -188,6 +188,16 @@
         .dropdown-divider { border-color: var(--border) !important; }
         hr { border-color: var(--border) !important; opacity: 1; }
 
+        /* ── Modal dark theme ────────────── */
+        .modal-content {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); color: var(--text);
+        }
+        .modal-header, .modal-footer { border-color: var(--border); }
+        .modal-backdrop.show { opacity: 0.7; }
+        .text-dark { color: #111 !important; }
+        .bg-warning.text-dark { color: #111 !important; }
+
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }

@@ -84,7 +84,7 @@
 </div>
 
 <!-- 批量操作工具栏 -->
-<div class="d-flex gap-2 align-items-center mb-2" id="batchToolbar" style="display:none !important">
+<div class="d-flex gap-2 align-items-center mb-2" id="batchToolbar" style="display:none">
     <span class="text-muted small" id="batchCount">已选 0 项</span>
     <select class="form-select form-select-sm w-auto" id="batchRole">
         <option value="">-- 批量设置角色 --</option>
@@ -240,10 +240,10 @@ function onCheckChange() {
     var checked = getChecked();
     var bar = document.getElementById('batchToolbar');
     var count = document.getElementById('batchCount');
+    if (!bar || !count) return;
     if (checked.length > 0) {
         bar.style.display = 'flex';
         count.textContent = '已选 ' + checked.length + ' 项';
-        document.getElementById('selectAll').indeterminate = false;
     } else {
         bar.style.display = 'none';
     }
@@ -256,29 +256,31 @@ function collectIds() {
 function submitBatchUpdate() {
     var role = document.getElementById('batchRole').value;
     if (!role) { alert('请选择要设置的角色'); return; }
-    var checked = getChecked();
-    if (checked.length === 0) { alert('请先选择用户'); return; }
+    if (getChecked().length === 0) { alert('请先选择用户'); return; }
     document.getElementById('batchUpdateRole').value = role;
     document.getElementById('batchUpdateInputs').innerHTML = collectIds();
     document.getElementById('batchUpdateForm').submit();
 }
 
 function confirmBatchDelete() {
-    var checked = getChecked();
-    if (checked.length === 0) { alert('请先选择用户'); return; }
-    document.getElementById('batchDeleteCount').textContent = checked.length;
-    new bootstrap.Modal(document.getElementById('batchDeleteModal')).show();
+    if (getChecked().length === 0) { alert('请先选择用户'); return; }
+    document.getElementById('batchDeleteCount').textContent = getChecked().length;
     document.getElementById('batchDeleteInputs').innerHTML = collectIds();
+    var modalEl = document.getElementById('batchDeleteModal');
+    var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+    modal.show();
 }
 
-// 单个删除 modal
 document.addEventListener('DOMContentLoaded', function() {
     var deleteModal = document.getElementById('deleteModal');
-    deleteModal.addEventListener('show.bs.modal', function(event) {
-        var btn = event.relatedTarget;
-        document.getElementById('deleteUserId').value = btn.getAttribute('data-user-id');
-        document.getElementById('deleteUsername').textContent = btn.getAttribute('data-username');
-    });
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function(event) {
+            var btn = event.relatedTarget;
+            if (!btn) return;
+            document.getElementById('deleteUserId').value = btn.getAttribute('data-user-id') || '';
+            document.getElementById('deleteUsername').textContent = btn.getAttribute('data-username') || '';
+        });
+    }
 });
 </script>
 {% endblock %}
