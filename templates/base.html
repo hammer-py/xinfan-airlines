@@ -281,10 +281,10 @@
                 <span class="fw-semibold" style="font-size:0.875rem;letter-spacing:-0.02em">新帆航空</span>
             </a>
             <div class="d-none d-md-flex align-items-center gap-1">
-                <a class="nav-link nav-link-active" href="{% url 'home' %}">首页</a>
-                <a class="nav-link" href="{% url 'about' %}">公司介绍</a>
-                <a class="nav-link" href="{% url 'flight_list' %}">航班信息</a>
-                <a class="nav-link" href="{% url 'job_list' %}">加入我们</a>
+                <a class="nav-link {% if request.path == '/' %}nav-link-active{% endif %}" href="{% url 'home' %}">首页</a>
+                <a class="nav-link {% if '/about/' in request.path %}nav-link-active{% endif %}" href="{% url 'about' %}">公司介绍</a>
+                <a class="nav-link {% if '/flights/' in request.path or '/signup' in request.path or '/private' in request.path %}nav-link-active{% endif %}" href="{% url 'flight_list' %}">航班信息</a>
+                <a class="nav-link {% if '/recruitment/' in request.path or '/job' in request.path or '/applic' in request.path %}nav-link-active{% endif %}" href="{% url 'job_list' %}">加入我们</a>
                 <div style="width:1px;height:20px;background:rgba(0,0,0,0.08);margin:0 0.5rem"></div>
                 <a class="nav-link" href="https://discord.gg/xNCBJVPsmR" target="_blank" title="Discord"><i class="bi bi-discord"></i></a>
                 <a class="nav-link" href="https://www.roblox.com/communities/16064021/Xinfan-Airlines#!/about" target="_blank" title="Roblox">
@@ -326,10 +326,10 @@
     </nav>
     <div class="collapse d-md-none" id="mobileNav">
         <div class="card m-3 p-3 d-flex flex-column gap-1">
-            <a class="nav-link nav-link-active" href="{% url 'home' %}">首页</a>
-            <a class="nav-link" href="{% url 'about' %}">公司介绍</a>
-            <a class="nav-link" href="{% url 'flight_list' %}">航班信息</a>
-            <a class="nav-link" href="{% url 'job_list' %}">加入我们</a>
+            <a class="nav-link {% if request.path == '/' %}nav-link-active{% endif %}" href="{% url 'home' %}">首页</a>
+            <a class="nav-link {% if '/about/' in request.path %}nav-link-active{% endif %}" href="{% url 'about' %}">公司介绍</a>
+            <a class="nav-link {% if '/flights/' in request.path or '/signup' in request.path or '/private' in request.path %}nav-link-active{% endif %}" href="{% url 'flight_list' %}">航班信息</a>
+            <a class="nav-link {% if '/recruitment/' in request.path or '/job' in request.path or '/applic' in request.path %}nav-link-active{% endif %}" href="{% url 'job_list' %}">加入我们</a>
             <hr>
             {% if user.is_authenticated %}
                 {% if user.profile.role == 'admin' %}
