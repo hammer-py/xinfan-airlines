@@ -166,7 +166,7 @@
             </select>
             <button type="submit" class="btn btn-sm btn-primary">更新</button>
             {% if u.id != request.user.id %}
-            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-user-id="{{ u.id }}" data-username="{{ u.username }}">
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="if(confirm('确定要删除用户 {{ u.username }} 吗？此操作不可撤销。')){document.getElementById('singleDeleteForm').elements['user_id'].value='{{ u.id }}';document.getElementById('singleDeleteForm').submit();}">
                 <i class="bi bi-trash"></i>
             </button>
             {% endif %}
@@ -182,43 +182,8 @@
 
 <a href="{% url 'admin_panel' %}" class="btn btn-outline-secondary mt-3">← 返回管理后台</a>
 
-<!-- 单个删除 Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header"><h5 class="modal-title">确认删除</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body">确定要删除用户 <strong id="deleteUsername"></strong> 吗？此操作不可撤销。</div>
-            <div class="modal-footer">
-                <form method="post" id="deleteForm">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="delete_user">
-                    <input type="hidden" name="user_id" id="deleteUserId">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="submit" class="btn btn-danger">确认删除</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 批量删除 Modal -->
-<div class="modal fade" id="batchDeleteModal" tabindex="-1">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header"><h5 class="modal-title">批量删除</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body">确定要删除选中的 <strong id="batchDeleteCount"></strong> 个用户吗？此操作不可撤销。</div>
-            <div class="modal-footer">
-                <form method="post" id="batchDeleteForm">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="batch_delete">
-                    <div id="batchDeleteInputs"></div>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="submit" class="btn btn-danger">确认删除</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<form method="post" id="singleDeleteForm" style="display:none">{% csrf_token %}<input type="hidden" name="action" value="delete_user"><input type="hidden" name="user_id"></form>
+<form method="post" id="batchDeleteForm" style="display:none">{% csrf_token %}<input type="hidden" name="action" value="batch_delete"><div id="batchDeleteInputs"></div></form>
 
 <!-- 批量更新角色 Form -->
 <form method="post" id="batchUpdateForm" style="display:none">
@@ -264,23 +229,10 @@ function submitBatchUpdate() {
 
 function confirmBatchDelete() {
     if (getChecked().length === 0) { alert('请先选择用户'); return; }
-    document.getElementById('batchDeleteCount').textContent = getChecked().length;
-    document.getElementById('batchDeleteInputs').innerHTML = collectIds();
-    var modalEl = document.getElementById('batchDeleteModal');
-    var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-    modal.show();
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    var deleteModal = document.getElementById('deleteModal');
-    if (deleteModal) {
-        deleteModal.addEventListener('show.bs.modal', function(event) {
-            var btn = event.relatedTarget;
-            if (!btn) return;
-            document.getElementById('deleteUserId').value = btn.getAttribute('data-user-id') || '';
-            document.getElementById('deleteUsername').textContent = btn.getAttribute('data-username') || '';
-        });
+    if (confirm('确定要删除选中的 ' + getChecked().length + ' 个用户吗？此操作不可撤销。')) {
+        document.getElementById('batchDeleteInputs').innerHTML = collectIds();
+        document.getElementById('batchDeleteForm').submit();
     }
-});
+}
 </script>
 {% endblock %}
