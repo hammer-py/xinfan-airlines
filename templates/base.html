@@ -336,10 +336,23 @@
         html.dark .border, html.dark .border-start, html.dark .border-end { border-color: rgba(255,255,255,0.06) !important; }
         html.dark .alert { background: rgba(24,26,32,0.9); color: #e2e4e9; border-color: rgba(255,255,255,0.08); }
         html.dark hr { border-color: rgba(255,255,255,0.06) !important; }
+        html.dark .hero { background: rgba(24,26,32,0.65); border-color: rgba(255,255,255,0.06); color: #e2e4e9; }
+        html.dark .hero p { color: #9ca3af; }
+        html.dark .bg-vaa-ghost { background: rgba(42,163,123,0.08) !important; }
+        html.dark .text-vaa { color: #4ade80 !important; }
+        html.dark .btn-light { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.12); color: #e2e4e9; }
+        html.dark .btn-light:hover { background: rgba(255,255,255,0.18); color: #fff; }
+        html.dark a { color: #4ade80; }
+        html.dark a:hover { color: #6ee7b6; }
+        html.dark .text-primary { color: #4ade80 !important; }
+        html.dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+        html.dark ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
         .theme-toggle { cursor: pointer; padding: 0.4rem 0.5rem; border-radius: 0.75rem; border: none; background: transparent; color: #6b7280; font-size: 1.05rem; transition: all 0.2s; }
         .theme-toggle:hover { background: rgba(0,0,0,0.04); }
         html.dark .theme-toggle { color: #9ca3af; }
         html.dark .theme-toggle:hover { background: rgba(255,255,255,0.05); }
+        html.dark .nav-divider { background: rgba(255,255,255,0.08) !important; }
+        .nav-divider { width: 1px; height: 20px; margin: 0 0.5rem; background: rgba(0,0,0,0.08); flex-shrink: 0; }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
@@ -355,7 +368,7 @@
                 <a class="nav-link {% if '/about/' in request.path %}nav-link-active{% endif %}" href="{% url 'about' %}">公司介绍</a>
                 <a class="nav-link {% if '/flights/' in request.path or '/signup' in request.path or '/private' in request.path %}nav-link-active{% endif %}" href="{% url 'flight_list' %}">航班信息</a>
                 <a class="nav-link {% if '/recruitment/' in request.path or '/job' in request.path or '/applic' in request.path %}nav-link-active{% endif %}" href="{% url 'job_list' %}">加入我们</a>
-                <div style="width:1px;height:20px;background:rgba(0,0,0,0.08);margin:0 0.5rem"></div>
+                <div class="nav-divider"></div>
                 <a class="nav-link" href="https://discord.gg/xNCBJVPsmR" target="_blank" title="Discord"><i class="bi bi-discord"></i></a>
                 <a class="nav-link" href="https://www.roblox.com/communities/16064021/Xinfan-Airlines#!/about" target="_blank" title="Roblox">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px"><path d="M13.383 14.341l-3.726-.958.959-3.726 3.726.959-.96 3.726zM4.913 0 0 19.088 19.088 24 24 4.912 4.912 0z"/></svg>
@@ -363,7 +376,7 @@
                 <button class="theme-toggle" onclick="toggleTheme()" title="切换深浅色模式" id="themeToggle">
                     <i class="bi bi-moon-stars"></i>
                 </button>
-                <div style="width:1px;height:20px;background:rgba(0,0,0,0.08);margin:0 0.5rem"></div>
+                <div class="nav-divider"></div>
                 {% if user.is_authenticated %}
                     {% if user.profile.role == 'admin' %}
                         <a class="nav-link" href="{% url 'admin_panel' %}" style="color:var(--vaa-green)">管理后台</a>
