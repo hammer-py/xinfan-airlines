@@ -1,5 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib import messages
+
+VIP_CLUB_ROLES = {'business', 'first_class', 'investor'}
+
+
+def vip_club_view(request):
+    if not request.user.is_authenticated or request.user.profile.role not in VIP_CLUB_ROLES:
+        messages.error(request, '仅商务舱及以上等级用户可访问')
+        return redirect('home')
+    return render(request, 'core/vip_club.html')
+
 
 def verify_txt(request):
     return HttpResponse('7d13c19ea2635efa621af4db13ff59f9e04643ff', content_type='text/plain')

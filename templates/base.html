@@ -248,6 +248,9 @@
                     <li class="nav-item"><a class="nav-link {% if '/about/' in request.path %}nav-link-active{% endif %}" href="{% url 'about' %}">公司介绍</a></li>
                     <li class="nav-item"><a class="nav-link {% if '/flights/' in request.path or '/signup' in request.path or '/private' in request.path %}nav-link-active{% endif %}" href="{% url 'flight_list' %}">航班信息</a></li>
                     <li class="nav-item"><a class="nav-link {% if '/recruitment/' in request.path or '/job' in request.path or '/applic' in request.path %}nav-link-active{% endif %}" href="{% url 'job_list' %}">加入我们</a></li>
+                    {% if user.is_authenticated and user.profile.role in 'business first_class investor' %}
+                    <li class="nav-item"><a class="nav-link {% if '/vip-club/' in request.path %}nav-link-active{% endif %}" href="{% url 'vip_club' %}">高舱俱乐部</a></li>
+                    {% endif %}
                     <li class="nav-item"><a class="nav-link" href="https://discord.gg/xNCBJVPsmR" target="_blank" title="Discord"><i class="bi bi-discord"></i></a></li>
                     <li class="nav-item"><a class="nav-link" href="https://www.roblox.com/communities/16064021/Xinfan-Airlines#!/about" target="_blank" title="Roblox">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px"><path d="M13.383 14.341l-3.726-.958.959-3.726 3.726.959-.96 3.726zM4.913 0 0 19.088 19.088 24 24 4.912 4.912 0z"/></svg>
