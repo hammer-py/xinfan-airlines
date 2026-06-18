@@ -166,7 +166,7 @@
             </select>
             <button type="submit" class="btn btn-sm btn-primary">更新</button>
             {% if u.id != request.user.id %}
-            <button type="button" class="btn btn-sm btn-outline-danger" onclick="if(confirm('确定要删除用户 {{ u.username }} 吗？此操作不可撤销。')){document.getElementById('singleDeleteForm').elements['user_id'].value='{{ u.id }}';document.getElementById('singleDeleteForm').submit();}">
+            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-user-id="{{ u.id }}" data-username="{{ u.username|escapejs }}">
                 <i class="bi bi-trash"></i>
             </button>
             {% endif %}
@@ -182,8 +182,53 @@
 
 <a href="{% url 'admin_panel' %}" class="btn btn-outline-secondary mt-3">← 返回管理后台</a>
 
-<form method="post" id="singleDeleteForm" style="display:none">{% csrf_token %}<input type="hidden" name="action" value="delete_user"><input type="hidden" name="user_id"></form>
-<form method="post" id="batchDeleteForm" style="display:none">{% csrf_token %}<input type="hidden" name="action" value="batch_delete"><div id="batchDeleteInputs"></div></form>
+<!-- 单个删除 Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title">确认删除</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">确定要删除用户 <strong id="deleteUsername"></strong> 吗？此操作不可撤销。</p>
+            </div>
+            <div class="modal-footer border-top-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete_user">
+                    <input type="hidden" name="user_id" id="deleteUserId">
+                    <button type="submit" class="btn btn-danger btn-sm">确认删除</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 批量删除 Modal -->
+<div class="modal fade" id="batchDeleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title">批量删除</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">确定要删除选中的 <strong id="batchDeleteCount"></strong> 个用户吗？此操作不可撤销。</p>
+            </div>
+            <div class="modal-footer border-top-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+                <form method="post" id="batchDeleteForm" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="batch_delete">
+                    <div id="batchDeleteInputs"></div>
+                    <button type="submit" class="btn btn-danger btn-sm">确认删除</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- 批量更新角色 Form -->
 <form method="post" id="batchUpdateForm" style="display:none">
@@ -229,10 +274,21 @@ function submitBatchUpdate() {
 
 function confirmBatchDelete() {
     if (getChecked().length === 0) { alert('请先选择用户'); return; }
-    if (confirm('确定要删除选中的 ' + getChecked().length + ' 个用户吗？此操作不可撤销。')) {
-        document.getElementById('batchDeleteInputs').innerHTML = collectIds();
-        document.getElementById('batchDeleteForm').submit();
-    }
+    document.getElementById('batchDeleteCount').textContent = getChecked().length;
+    document.getElementById('batchDeleteInputs').innerHTML = collectIds();
+    new bootstrap.Modal(document.getElementById('batchDeleteModal')).show();
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    var delModal = document.getElementById('deleteModal');
+    if (delModal) {
+        delModal.addEventListener('show.bs.modal', function(event) {
+            var btn = event.relatedTarget;
+            if (!btn) return;
+            document.getElementById('deleteUserId').value = btn.getAttribute('data-user-id') || '';
+            document.getElementById('deleteUsername').textContent = btn.getAttribute('data-username') || '';
+        });
+    }
+});
 </script>
 {% endblock %}

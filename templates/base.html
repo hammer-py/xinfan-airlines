@@ -190,11 +190,16 @@
 
         /* ── Modal dark theme ────────────── */
         .modal-content {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); color: var(--text);
+            background: #222; border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 1rem; color: var(--text); box-shadow: 0 24px 80px rgba(0,0,0,0.6);
         }
-        .modal-header, .modal-footer { border-color: var(--border); }
-        .modal-backdrop.show { opacity: 0.7; }
+        .modal-header { border-color: rgba(255,255,255,0.06); padding: 1.25rem 1.5rem 0.5rem; }
+        .modal-footer { border-color: rgba(255,255,255,0.06); padding: 0.5rem 1.5rem 1.25rem; }
+        .modal-body { padding: 1rem 1.5rem; }
+        .modal-title { color: #fff; font-weight: 600; }
+        .modal-backdrop.show { opacity: 0.6; }
+        .modal-backdrop { z-index: 1040; }
+        .modal { z-index: 1055; }
         .text-dark { color: #111 !important; }
         .bg-warning.text-dark { color: #111 !important; }
 
