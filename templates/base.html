@@ -39,7 +39,7 @@
             background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
             background-size: 2.5rem 2.5rem; pointer-events: none; z-index: 0;
         }
-        main { flex: 1; position: relative; z-index: 1; }
+        main { flex: 1; }
 
         a { color: var(--accent); text-decoration: none; }
         a:hover { color: var(--accent); text-decoration: none; }
@@ -189,17 +189,23 @@
         hr { border-color: var(--border) !important; opacity: 1; }
 
         /* ── Modal dark theme ────────────── */
-        .modal-content {
-            background: #222; border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 1rem; color: var(--text); box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+        .modal {
+            --bs-modal-zindex: 1055;
+            --bs-modal-bg: #222;
+            --bs-modal-color: var(--text);
+            --bs-modal-border-color: rgba(255,255,255,0.08);
+            --bs-modal-header-border-color: rgba(255,255,255,0.06);
+            --bs-modal-footer-border-color: rgba(255,255,255,0.06);
         }
-        .modal-header { border-color: rgba(255,255,255,0.06); padding: 1.25rem 1.5rem 0.5rem; }
-        .modal-footer { border-color: rgba(255,255,255,0.06); padding: 0.5rem 1.5rem 1.25rem; }
+        .modal-content {
+            box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+            border-radius: 1rem;
+        }
+        .modal-header { padding: 1.25rem 1.5rem 0.5rem; }
+        .modal-footer { padding: 0.5rem 1.5rem 1.25rem; }
         .modal-body { padding: 1rem 1.5rem; }
         .modal-title { color: #fff; font-weight: 600; }
-        .modal-backdrop.show { opacity: 0.6; }
-        .modal-backdrop { z-index: 1040; }
-        .modal { z-index: 1055; }
+        .modal-backdrop { --bs-backdrop-zindex: 1040; --bs-backdrop-opacity: 0.5; }
         .text-dark { color: #111 !important; }
         .bg-warning.text-dark { color: #111 !important; }
 
