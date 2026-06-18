@@ -29,10 +29,10 @@ def mileage_redeem_view(request):
             messages.success(request, f'兑换成功！消耗 {cost} 英里')
         return redirect('mileage_list')
     items = [
-        {'key': 'priority_boarding', 'name': '优先登机', 'cost': 500, 'icon': '✈️'},
-        {'key': 'lounge_access', 'name': '贵宾休息室', 'cost': 1000, 'icon': '🍸'},
-        {'key': 'custom_title', 'name': '自定义头衔', 'cost': 2000, 'icon': '🏷️'},
-        {'key': 'free_flight', 'name': '免费航班券', 'cost': 5000, 'icon': '🎫'},
+        {'key': 'priority_boarding', 'name': '优先登机', 'cost': 500, 'icon': 'bi bi-airplane'},
+        {'key': 'lounge_access', 'name': '贵宾休息室', 'cost': 1000, 'icon': 'bi bi-cup-hot'},
+        {'key': 'custom_title', 'name': '自定义头衔', 'cost': 2000, 'icon': 'bi bi-tag'},
+        {'key': 'free_flight', 'name': '免费航班券', 'cost': 5000, 'icon': 'bi bi-ticket-perforated'},
     ]
     return render(request, 'mileage/redeem.html', {'items': items})
 

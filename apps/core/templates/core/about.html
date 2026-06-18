@@ -17,7 +17,7 @@
             <h5 class="fw-bold mb-3">主航机队</h5>
             <div class="row g-2">
                 {% for ac in main_fleet %}
-                <div class="col-4 col-md-3"><span style="color:var(--text-secondary);font-size:0.88rem">&#9992; {{ ac }}</span></div>
+                <div class="col-4 col-md-3"><span style="color:var(--text-secondary);font-size:0.88rem"><i class="bi bi-airplane me-1" style="font-size:0.7rem"></i>{{ ac }}</span></div>
                 {% endfor %}
             </div>
         </div>
@@ -26,7 +26,7 @@
             <h5 class="fw-bold mb-3">私人航班机队</h5>
             <div class="row g-2">
                 {% for ac in private_fleet %}
-                <div class="col-4 col-md-3"><span style="color:var(--text-secondary);font-size:0.88rem">&#9992; {{ ac }}</span></div>
+                <div class="col-4 col-md-3"><span style="color:var(--text-secondary);font-size:0.88rem"><i class="bi bi-airplane me-1" style="font-size:0.7rem"></i>{{ ac }}</span></div>
                 {% endfor %}
             </div>
         </div>
