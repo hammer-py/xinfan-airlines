@@ -4,35 +4,30 @@
 
 <section class="hero mb-5">
     <p class="section-label">XINFAN AIRLINES</p>
-    <h1>新帆<span class="glow-text">航空</span></h1>
-    <p class="text-gray-500 mt-2">Xinfan Airlines &mdash; Roblox Virtual Aviation</p>
-    <p class="text-gray-400" style="font-size:0.9rem">飞越虚拟天际，开启云端旅程</p>
-    <div class="mt-4 d-flex justify-content-center gap-3 flex-wrap">
-        <a href="{% url 'flight_list' %}" class="btn btn-primary btn-lg">查看航班</a>
-        <a href="{% url 'about' %}" class="btn btn-outline btn-lg">了解我们</a>
+    <h1 class="text-white">新帆<span class="accent">航空</span></h1>
+    <p class="fs-5 mb-0 mt-2" style="opacity:0.6">Xinfan Airlines — Roblox Virtual Aviation</p>
+    <p style="opacity:0.35;margin-top:0.35rem">飞越虚拟天际，开启云端旅程</p>
+    <div class="mt-4">
+        <a href="{% url 'flight_list' %}" class="btn btn-light btn-lg me-2">查看航班</a>
+        <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg">了解我们</a>
     </div>
 </section>
 
 {% if latest_flights %}
 <section class="mb-5">
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-            <p class="section-label mb-1">Latest Flights</p>
-            <h3 class="fw-semibold text-gray-900 mb-0">最新航班</h3>
-        </div>
-        <a class="text-vaa fw-medium" href="{% url 'flight_list' %}" style="font-size:0.875rem">全部航班 <i class="bi bi-arrow-right ms-1" style="font-size:0.75rem"></i></a>
-    </div>
+    <p class="section-label">Latest Flights</p>
+    <h3 class="fw-bold mb-3">最新航班</h3>
     <div class="row g-3">
         {% for flight in latest_flights %}
         <div class="col-md-6 col-lg-4">
             <div class="card p-3 position-relative">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <strong style="font-size:1.1rem">{{ flight.flight_number }}</strong>
-                    <span class="badge {% if flight.status == 'scheduled' %}badge-green{% elif flight.status == 'arrived' %}badge-green{% elif flight.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}">{{ flight.get_status_display }}</span>
+                    <strong class="fs-5">{{ flight.flight_number }}</strong>
+                    <span class="badge {% if flight.status == 'scheduled' %}bg-primary{% elif flight.status == 'arrived' %}bg-success{% elif flight.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}">{{ flight.get_status_display }}</span>
                 </div>
-                <div class="text-gray-500" style="font-size:0.85rem">
+                <div class="text-muted" style="font-size:0.85rem">
                     <p class="mb-1">{{ flight.origin }} &rarr; {{ flight.destination }}</p>
-                    <p class="mb-0">{{ flight.departure_time|date:"Y-m-d H:i" }} &nbsp;|&nbsp; {{ flight.aircraft }}</p>
+                    <p class="mb-1"><i class="bi bi-clock me-1" style="font-size:0.7rem"></i>{{ flight.departure_time|date:"Y-m-d H:i" }} &nbsp;|&nbsp; <i class="bi bi-airplane me-1" style="font-size:0.7rem"></i>{{ flight.aircraft }}</p>
                 </div>
                 <a href="{% url 'flight_detail' flight.pk %}" class="stretched-link"></a>
             </div>
@@ -43,28 +38,28 @@
 {% endif %}
 
 <section>
-    <p class="section-label mb-1">Why Xinfan</p>
-    <h3 class="fw-semibold text-gray-900 mb-4">我们的服务</h3>
+    <p class="section-label">Why Xinfan</p>
+    <h3 class="fw-bold mb-4">我们的服务</h3>
     <div class="row g-3 text-center">
         <div class="col-md-4">
-            <div class="surface p-4">
-                <div style="font-size:2rem;margin-bottom:0.5rem"><i class="bi bi-airplane" style="font-size:1.5rem;color:var(--vaa-green)"></i></div>
-                <h5 class="fw-semibold text-gray-800">定期航班</h5>
-                <p class="text-gray-400 mb-0" style="font-size:0.875rem">覆盖全球主要枢纽的定期虚拟航班</p>
+            <div class="card p-4">
+                <div class="stat-icon-circle"><i class="bi bi-airplane" style="font-size:1.5rem"></i></div>
+                <h5 class="fw-bold">定期航班</h5>
+                <p class="text-muted" style="font-size:0.88rem">覆盖全球主要枢纽的定期虚拟航班</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="surface p-4">
-                <div style="font-size:2rem;margin-bottom:0.5rem"><i class="bi bi-people" style="font-size:1.5rem;color:var(--vaa-green)"></i></div>
-                <h5 class="fw-semibold text-gray-800">专业团队</h5>
-                <p class="text-gray-400 mb-0" style="font-size:0.875rem">招募机长、空乘、地勤等虚拟航空人才</p>
+            <div class="card p-4">
+                <div class="stat-icon-circle"><i class="bi bi-people" style="font-size:1.5rem"></i></div>
+                <h5 class="fw-bold">专业团队</h5>
+                <p class="text-muted" style="font-size:0.88rem">招募机长、空乘、地勤等虚拟航空人才</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="surface p-4">
-                <div style="font-size:2rem;margin-bottom:0.5rem"><i class="bi bi-star" style="font-size:1.5rem;color:var(--vaa-green)"></i></div>
-                <h5 class="fw-semibold text-gray-800">里程计划</h5>
-                <p class="text-gray-400 mb-0" style="font-size:0.875rem">每次飞行积累里程，兑换专属权益</p>
+            <div class="card p-4">
+                <div class="stat-icon-circle"><i class="bi bi-star" style="font-size:1.5rem"></i></div>
+                <h5 class="fw-bold">里程计划</h5>
+                <p class="text-muted" style="font-size:0.88rem">每次飞行积累里程，兑换专属权益</p>
             </div>
         </div>
     </div>
