@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 
-VIP_CLUB_ROLES = {'business', 'first_class', 'investor'}
+VIP_CLUB_ROLES = {'business', 'first_class', 'investor', 'uinv', 'admin'}
 
 
 def vip_club_view(request):
