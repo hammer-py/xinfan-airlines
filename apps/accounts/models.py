@@ -20,8 +20,15 @@ ROLE_CHOICES = [
     ('first_officer', '正式副驾驶'),
     ('captain', '正式机长'),
     ('ground_staff', '正式地勤'),
-    # 管理员
+    # 管理员（全部权限）
     ('admin', '管理员'),
+    ('hod', '部门主管'),
+    ('shr', '高级管理'),
+    ('vice_chairman', '副董事长'),
+    ('chairman', '董事长'),
+    ('group_owner', '集团所有者'),
+    # 管理员（部分权限）
+    ('flight_host', '飞行经理'),
 ]
 
 USER_ROLES = {'economy', 'business', 'first_class', 'investor', 'uinv'}
@@ -30,13 +37,19 @@ EMPLOYEE_ROLES = {
     'cabin_crew', 'first_officer', 'captain', 'ground_staff',
 }
 TRAINEE_ROLES = {'trainee_cabin_crew', 'trainee_first_officer', 'trainee_captain', 'trainee_ground'}
-PREMIUM_ROLES = {'business', 'first_class', 'investor', 'uinv', 'admin'}
+STAFF_ROLES = {'cabin_crew', 'first_officer', 'captain', 'ground_staff'}
+ADMIN_ROLES = {'admin', 'hod', 'shr', 'vice_chairman', 'chairman', 'group_owner'}
+ALL_STAFF_ROLES = ADMIN_ROLES | {'flight_host'}
+PREMIUM_ROLES = {'business', 'first_class', 'investor', 'uinv'} | ADMIN_ROLES
+
 
 def is_employee(role):
-    return role in EMPLOYEE_ROLES or role == 'admin'
+    return role in EMPLOYEE_ROLES or role in ALL_STAFF_ROLES
+
 
 def is_trainee(role):
     return role in TRAINEE_ROLES
+
 
 def is_staff(role):
     return role in STAFF_ROLES
@@ -57,7 +70,7 @@ class UserProfile(models.Model):
 
     @property
     def is_employee(self):
-        return self.role in EMPLOYEE_ROLES or self.role == 'admin'
+        return self.role in EMPLOYEE_ROLES or self.role in ALL_STAFF_ROLES
 
     @property
     def is_trainee(self):
@@ -66,6 +79,14 @@ class UserProfile(models.Model):
     @property
     def is_staff(self):
         return self.role in STAFF_ROLES
+
+    @property
+    def is_admin(self):
+        return self.role in ADMIN_ROLES
+
+    @property
+    def has_staff_access(self):
+        return self.role in ALL_STAFF_ROLES
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

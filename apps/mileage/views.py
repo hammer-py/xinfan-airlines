@@ -37,7 +37,7 @@ def mileage_redeem_view(request):
     return render(request, 'mileage/redeem.html', {'items': items})
 
 @login_required
-@role_required(['admin'])
+@role_required(['staff'])
 def mileage_grant_view(request):
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()

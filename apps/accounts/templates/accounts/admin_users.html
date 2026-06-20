@@ -69,8 +69,16 @@
                                 <option value="captain">正式机长</option>
                                 <option value="ground_staff">正式地勤</option>
                             </optgroup>
-                            <optgroup label="—— 管理员 ——">
+                            <optgroup label="—— 管理员（全部权限） ——">
                                 <option value="admin">管理员</option>
+                                <option value="hod">部门主管</option>
+                                <option value="shr">高级管理</option>
+                                <option value="vice_chairman">副董事长</option>
+                                <option value="chairman">董事长</option>
+                                <option value="group_owner">集团所有者</option>
+                            </optgroup>
+                            <optgroup label="—— 管理员（有限权限） ——">
+                                <option value="flight_host">飞行经理</option>
                             </optgroup>
                         </select>
                     </div>
@@ -107,8 +115,16 @@
             <option value="captain">正式机长</option>
             <option value="ground_staff">正式地勤</option>
         </optgroup>
-        <optgroup label="—— 管理员 ——">
+        <optgroup label="—— 管理员（全部权限） ——">
             <option value="admin">管理员</option>
+            <option value="hod">部门主管</option>
+            <option value="shr">高级管理</option>
+            <option value="vice_chairman">副董事长</option>
+            <option value="chairman">董事长</option>
+            <option value="group_owner">集团所有者</option>
+        </optgroup>
+        <optgroup label="—— 管理员（有限权限） ——">
+            <option value="flight_host">飞行经理</option>
         </optgroup>
     </select>
     <button type="button" class="btn btn-sm btn-primary" onclick="submitBatchUpdate()">应用</button>
@@ -133,7 +149,7 @@
     <td>{{ u.id }}</td>
     <td>{{ u.username }}</td>
     <td>{{ u.email|default:'—' }}</td>
-    <td><span class="badge {% if u.profile.role == 'admin' %}bg-danger{% elif 'trainee' in u.profile.role %}bg-warning text-dark{% elif u.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif u.profile.role == 'investor' or u.profile.role == 'uinv' %}bg-info text-dark{% else %}bg-secondary{% endif %}">{{ u.profile.get_role_display }}</span></td>
+    <td><span class="badge {% if u.profile.is_admin %}bg-danger{% elif u.profile.role == 'flight_host' %}bg-warning text-dark{% elif 'trainee' in u.profile.role %}bg-warning text-dark{% elif u.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif u.profile.role == 'investor' or u.profile.role == 'uinv' %}bg-info text-dark{% else %}bg-secondary{% endif %}">{{ u.profile.get_role_display }}</span></td>
     <td>{{ u.profile.miles }}</td>
     <td>{{ u.date_joined|date:"Y-m-d" }}</td>
     <td>
@@ -160,8 +176,16 @@
                     <option value="captain" {% if u.profile.role == 'captain' %}selected{% endif %}>正式机长</option>
                     <option value="ground_staff" {% if u.profile.role == 'ground_staff' %}selected{% endif %}>正式地勤</option>
                 </optgroup>
-                <optgroup label="—— 管理员 ——">
+                <optgroup label="—— 管理员（全部权限） ——">
                     <option value="admin" {% if u.profile.role == 'admin' %}selected{% endif %}>管理员</option>
+                    <option value="hod" {% if u.profile.role == 'hod' %}selected{% endif %}>部门主管</option>
+                    <option value="shr" {% if u.profile.role == 'shr' %}selected{% endif %}>高级管理</option>
+                    <option value="vice_chairman" {% if u.profile.role == 'vice_chairman' %}selected{% endif %}>副董事长</option>
+                    <option value="chairman" {% if u.profile.role == 'chairman' %}selected{% endif %}>董事长</option>
+                    <option value="group_owner" {% if u.profile.role == 'group_owner' %}selected{% endif %}>集团所有者</option>
+                </optgroup>
+                <optgroup label="—— 管理员（有限权限） ——">
+                    <option value="flight_host" {% if u.profile.role == 'flight_host' %}selected{% endif %}>飞行经理</option>
                 </optgroup>
             </select>
             <button type="submit" class="btn btn-sm btn-primary">更新</button>

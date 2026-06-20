@@ -233,16 +233,16 @@
             </a>
             <div class="d-flex align-items-center gap-1 ms-auto order-lg-last">
                 {% if user.is_authenticated %}
-                    {% if user.profile.role == 'admin' %}
+                    {% if user.profile.has_staff_access %}
                         <a class="nav-link d-none d-lg-block" href="{% url 'admin_panel' %}" style="color:var(--accent)!important">管理后台</a>
                     {% endif %}
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#" data-bs-toggle="dropdown" style="cursor:pointer">
                             {{ user.username }}
-                            <span class="badge {% if user.profile.role == 'admin' %}bg-danger{% elif 'trainee' in user.profile.role %}bg-warning{% elif user.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif user.profile.role == 'investor' or user.profile.role == 'uinv' %}bg-info{% else %}bg-secondary{% endif %} d-none d-sm-inline">{{ user.profile.get_role_display }}</span>
+                            <span class="badge {% if user.profile.is_admin %}bg-danger{% elif 'trainee' in user.profile.role %}bg-warning{% elif user.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif user.profile.role == 'investor' or user.profile.role == 'uinv' %}bg-info{% elif user.profile.role == 'flight_host' %}bg-warning{% else %}bg-secondary{% endif %} d-none d-sm-inline">{{ user.profile.get_role_display }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            {% if user.profile.role == 'admin' %}
+                            {% if user.profile.has_staff_access %}
                                 <li><a class="dropdown-item d-lg-none" href="{% url 'admin_panel' %}">管理后台</a></li>
                             {% endif %}
                             <li><a class="dropdown-item" href="{% url 'profile' %}">个人中心</a></li>

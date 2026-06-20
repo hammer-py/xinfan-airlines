@@ -35,7 +35,7 @@
                 <tr><td>航线类型</td><td>{{ flight.get_route_type_display }}</td></tr>
                 {% if flight.notes %}<tr><td>备注</td><td>{{ flight.notes }}</td></tr>{% endif %}
             </tbody></table>
-            {% if user.profile.role == 'admin' %}
+            {% if user.profile.is_admin %}
             <div class="d-flex gap-2">
                 <a href="{% url 'flight_edit' flight.pk %}" class="btn btn-outline-primary btn-sm">编辑</a>
                 <a href="{% url 'flight_delete' flight.pk %}" class="btn btn-outline-danger btn-sm">删除</a>

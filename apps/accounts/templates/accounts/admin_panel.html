@@ -11,11 +11,15 @@
 
 <h4 class="mb-3">快捷操作</h4>
 <div class="row g-3">
+    {% if is_full_admin %}
     <div class="col-md-3"><a href="{% url 'admin_users' %}" class="card p-3 text-decoration-none"><i class="bi bi-people fs-3"></i><span class="ms-2">人员管理</span></a></div>
+    {% endif %}
     <div class="col-md-3"><a href="{% url 'flight_create' %}" class="card p-3 text-decoration-none"><i class="bi bi-plus-circle fs-3"></i><span class="ms-2">创建航班</span></a></div>
     <div class="col-md-3"><a href="{% url 'admin_signups' %}" class="card p-3 text-decoration-none"><i class="bi bi-check-circle fs-3"></i><span class="ms-2">审批报名</span></a></div>
+    {% if is_full_admin %}
     <div class="col-md-3"><a href="{% url 'admin_recruitment' %}" class="card p-3 text-decoration-none"><i class="bi bi-briefcase fs-3"></i><span class="ms-2">招聘管理</span></a></div>
     <div class="col-md-3"><a href="{% url 'admin_applications' %}" class="card p-3 text-decoration-none"><i class="bi bi-file-earmark-text fs-3"></i><span class="ms-2">审核申请</span></a></div>
+    {% endif %}
     <div class="col-md-3"><a href="{% url 'admin_private_requests' %}" class="card p-3 text-decoration-none"><i class="bi bi-shield-check fs-3"></i><span class="ms-2">私人航班审批</span></a></div>
     <div class="col-md-3"><a href="{% url 'mileage_grant' %}" class="card p-3 text-decoration-none"><i class="bi bi-gift fs-3"></i><span class="ms-2">发放里程</span></a></div>
 </div>

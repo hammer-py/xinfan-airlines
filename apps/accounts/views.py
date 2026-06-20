@@ -6,7 +6,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.db import transaction
 from django.utils.decorators import method_decorator
-from .models import UserProfile, ROLE_CHOICES
+from .models import UserProfile, ROLE_CHOICES, ADMIN_ROLES
 from .decorators import role_required
 import json
 import urllib.request
@@ -121,7 +121,7 @@ def profile_edit_view(request):
 # ─── Admin Panel ────────────────────────────────────────────
 
 @login_required
-@role_required(['admin'])
+@role_required(['staff'])
 def admin_panel_view(request):
     total_users = User.objects.count()
     total_flights = 0
@@ -139,18 +139,23 @@ def admin_panel_view(request):
     except Exception:
         pass
 
+    is_full_admin = request.user.profile.role in ADMIN_ROLES
     ctx = {
         'total_users': total_users,
         'total_flights': total_flights,
         'pending_signups': pending_signups,
         'pending_applications': pending_applications,
+        'is_full_admin': is_full_admin,
     }
     return render(request, 'accounts/admin_panel.html', ctx)
 
 
 @login_required
-@staff_member_required(login_url='login')
 def admin_users_view(request):
+    if request.user.profile.role not in ADMIN_ROLES:
+        messages.error(request, '你没有权限访问此页面')
+        return redirect('home')
+
     role_choices = dict(ROLE_CHOICES)
 
     search_query = request.GET.get('q', '').strip()

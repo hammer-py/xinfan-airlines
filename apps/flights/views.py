@@ -52,7 +52,7 @@ def flight_detail_view(request, pk):
     })
 
 @login_required
-@role_required(['admin'])
+@role_required(['staff'])
 def flight_create_view(request):
     if request.method == 'POST':
         try:
@@ -135,7 +135,7 @@ def my_signups_view(request):
     return render(request, 'flights/my_signups.html', {'signups': signups})
 
 @login_required
-@role_required(['admin'])
+@role_required(['staff'])
 def admin_signups_view(request):
     signups = FlightCrewSignup.objects.select_related('flight', 'user').all().order_by('-signed_up_at')
     if request.method == 'POST':
@@ -203,7 +203,7 @@ def my_private_requests_view(request):
 
 
 @login_required
-@role_required(['admin'])
+@role_required(['staff'])
 def admin_private_requests_view(request):
     requests_list = PrivateFlightRequest.objects.select_related('user', 'reviewed_by', 'created_flight').all().order_by('-created_at')
 

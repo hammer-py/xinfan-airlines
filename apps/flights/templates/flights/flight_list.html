@@ -7,7 +7,7 @@
         {% if user.is_authenticated and user.profile.role in 'business,first_class,investor,uinv,admin' %}
         <a href="{% url 'private_flight_request' %}" class="btn btn-outline-primary btn-sm">+ 私人航班申请</a>
         {% endif %}
-        {% if user.profile.role == 'admin' %}<a href="{% url 'flight_create' %}" class="btn btn-primary btn-sm">+ 创建航班</a>{% endif %}
+        {% if user.profile.has_staff_access %}<a href="{% url 'flight_create' %}" class="btn btn-primary btn-sm">+ 创建航班</a>{% endif %}
     </div>
 </div>
 <div class="card p-3 mb-3">
