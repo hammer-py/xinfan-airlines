@@ -22,8 +22,8 @@ ROLE_CHOICES = [
     ('ground_staff', '正式地勤'),
     # 管理员（全部权限）
     ('admin', '管理员'),
-    ('hod', '部门主管'),
-    ('shr', '高级管理'),
+    ('hod', 'HOD-部门主管'),
+    ('shr', 'SHR-高级管理'),
     ('vice_chairman', '副董事长'),
     ('chairman', '董事长'),
     ('group_owner', '集团所有者'),
