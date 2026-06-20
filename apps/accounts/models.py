@@ -24,11 +24,11 @@ ROLE_CHOICES = [
     ('admin', '管理员'),
     ('hod', 'HOD-部门主管'),
     ('shr', 'SHR-高级管理'),
-    ('vice_chairman', '副董事长'),
-    ('chairman', '董事长'),
-    ('group_owner', '集团所有者'),
+    ('vice_chairman', 'Vice Chairman-副董事长'),
+    ('chairman', 'Chairman-董事长'),
+    ('group_owner', 'Group Owner-集团所有者'),
     # 管理员（部分权限）
-    ('flight_host', '飞行经理'),
+    ('flight_host', 'Flight Host-飞行经理'),
 ]
 
 USER_ROLES = {'economy', 'business', 'first_class', 'investor', 'uinv'}

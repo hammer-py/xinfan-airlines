@@ -73,12 +73,12 @@
                                 <option value="admin">管理员</option>
                                 <option value="hod">HOD-部门主管</option>
                                 <option value="shr">SHR-高级管理</option>
-                                <option value="vice_chairman">副董事长</option>
-                                <option value="chairman">董事长</option>
-                                <option value="group_owner">集团所有者</option>
+                                <option value="vice_chairman">Vice Chairman-副Chairman-董事长</option>
+                                <option value="chairman">Chairman-董事长</option>
+                                <option value="group_owner">Group Owner-集团所有者</option>
                             </optgroup>
                             <optgroup label="—— 管理员（有限权限） ——">
-                                <option value="flight_host">飞行经理</option>
+                                <option value="flight_host">Flight Host-飞行经理</option>
                             </optgroup>
                         </select>
                     </div>
@@ -119,12 +119,12 @@
             <option value="admin">管理员</option>
             <option value="hod">部门主管</option>
             <option value="shr">高级管理</option>
-            <option value="vice_chairman">副董事长</option>
-            <option value="chairman">董事长</option>
-            <option value="group_owner">集团所有者</option>
+            <option value="vice_chairman">Vice Chairman-副Chairman-董事长</option>
+            <option value="chairman">Chairman-董事长</option>
+            <option value="group_owner">Group Owner-集团所有者</option>
         </optgroup>
         <optgroup label="—— 管理员（有限权限） ——">
-            <option value="flight_host">飞行经理</option>
+            <option value="flight_host">Flight Host-飞行经理</option>
         </optgroup>
     </select>
     <button type="button" class="btn btn-sm btn-primary" onclick="submitBatchUpdate()">应用</button>
@@ -180,12 +180,12 @@
                     <option value="admin" {% if u.profile.role == 'admin' %}selected{% endif %}>管理员</option>
                     <option value="hod" {% if u.profile.role == 'hod' %}selected{% endif %}>HOD-部门主管</option>
                     <option value="shr" {% if u.profile.role == 'shr' %}selected{% endif %}>SHR-高级管理</option>
-                    <option value="vice_chairman" {% if u.profile.role == 'vice_chairman' %}selected{% endif %}>副董事长</option>
-                    <option value="chairman" {% if u.profile.role == 'chairman' %}selected{% endif %}>董事长</option>
-                    <option value="group_owner" {% if u.profile.role == 'group_owner' %}selected{% endif %}>集团所有者</option>
+                    <option value="vice_chairman" {% if u.profile.role == 'vice_chairman' %}selected{% endif %}>Vice Chairman-副Chairman-董事长</option>
+                    <option value="chairman" {% if u.profile.role == 'chairman' %}selected{% endif %}>Chairman-董事长</option>
+                    <option value="group_owner" {% if u.profile.role == 'group_owner' %}selected{% endif %}>Group Owner-集团所有者</option>
                 </optgroup>
                 <optgroup label="—— 管理员（有限权限） ——">
-                    <option value="flight_host" {% if u.profile.role == 'flight_host' %}selected{% endif %}>飞行经理</option>
+                    <option value="flight_host" {% if u.profile.role == 'flight_host' %}selected{% endif %}>Flight Host-飞行经理</option>
                 </optgroup>
             </select>
             <button type="submit" class="btn btn-sm btn-primary">更新</button>
