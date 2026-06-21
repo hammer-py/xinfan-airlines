@@ -5,6 +5,10 @@ from django.contrib import messages
 VIP_CLUB_ROLES = {'business', 'first_class', 'investor', 'uinv', 'admin'}
 
 
+def hkhos_demo_view(request):
+    return render(request, 'core/hkhos_demo.html')
+
+
 def vip_club_view(request):
     if not request.user.is_authenticated or request.user.profile.role not in VIP_CLUB_ROLES:
         messages.error(request, '仅商务舱及以上等级用户可访问')
