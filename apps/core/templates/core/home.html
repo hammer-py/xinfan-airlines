@@ -6,10 +6,8 @@
     /* ── Slider ──────────────────────── */
     .hero-slider {
         position: relative; overflow: hidden; height: 75vh; min-height: 520px;
+        width: 100vw; margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%);
         margin-top: -1.5rem; margin-bottom: 2rem;
-    }
-    @media (min-width: 992px) {
-        .hero-slider { margin-left: -0.75rem; margin-right: -0.75rem; }
     }
     .slider-track {
         display: flex; height: 100%; transition: transform 0.8s cubic-bezier(0.65,0,0.35,1);
@@ -113,6 +111,9 @@
     .stat-num { font-size: 2.5rem; font-weight: 800; color: var(--accent); }
     .stat-label { color: var(--text-secondary); font-size: 0.88rem; }
     .bg-gray { background: var(--surface); }
+    .section-full { width: 100vw; margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); padding: 5rem 1.5rem; }
+    .section-full > .container { max-width: 1140px; }
+    @media (max-width: 768px) { .section-full { padding: 3rem 1rem; } }
     .section-padding { padding: 5rem 0; }
 
     @media (max-width: 768px) {
@@ -204,7 +205,7 @@
 </div>
 
 <!-- Services -->
-<div class="section-padding bg-gray">
+<div class="section-full bg-gray">
     <div class="container">
         <div class="row g-4">
             <div class="col-md-4"><div class="service-block color-bg"><div class="service-icon"><i class="bi bi-airplane"></i></div><h3>定期航班</h3><p>覆盖全球主要枢纽的定期虚拟航班，拥有 22 架飞机的现代化机队，包括 B787-10、A350-900、B737-800 等机型。</p></div></div>
