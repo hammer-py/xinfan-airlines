@@ -113,14 +113,45 @@
     .bg-gray { background: var(--surface); }
     .section-full { width: 100vw; margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); padding: 5rem 1.5rem; }
     .section-full > .container { max-width: 1140px; }
-    @media (max-width: 768px) { .section-full { padding: 3rem 1rem; } }
     .section-padding { padding: 5rem 0; }
 
+    @media (max-width: 992px) {
+        .service-block { padding: 2rem 1.5rem; }
+        .service-icon { width: 52px; height: 52px; font-size: 1.4rem; margin-bottom: 1rem; }
+        .stat-num { font-size: 2rem; }
+    }
     @media (max-width: 768px) {
-        .hero-slider { height: 60vh; min-height: 380px; margin-top: -0.75rem; }
+        .hero-slider { height: 55vh; min-height: 340px; margin-top: -0.75rem; }
         .slider-arrow { display: none; }
-        .slide-content { padding: 2rem 1.5rem; }
+        .slide-content { padding: 1.5rem 1.5rem; }
+        .slide-content h1 { font-size: 1.5rem; }
+        .slide-content .tag { font-size: 0.55rem; letter-spacing: 3px; }
+        .slide-content p { font-size: 0.85rem; }
+        .section-full { padding: 3rem 0.75rem; }
         .section-padding { padding: 3rem 0; }
+        .service-block { padding: 1.5rem 1rem; }
+        .service-block h3 { font-size: 1rem; }
+        .service-block p { font-size: 0.8rem; }
+        .goal-item { padding: 1.5rem 1rem; }
+        .goal-item h4 { font-size: 0.95rem; }
+        .goal-item p { font-size: 0.8rem; }
+        .stat-num { font-size: 1.75rem; }
+        .stat-label { font-size: 0.75rem; }
+        .title-border { margin: 0.5rem auto 1rem; }
+        .slider-nav { bottom: 1.5rem; }
+        .slider-nav span { width: 24px; height: 3px; }
+        .slider-nav span.active { width: 36px; }
+    }
+    @media (max-width: 576px) {
+        .hero-slider { height: 50vh; min-height: 300px; }
+        .slide-content { padding: 1rem 1rem; }
+        .slide-content h1 { font-size: 1.25rem; }
+        .slide-content p { font-size: 0.78rem; display: none; }
+        .slide-content .tag { font-size: 0.5rem; letter-spacing: 2px; margin-bottom: 0.5rem; }
+        .section-full { padding: 2rem 0.5rem; }
+        .section-padding { padding: 2rem 0; }
+        .service-block { margin-bottom: 0.5rem; }
+        .stat-num { font-size: 1.5rem; }
     }
 </style>
 {% endblock %}

@@ -215,12 +215,35 @@
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #555; }
 
+        @media (max-width: 992px) {
+            .navbar .nav-link { font-size: 0.8rem; padding: 0.35rem 0.7rem !important; }
+            .navbar-brand { font-size: 0.9rem; }
+            .navbar-brand img { height: 24px !important; }
+            .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+        }
         @media (max-width: 768px) {
             .hero { padding: 3rem 1.2rem; border-radius: 1.25rem; }
             .hero h1 { font-size: 2rem; }
             .container { padding-left: 0.75rem; padding-right: 0.75rem; }
             .card { border-radius: var(--radius-sm); }
             .table { font-size: 0.78rem; }
+            .table-responsive { -webkit-overflow-scrolling: touch; }
+            main.container { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+            .row.g-3 { --bs-gutter-y: 0.75rem; --bs-gutter-x: 0.75rem; }
+            .footer, .site-footer { padding: 2rem 0 0; margin-top: 3rem; font-size: 0.78rem; }
+            .d-sm-inline { display: none !important; }
+            .navbar .badge { display: none !important; }
+        }
+        @media (max-width: 576px) {
+            .col-md-3 { flex: 0 0 50%; max-width: 50%; }
+            .col-md-4 { flex: 0 0 100%; max-width: 100%; }
+            .col-md-5 { flex: 0 0 100%; max-width: 100%; }
+            .row.justify-content-center > .col-md-5 { flex: 0 0 100%; max-width: 100%; }
+            .btn-lg { padding: 0.5rem 1.4rem; font-size: 0.9rem; }
+            h2 { font-size: 1.3rem; }
+            h3 { font-size: 1.1rem; }
+            .page-heading { font-size: 1.4rem; }
+            .alert { font-size: 0.8rem; padding: 0.6rem 1rem; }
         }
     </style>
     {% block extra_head %}{% endblock %}
