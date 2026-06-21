@@ -140,7 +140,8 @@
         .table-hover tbody tr:hover { background: rgba(255,255,255,0.02); }
 
         /* ── Footer ───────────────────────── */
-        .footer { background: #111; color: #666; padding: 3rem 0 2rem; margin-top: 5rem; font-size: 0.82rem; border-top: 1px solid var(--border); }
+        .footer, .site-footer { background: #111; color: #666; padding: 3rem 0 0; margin-top: 5rem; font-size: 0.82rem; border-top: 1px solid var(--border); }
+        .site-footer a { color: #bbb; text-decoration: none; }
         .footer a { color: #888; }
         .footer a:hover { color: var(--accent); }
 
@@ -293,10 +294,28 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="footer">
-        <div class="container text-center">
-            <p class="mb-1">&copy; {% now "Y" %} 新帆航空 Xinfan Airlines</p>
-            <small>Roblox Virtual Aviation &middot; 本网站为虚拟航空公司模拟平台</small>
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4" style="color:#fff;font-size:1rem;font-weight:700">网站导航
+                    <ul style="list-style:none;padding:0;margin-top:0.75rem">
+                        <li style="margin-bottom:0.5rem"><a href="{% url 'home' %}" style="color:#bbb;font-size:0.9rem;transition:color 0.2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#bbb'">首页</a></li>
+                        <li style="margin-bottom:0.5rem"><a href="{% url 'flight_list' %}" style="color:#bbb;font-size:0.9rem;transition:color 0.2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#bbb'">航班信息</a></li>
+                        <li style="margin-bottom:0.5rem"><a href="{% url 'about' %}" style="color:#bbb;font-size:0.9rem;transition:color 0.2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#bbb'">公司介绍</a></li>
+                        <li style="margin-bottom:0.5rem"><a href="{% url 'job_list' %}" style="color:#bbb;font-size:0.9rem;transition:color 0.2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#bbb'">加入我们</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 mb-4" style="color:#fff;font-size:1rem;font-weight:700">社交平台
+                    <div style="margin-top:0.75rem;display:flex;gap:0.5rem">
+                        <a href="https://discord.gg/xNCBJVPsmR" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.06);color:#aaa;font-size:1.3rem;transition:all 0.3s" onmouseover="this.style.background='var(--accent)';this.style.color='#171717'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='#aaa'"><i class="bi bi-discord"></i></a>
+                        <a href="https://www.roblox.com/communities/16064021/Xinfan-Airlines#!/about" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.06);color:#aaa;font-size:1.3rem;transition:all 0.3s" onmouseover="this.style.background='var(--accent)';this.style.color='#171717'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='#aaa'"><i class="bi bi-box"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center;padding:1.25rem 0;margin-top:1rem;font-size:0.85rem;color:#555;border-top:1px solid var(--border)">
+            <p class="mb-0">Copyright &copy; 2023-2026 新帆航空 Xinfan Airlines. Some rights reserved.</p>
+            <p class="mb-0" style="font-size:0.75rem">Roblox Virtual Aviation</p>
         </div>
     </footer>
 
