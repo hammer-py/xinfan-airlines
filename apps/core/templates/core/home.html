@@ -220,6 +220,18 @@
                 </div>
             </div>
         </div>
+        <div class="slide effect-right" style="background-image:url({% static 'images/slider/06.jpg' %})">
+            <div class="overlay-grid"></div>
+            <div class="slide-content">
+                <div class="tag">Community · 社区共建</div>
+                <h1 class="hero-title">连接每一位<span class="accent">航空爱好者</span></h1>
+                <p>Discord 活跃社区，定期连飞活动，丰富的机组角色等你加入</p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="https://discord.gg/xNCBJVPsmR" target="_blank" class="btn btn-light btn-lg">加入Discord <i class="bx bxl-discord-alt ms-1"></i></a>
+                    <a href="https://www.roblox.com/communities/16064021/Xinfan-Airlines#!/about" target="_blank" class="btn btn-outline-light btn-lg">查看Group信息 <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="slider-arrow prev" onclick="prevSlide()"><i class="bi bi-chevron-left"></i></div>
     <div class="slider-arrow next" onclick="nextSlide()"><i class="bi bi-chevron-right"></i></div>
@@ -229,6 +241,7 @@
         <span onclick="goTo(2)"></span>
         <span onclick="goTo(3)"></span>
         <span onclick="goTo(4)"></span>
+        <span onclick="goTo(5)"></span>
     </div>
 </div>
 {% endblock %}
@@ -318,7 +331,7 @@
 {% block extra_js %}
 <script>
     let current = 0;
-    const total = 5;
+    const total = 6;
     let autoTimer;
     const track = document.getElementById('sliderTrack');
     const dots = document.querySelectorAll('#sliderDots span');
