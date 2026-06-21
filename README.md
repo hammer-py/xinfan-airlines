@@ -1,4 +1,4 @@
-# ✈️ 新帆航空 Xinfan Airlines
+# <img src="https://raw.githubusercontent.com/hammer-py/xinfan-airlines/main/static/images/logo.png" width="48" alt=""> 新帆航空 Xinfan Airlines
 
 Roblox 虚拟航空公司官方网站，基于 Python + Django 全栈开发。
 
