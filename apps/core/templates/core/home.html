@@ -7,10 +7,9 @@
     .hero-slider {
         position: relative; overflow: hidden; height: 75vh; min-height: 520px;
         margin-top: -1.5rem; margin-bottom: 2rem;
-        border-radius: 1.5rem;
     }
     @media (min-width: 992px) {
-        .hero-slider { margin-left: -1.5rem; margin-right: -1.5rem; border-radius: 0; }
+        .hero-slider { margin-left: -0.75rem; margin-right: -0.75rem; }
     }
     .slider-track {
         display: flex; height: 100%; transition: transform 0.8s cubic-bezier(0.65,0,0.35,1);
@@ -52,7 +51,7 @@
     .slide.effect-scale.active .slide-content { animation: scaleUp 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
     @keyframes scaleUp { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-    /* Hero text char flip */
+    /* Char flip */
     .hero-title .char { display: inline-block; animation: charFlip 0.5s cubic-bezier(0.22,1,0.36,1) both; }
     .hero-title .accent .char { color: var(--accent); }
     @keyframes charFlip { 0% { transform: rotateX(90deg); opacity: 0; } 100% { transform: rotateX(0deg); opacity: 1; } }
@@ -78,49 +77,53 @@
     .slider-arrow.next { right: 2rem; }
 
     /* ── Service cards ──────────────── */
-    .service-block-home {
+    .service-block {
         background: var(--surface); border: 1px solid var(--border);
         border-radius: 1.25rem; padding: 2.5rem 2rem; text-align: center;
         transition: all 0.3s; height: 100%;
     }
-    .service-block-home:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.1); }
-    .service-block-home.color-bg {
+    .service-block:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.1); }
+    .service-block.color-bg {
         background: linear-gradient(160deg, #0f1a0f 0%, #1a2a1a 100%);
         border-color: rgba(23,247,0,0.15); color: #fff;
     }
-    .service-block-home.color-bg p { color: rgba(255,255,255,0.6); }
-    .service-icon-home {
+    .service-block.color-bg p { color: rgba(255,255,255,0.6); }
+    .service-icon {
         width: 64px; height: 64px; border-radius: 16px;
         display: inline-flex; align-items: center; justify-content: center;
         margin-bottom: 1.25rem; font-size: 1.75rem;
     }
-    .service-block-home:not(.color-bg) .service-icon-home { background: var(--accent-dim); color: var(--accent); }
-    .service-block-home.color-bg .service-icon-home { background: rgba(23,247,0,0.15); color: var(--accent); }
-    .service-block-home h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem; }
-    .service-block-home p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 0; }
+    .service-block:not(.color-bg) .service-icon { background: var(--accent-dim); color: var(--accent); }
+    .service-block.color-bg .service-icon { background: rgba(23,247,0,0.15); color: var(--accent); }
+    .service-block h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .service-block p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 0; }
 
     /* ── Goal ────────────────────────── */
-    .goal-item-home { padding: 2rem 1.5rem; text-align: center; }
-    .goal-item-home .count {
+    .goal-item { padding: 2rem 1.5rem; text-align: center; }
+    .goal-item .count {
         display: inline-flex; align-items: center; justify-content: center;
         width: 48px; height: 48px; border-radius: 50%;
         background: var(--accent); color: #171717; font-weight: 800;
         font-size: 1rem; margin-bottom: 0.75rem;
     }
-    .goal-item-home h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .goal-item-home p { font-size: 0.85rem; color: var(--text-secondary); }
+    .goal-item h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .goal-item p { font-size: 0.85rem; color: var(--text-secondary); }
 
-    .title-border-home { display: block; width: 50px; height: 3px; background: var(--accent); border-radius: 2px; margin: 0.75rem auto 1.5rem; }
-    .stat-num-home { font-size: 2.5rem; font-weight: 800; color: var(--accent); }
-    .stat-label-home { color: var(--text-secondary); font-size: 0.88rem; }
+    .title-border { display: block; width: 50px; height: 3px; background: var(--accent); border-radius: 2px; margin: 0.75rem auto 1.5rem; }
+    .stat-num { font-size: 2.5rem; font-weight: 800; color: var(--accent); }
+    .stat-label { color: var(--text-secondary); font-size: 0.88rem; }
+    .bg-gray { background: var(--surface); }
+    .section-padding { padding: 5rem 0; }
 
     @media (max-width: 768px) {
-        .hero-slider { height: 60vh; min-height: 380px; margin-top: -0.75rem; border-radius: 1rem; }
+        .hero-slider { height: 60vh; min-height: 380px; margin-top: -0.75rem; }
         .slider-arrow { display: none; }
         .slide-content { padding: 2rem 1.5rem; }
+        .section-padding { padding: 3rem 0; }
     }
 </style>
 {% endblock %}
+
 {% block content %}
 
 <!-- Hero Slider -->
@@ -140,7 +143,7 @@
             <div class="slide-content">
                 <div class="tag">Welcome Aboard</div>
                 <h1 class="hero-title">欢迎<span class="accent">登机</span></h1>
-                <p>系好安全带，收起小桌板——一次难忘的飞行体验即将开始</p>
+                <p>系好安全带，收起小桌板——一次难忘的飞行体验即将开始。新帆航空，从这里起飞。</p>
                 <a href="{% url 'flight_list' %}" class="btn btn-light btn-lg">查看航班 <i class="bi bi-airplane"></i></a>
             </div>
         </div>
@@ -183,60 +186,82 @@
     </div>
 </div>
 
-<!-- Latest Flights -->
-{% if latest_flights %}
-<section class="mb-5">
-    <p class="section-label">Latest Flights</p>
-    <h3 class="fw-bold mb-3">最新航班</h3>
-    <div class="row g-3">
-        {% for flight in latest_flights %}
-        <div class="col-md-6 col-lg-4">
-            <div class="card p-3 position-relative">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <strong class="fs-5">{{ flight.flight_number }}</strong>
-                    <span class="badge {% if flight.status == 'scheduled' %}bg-primary{% elif flight.status == 'arrived' %}bg-success{% elif flight.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}">{{ flight.get_status_display }}</span>
-                </div>
-                <div class="text-muted" style="font-size:0.85rem">
-                    <p class="mb-1">{{ flight.origin }} &rarr; {{ flight.destination }}</p>
-                    <p class="mb-1"><i class="bi bi-clock me-1" style="font-size:0.7rem"></i>{{ flight.departure_time|date:"Y-m-d H:i" }} &nbsp;|&nbsp; <i class="bi bi-airplane me-1" style="font-size:0.7rem"></i>{{ flight.aircraft }}</p>
-                </div>
-                <a href="{% url 'flight_detail' flight.pk %}" class="stretched-link"></a>
+<!-- About -->
+<div class="section-padding">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-5 mb-4 mb-md-0">
+                <h2 style="font-size:2rem;font-weight:800;color:#fff">关于我们</h2>
+                <h4 style="font-size:1rem;color:var(--accent);font-weight:600;letter-spacing:1px">About Us</h4>
+            </div>
+            <div class="col-md-7">
+                <p style="color:#fff;font-weight:600;margin-bottom:0.5rem">新帆航空 Xinfan Airlines</p>
+                <p class="text-secondary">新帆航空是一家成立于 Roblox 平台的虚拟航空公司，总部设于香港国际机场。我们模拟真实航空公司的运营模式，提供定期航班、机组人员招募、里程积累等服务。</p>
+                <p class="text-secondary">无论是想体验飞行员驾驶乐趣的玩家，还是想要担任空乘、地勤的航空爱好者，都可以在新帆航空找到适合自己的角色。</p>
             </div>
         </div>
-        {% endfor %}
     </div>
-</section>
-{% endif %}
+</div>
 
 <!-- Services -->
-<section class="mb-5">
-    <p class="section-label">Why Xinfan</p>
-    <h3 class="fw-bold mb-4">我们的服务</h3>
-    <div class="row g-3">
-        <div class="col-md-4"><div class="service-block-home color-bg"><div class="service-icon-home"><i class="bi bi-airplane"></i></div><h3>定期航班</h3><p>覆盖全球主要枢纽的定期虚拟航班，拥有 22 架飞机的现代化机队，包括 B787-10、A350-900、B737-800 等机型。</p></div></div>
-        <div class="col-md-4"><div class="service-block-home"><div class="service-icon-home"><i class="bi bi-people"></i></div><h3>专业团队</h3><p>招募机长、空乘、地勤等虚拟航空人才。从实习到正式员工，提供完整的职业晋升通道和培训体系。</p></div></div>
-        <div class="col-md-4"><div class="service-block-home color-bg"><div class="service-icon-home"><i class="bi bi-star"></i></div><h3>里程计划</h3><p>每次飞行积累里程，兑换优先登机、贵宾休息室、自定义头衔、免费航班券等专属权益。</p></div></div>
+<div class="section-padding bg-gray">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4"><div class="service-block color-bg"><div class="service-icon"><i class="bi bi-airplane"></i></div><h3>定期航班</h3><p>覆盖全球主要枢纽的定期虚拟航班，拥有 22 架飞机的现代化机队，包括 B787-10、A350-900、B737-800 等机型。</p></div></div>
+            <div class="col-md-4"><div class="service-block"><div class="service-icon"><i class="bi bi-people"></i></div><h3>专业团队</h3><p>招募机长、空乘、地勤等虚拟航空人才。从实习到正式员工，提供完整的职业晋升通道和培训体系。</p></div></div>
+            <div class="col-md-4"><div class="service-block color-bg"><div class="service-icon"><i class="bi bi-star"></i></div><h3>里程计划</h3><p>每次飞行积累里程，兑换优先登机、贵宾休息室、自定义头衔、免费航班券等专属权益。</p></div></div>
+        </div>
     </div>
-</section>
+</div>
 
 <!-- Goals -->
-<section class="mb-5">
-    <div class="text-center mb-4"><p class="section-label">Mission</p><h3 class="fw-bold">理念与目标</h3><span class="title-border-home"></span></div>
-    <div class="row justify-content-center">
-        <div class="col-md-5"><div class="goal-item-home"><span class="count">1</span><h4>打造高品质虚拟航空</h4><p>致力于为 Roblox 玩家提供最真实、专业的虚拟航空体验。</p></div></div>
-        <div class="col-md-5"><div class="goal-item-home"><span class="count">2</span><h4>培育新一代航空人才</h4><p>通过完善的培训体系和晋升通道，让更多航空爱好者成长。</p></div></div>
+<div class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5"><h2 style="font-weight:800;color:#fff">理念与目标</h2><span class="title-border"></span></div>
+        <div class="row justify-content-center">
+            <div class="col-md-5"><div class="goal-item"><span class="count">1</span><h4>打造高品质虚拟航空</h4><p>致力于为 Roblox 玩家提供最真实、专业的虚拟航空体验，模拟真实航空公司的运营模式。</p></div></div>
+            <div class="col-md-5"><div class="goal-item"><span class="count">2</span><h4>培育新一代航空人才</h4><p>通过完善的培训体系和晋升通道，让更多航空爱好者在这里成长，推动虚拟航空社区发展。</p></div></div>
+        </div>
     </div>
-</section>
+</div>
 
 <!-- Stats -->
-<section class="mb-5">
-    <div class="row g-3 text-center">
-        <div class="col-6 col-md-3"><div class="card p-3"><div class="stat-num-home">22</div><div class="stat-label-home">运营飞机</div></div></div>
-        <div class="col-6 col-md-3"><div class="card p-3"><div class="stat-num-home">20+</div><div class="stat-label-home">覆盖目的地</div></div></div>
-        <div class="col-6 col-md-3"><div class="card p-3"><div class="stat-num-home">14</div><div class="stat-label-home">角色体系</div></div></div>
-        <div class="col-6 col-md-3"><div class="card p-3"><div class="stat-num-home">3</div><div class="stat-label-home">全球枢纽</div></div></div>
+<div class="section-padding bg-gray">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-6 col-md-3"><div class="stat-num">22</div><div class="stat-label">运营飞机</div></div>
+            <div class="col-6 col-md-3"><div class="stat-num">20+</div><div class="stat-label">覆盖目的地</div></div>
+            <div class="col-6 col-md-3"><div class="stat-num">14</div><div class="stat-label">角色体系</div></div>
+            <div class="col-6 col-md-3"><div class="stat-num">3</div><div class="stat-label">全球枢纽</div></div>
+        </div>
     </div>
-</section>
+</div>
+
+<!-- Social -->
+<div class="section-padding">
+    <div class="container">
+        <div class="text-center mb-4"><h2 style="font-weight:800;color:#fff">关注我们</h2><span class="title-border"></span></div>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-3 mb-md-0 text-center">
+                        <p class="text-secondary mb-3">加入我们的社区</p>
+                        <div style="display:flex;gap:0.5rem;justify-content:center">
+                            <a href="https://discord.gg/xNCBJVPsmR" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.04);color:#888;font-size:1.3rem;transition:all 0.3s" onmouseover="this.style.background='var(--accent)';this.style.color='#171717'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.color='#888'"><i class="bi bi-discord"></i></a>
+                            <a href="https://www.roblox.com/communities/16064021/Xinfan-Airlines" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.04);color:#888;font-size:1.3rem;transition:all 0.3s" onmouseover="this.style.background='var(--accent)';this.style.color='#171717'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.color='#888'"><i class="bi bi-box"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div style="background:var(--surface);border:1px solid var(--border);border-radius:1rem;padding:3rem 2rem">
+                            <i class="bi bi-airplane" style="font-size:3rem;color:var(--accent);opacity:0.2"></i>
+                            <p class="text-muted mt-2 mb-0">更多社交媒体链接即将上线</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 {% block extra_js %}
@@ -257,8 +282,7 @@
         dots[i].classList.add('active');
         current = i;
         resetAuto();
-        // Re-trigger char flip
-        setTimeout(() => animateChars(slides[i].querySelector('.hero-title')), 100);
+        setTimeout(() => animateChars(slides[i].querySelector('.hero-title')), 150);
     }
 
     function nextSlide() { goTo((current + 1) % total); }
@@ -270,9 +294,8 @@
         const nodes = [];
         function walk(parent) {
             for (const node of parent.childNodes) {
-                if (node.nodeType === 3) {
-                    for (const ch of node.textContent) nodes.push(ch === ' ' ? ' ' : ch);
-                } else if (node.nodeType === 1) {
+                if (node.nodeType === 3) { for (const ch of node.textContent) nodes.push(ch === ' ' ? ' ' : ch); }
+                else if (node.nodeType === 1) {
                     if (node.tagName === 'BR') { nodes.push('<br>'); continue; }
                     const cls = node.className;
                     for (const ch of node.textContent) nodes.push({ cls, ch: ch === ' ' ? ' ' : ch });
@@ -280,27 +303,22 @@
             }
         }
         walk(title);
-        const origHTML = title.innerHTML;
         title.innerHTML = '';
         let idx = 0;
         for (const n of nodes) {
             if (n === '<br>') { title.appendChild(document.createElement('br')); continue; }
-            const span = document.createElement('span');
-            span.className = 'char';
+            const span = document.createElement('span'); span.className = 'char';
             if (typeof n === 'object' && n.cls) span.classList.add(n.cls.split(' ')[0]);
             span.style.animationDelay = (0.05 * idx) + 's';
             span.textContent = typeof n === 'string' ? n : n.ch;
-            title.appendChild(span);
-            idx++;
+            title.appendChild(span); idx++;
         }
     }
 
-    // Initial char flip
     document.addEventListener('DOMContentLoaded', function() {
-        const firstTitle = document.querySelector('.slide.active .hero-title');
-        if (firstTitle) animateChars(firstTitle);
+        const t = document.querySelector('.slide.active .hero-title');
+        if (t) animateChars(t);
     });
-
     autoTimer = setInterval(nextSlide, 6000);
 </script>
 {% endblock %}
