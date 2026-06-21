@@ -99,15 +99,3 @@ Roblox 虚拟航空公司官方网站，基于 Python + Django 全栈开发。
 
 - Discord: [discord.gg/xNCBJVPsmR](https://discord.gg/xNCBJVPsmR)
 - Roblox Group: [Xinfan Airlines](https://www.roblox.com/communities/16064021/Xinfan-Airlines#!/about)
-
-## 快速开始
-
-```bash
-git clone https://github.com/hammer-py/xinfan-airlines.git
-cd xinfan-airlines
-pip install -r requirements.txt
-python manage.py makemigrations accounts flights recruitment mileage
-python manage.py migrate
-python manage.py setup_demo
-python manage.py runserver 8080
-```
