@@ -6,8 +6,7 @@
     /* ── Slider ──────────────────────── */
     .hero-slider {
         position: relative; overflow: hidden; height: 75vh; min-height: 520px;
-        width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
-        margin-top: -1.5rem; margin-bottom: 2rem;
+        margin-bottom: 2rem;
     }
     main.container { padding-top: 0 !important; }
     .slider-track {
@@ -157,8 +156,7 @@
 </style>
 {% endblock %}
 
-{% block content %}
-
+{% block before_content %}
 <!-- Hero Slider -->
 <div class="hero-slider" id="heroSlider">
     <div class="slider-track" id="sliderTrack">
@@ -218,6 +216,9 @@
         <span onclick="goTo(4)"></span>
     </div>
 </div>
+{% endblock %}
+
+{% block content %}
 
 <!-- About -->
 <div class="section-padding">

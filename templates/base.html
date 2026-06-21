@@ -307,6 +307,8 @@
         </div>
     </nav>
 
+    {% block before_content %}{% endblock %}
+
     <main class="container py-4">
         {% if messages %}
             {% for msg in messages %}
@@ -318,6 +320,8 @@
         {% endif %}
         {% block content %}{% endblock %}
     </main>
+
+    {% block extra_body %}{% endblock %}
 
     <footer class="site-footer">
         <div class="container">
