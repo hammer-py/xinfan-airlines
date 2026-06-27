@@ -60,6 +60,8 @@ class UserProfile(models.Model):
     miles = models.IntegerField(default=0, verbose_name='累计里程')
     phone = models.CharField(max_length=20, blank=True, null=True, verbose_name='手机号')
     bio = models.TextField(blank=True, null=True, verbose_name='个人简介')
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, verbose_name='头像')
+    qq_number = models.CharField(max_length=20, blank=True, null=True, verbose_name='QQ号')
 
     class Meta:
         verbose_name = '用户资料'
@@ -67,6 +69,14 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} ({self.get_role_display()})"
+
+    @property
+    def avatar_url(self):
+        if self.avatar:
+            return self.avatar.url
+        if self.qq_number:
+            return f'https://q1.qlogo.cn/g?b=qq&nk={self.qq_number}&s=100'
+        return None
 
     @property
     def is_employee(self):

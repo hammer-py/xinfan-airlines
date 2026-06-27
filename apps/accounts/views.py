@@ -112,8 +112,36 @@ def profile_edit_view(request):
     if request.method == 'POST':
         profile.phone = request.POST.get('phone', '').strip() or None
         profile.bio = request.POST.get('bio', '').strip() or None
+
+        # QQ 号同步头像
+        qq_number = request.POST.get('qq_number', '').strip() or None
+        if qq_number != profile.qq_number:
+            profile.qq_number = qq_number
+            # 设置 QQ 号时清除自定义头像
+            if qq_number:
+                profile.avatar = None
+
+        # 自定义头像上传
+        avatar_file = request.FILES.get('avatar')
+        if avatar_file:
+            # 验证文件类型
+            if not avatar_file.content_type.startswith('image/'):
+                messages.error(request, '<span class="lang-zh">仅支持图片文件</span><span class="lang-en">Only image files are supported</span>')
+                return render(request, 'accounts/profile_edit.html', {'profile': profile})
+            if avatar_file.size > 2 * 1024 * 1024:
+                messages.error(request, '<span class="lang-zh">图片大小不能超过 2MB</span><span class="lang-en">Image size must be under 2MB</span>')
+                return render(request, 'accounts/profile_edit.html', {'profile': profile})
+            profile.avatar = avatar_file
+            # 上传自定义头像时清除 QQ 号
+            profile.qq_number = None
+
+        # 清除头像
+        if request.POST.get('clear_avatar') == '1':
+            profile.avatar = None
+            profile.qq_number = None
+
         profile.save()
-        messages.success(request, '资料已更新')
+        messages.success(request, '<span class="lang-zh">资料已更新</span><span class="lang-en">Profile updated</span>')
         return redirect('profile')
     return render(request, 'accounts/profile_edit.html', {'profile': profile})
 

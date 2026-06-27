@@ -4,9 +4,55 @@
 <div class="row justify-content-center"><div class="col-md-6">
 <div class="card p-4">
 <h3 class="mb-3"><span class="lang-zh">编辑个人资料</span><span class="lang-en">Edit Profile</span></h3>
-<form method="post">{% csrf_token %}
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+
+    <!-- Avatar -->
+    <div class="mb-3 text-center">
+        <div class="mb-2">
+            {% with avatar_url=profile.avatar_url %}
+            {% if avatar_url %}
+            <img src="{{ avatar_url }}" alt="Avatar" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)">
+            {% else %}
+            <i class="bi bi-person-circle" style="font-size:5rem;color:var(--accent)"></i>
+            {% endif %}
+            {% endwith %}
+        </div>
+        <span class="text-muted" style="font-size:0.78rem">
+            {% if profile.avatar %}<span class="lang-zh">自定义头像</span><span class="lang-en">Custom Avatar</span>
+            {% elif profile.qq_number %}<span class="lang-zh">QQ 头像</span><span class="lang-en">QQ Avatar</span> ({{ profile.qq_number }})
+            {% else %}<span class="lang-zh">默认头像</span><span class="lang-en">Default Avatar</span>{% endif %}
+        </span>
+    </div>
+
+    <!-- Upload custom avatar -->
+    <div class="mb-3">
+        <label class="form-label"><span class="lang-zh">自定义头像</span><span class="lang-en">Custom Avatar</span></label>
+        <input type="file" name="avatar" class="form-control" accept="image/*" style="font-size:0.85rem">
+        <small class="text-muted" style="font-size:0.72rem"><span class="lang-zh">支持 JPG/PNG，最大 2MB。上传自定义头像后将清除 QQ 同步。</span><span class="lang-en">JPG/PNG supported, max 2MB. Uploading a custom avatar will clear QQ sync.</span></small>
+    </div>
+
+    <!-- QQ 号同步头像 -->
+    <div class="mb-3">
+        <label class="form-label"><span class="lang-zh">QQ 号同步头像</span><span class="lang-en">QQ Avatar Sync</span></label>
+        <input type="text" name="qq_number" class="form-control" value="{{ profile.qq_number|default:'' }}" placeholder="e.g. 741507315"
+               style="font-family:'SF Mono','Fira Code',monospace" pattern="[0-9]{5,15}">
+        <small class="text-muted" style="font-size:0.72rem"><span class="lang-zh">输入 QQ 号自动获取 QQ 头像。输入后将清除自定义头像。</span><span class="lang-en">Enter your QQ number to sync your QQ avatar. This will clear any custom avatar.</span></small>
+    </div>
+
+    <hr>
+
     <div class="mb-3"><label class="form-label"><span class="lang-zh">手机号</span><span class="lang-en">Phone</span></label><input type="text" name="phone" class="form-control" value="{{ profile.phone|default:'' }}"></div>
     <div class="mb-3"><label class="form-label"><span class="lang-zh">个人简介</span><span class="lang-en">Bio</span></label><textarea name="bio" class="form-control" rows="3">{{ profile.bio|default:'' }}</textarea></div>
+
+    {% if profile.avatar_url %}
+    <div class="mb-3">
+        <label class="form-check-label">
+            <input type="checkbox" name="clear_avatar" value="1" class="form-check-input">
+            <span class="lang-zh">清除头像（恢复默认）</span><span class="lang-en">Remove avatar (restore default)</span>
+        </label>
+    </div>
+    {% endif %}
+
     <button type="submit" class="btn btn-primary"><span class="lang-zh">保存</span><span class="lang-en">Save</span></button>
     <a href="{% url 'profile' %}" class="btn btn-outline-secondary"><span class="lang-zh">取消</span><span class="lang-en">Cancel</span></a>
 </form>

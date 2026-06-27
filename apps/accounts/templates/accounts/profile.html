@@ -5,11 +5,18 @@
 <div class="row g-4">
     <div class="col-md-4">
         <div class="card p-4 text-center">
+            {% with avatar_url=user.profile.avatar_url %}
+            {% if avatar_url %}
+            <img src="{{ avatar_url }}" alt="Avatar" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);box-shadow: 0 0 20px var(--accent-dim)">
+            {% else %}
             <i class="bi bi-person-circle" style="font-size:4rem;color:var(--accent)"></i>
+            {% endif %}
+            {% endwith %}
             <h4 class="mt-2">{{ user.username }}</h4>
             <span class="badge bg-primary fs-6">{{ user.profile.get_role_display }}</span>
             <p class="text-muted mt-2 mb-1">{{ user.email }}</p>
             {% if user.profile.phone %}<p class="text-muted"><i class="bi bi-phone me-1" style="font-size:0.75rem"></i>{{ user.profile.phone }}</p>{% endif %}
+            {% if user.profile.qq_number %}<p class="text-muted"><i class="bi bi-chat-dots me-1" style="font-size:0.75rem"></i>QQ: {{ user.profile.qq_number }}</p>{% endif %}
             {% if user.profile.bio %}<p class="text-muted small">{{ user.profile.bio }}</p>{% endif %}
             <a href="{% url 'profile_edit' %}" class="btn btn-outline-primary btn-sm mt-2"><span class="lang-zh">编辑资料</span><span class="lang-en">Edit Profile</span></a>
         </div>
