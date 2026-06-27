@@ -1,32 +1,31 @@
 {% extends 'base.html' %}
-{% block title %}公司介绍 — 新帆航空{% endblock %}
+{% block title %}<span class="lang-zh">公司介绍</span><span class="lang-en">About</span> — Xinfan Airlines{% endblock %}
 {% block content %}
-
 <p class="section-label">About</p>
-<h2 class="page-heading">关于新帆航空</h2>
+<h2 class="page-heading"><span class="lang-zh">关于新帆航空</span><span class="lang-en">About Xinfan Airlines</span></h2>
 
 <div class="row g-4">
     <div class="col-lg-8">
         <div class="card p-4 mb-4">
-            <h5 class="fw-bold mb-3">公司简介</h5>
-            <p style="color:var(--text-secondary)">新帆航空（Xinfan Airlines）是一家成立于 Roblox 平台的虚拟航空公司，致力于为 Roblox 玩家提供真实、专业的虚拟航空体验。我们模拟真实航空公司的运营模式，提供定期航班、机组人员招募、里程积累等服务。</p>
-            <p class="mb-0" style="color:var(--text-secondary)">无论是想体验飞行员驾驶乐趣的玩家，还是想要担任空乘、地勤的航空爱好者，都可以在新帆航空找到适合自己的角色。</p>
+            <h5 class="fw-bold mb-3"><span class="lang-zh">公司简介</span><span class="lang-en">Company Profile</span></h5>
+            <p style="color:var(--text-secondary)"><span class="lang-zh">新帆航空（Xinfan Airlines）是一家成立于 Roblox 平台的虚拟航空公司，致力于为 Roblox 玩家提供真实、专业的虚拟航空体验。我们模拟真实航空公司的运营模式，提供定期航班、机组人员招募、里程积累等服务。</span><span class="lang-en">Xinfan Airlines is a virtual airline on the Roblox platform, dedicated to providing authentic and professional virtual aviation experiences. We simulate real airline operations with scheduled flights, crew recruitment, and mileage programs.</span></p>
+            <p class="mb-0" style="color:var(--text-secondary)"><span class="lang-zh">无论是想体验飞行员驾驶乐趣的玩家，还是想要担任空乘、地勤的航空爱好者，都可以在新帆航空找到适合自己的角色。</span><span class="lang-en">Whether you want to experience life as a pilot or serve as cabin crew or ground staff, Xinfan has a role for every aviation enthusiast.</span></p>
         </div>
 
         <div class="card p-4 mb-4">
-            <h5 class="fw-bold mb-3">主航机队</h5>
+            <h5 class="fw-bold mb-3"><span class="lang-zh">主航机队</span><span class="lang-en">Main Fleet</span></h5>
             <div class="row g-2">
                 {% for ac in main_fleet %}
-                <div class="col-4 col-md-3"><span style="color:var(--text-secondary);font-size:0.88rem"><i class="bi bi-airplane me-1" style="font-size:0.7rem"></i>{{ ac }}</span></div>
+                <div class="col-4 col-md-3"><span style="color:var(--text-secondary);font-size:0.88rem">&#9992; {{ ac }}</span></div>
                 {% endfor %}
             </div>
         </div>
 
         <div class="card p-4 mb-4">
-            <h5 class="fw-bold mb-3">私人航班机队</h5>
+            <h5 class="fw-bold mb-3"><span class="lang-zh">私人航班机队</span><span class="lang-en">Private Flight Fleet</span></h5>
             <div class="row g-2">
                 {% for ac in private_fleet %}
-                <div class="col-4 col-md-3"><span style="color:var(--text-secondary);font-size:0.88rem"><i class="bi bi-airplane me-1" style="font-size:0.7rem"></i>{{ ac }}</span></div>
+                <div class="col-4 col-md-3"><span style="color:var(--text-secondary);font-size:0.88rem">&#9992; {{ ac }}</span></div>
                 {% endfor %}
             </div>
         </div>
@@ -36,7 +35,7 @@
             {% if future_fleet %}
             <div class="col-md-6">
                 <div class="card p-4">
-                    <h5 class="fw-bold mb-3">未来计划投入</h5>
+                    <h5 class="fw-bold mb-3"><span class="lang-zh">未来计划投入</span><span class="lang-en">Future Fleet</span></h5>
                     {% for ac in future_fleet %}
                     <span class="badge me-1 mb-1" style="background:var(--accent-dim);color:var(--accent)">{{ ac }}</span>
                     {% endfor %}
@@ -46,7 +45,7 @@
             {% if maintenance_fleet %}
             <div class="col-md-6">
                 <div class="card p-4">
-                    <h5 class="fw-bold mb-3">厂内维修</h5>
+                    <h5 class="fw-bold mb-3"><span class="lang-zh">厂内维修</span><span class="lang-en">Under Maintenance</span></h5>
                     {% for ac in maintenance_fleet %}
                     <span class="badge me-1 mb-1 bg-warning text-dark">{{ ac }}</span>
                     {% endfor %}
@@ -59,32 +58,32 @@
 
     <div class="col-lg-4">
         <div class="card p-4 mb-3">
-            <h6 class="fw-bold">运营数据</h6>
+            <h6 class="fw-bold"><span class="lang-zh">运营数据</span><span class="lang-en">Operations</span></h6>
             <ul class="list-unstyled mb-0" style="color:var(--text-secondary);font-size:0.88rem">
-                <li class="mb-1">22 架飞机</li>
-                <li class="mb-1">20+ 目的地</li>
-                <li class="mb-0">活跃成员</li>
+                <li class="mb-1"><span class="lang-zh">22 架飞机</span><span class="lang-en">22 Aircraft</span></li>
+                <li class="mb-1"><span class="lang-zh">20+ 目的地</span><span class="lang-en">20+ Destinations</span></li>
+                <li class="mb-0"><span class="lang-zh">活跃成员</span><span class="lang-en">Active Members</span></li>
             </ul>
         </div>
         <div class="card p-4 mb-3">
-            <h6 class="fw-bold">枢纽机场</h6>
+            <h6 class="fw-bold"><span class="lang-zh">枢纽机场</span><span class="lang-en">Hubs</span></h6>
             <ul class="list-unstyled mb-0" style="color:var(--text-secondary);font-size:0.85rem">
-                <li class="mb-2"><strong style="color:var(--text)">亚洲</strong><br>香港国际机场 (HKG)</li>
-                <li class="mb-2"><strong style="color:var(--text)">西欧</strong><br>巴黎戴高乐国际机场 (CDG)</li>
-                <li><strong style="color:var(--text)">北美</strong><br><span style="color:var(--text-muted)">待定</span></li>
+                <li class="mb-2"><strong style="color:var(--text)"><span class="lang-zh">亚洲</span><span class="lang-en">Asia</span></strong><br>香港国际机场 (HKG)</li>
+                <li class="mb-2"><strong style="color:var(--text)"><span class="lang-zh">西欧</span><span class="lang-en">Western Europe</span></strong><br>巴黎戴高乐国际机场 (CDG)</li>
+                <li><strong style="color:var(--text)"><span class="lang-zh">北美</span><span class="lang-en">North America</span></strong><br><span style="color:var(--text-muted)"><span class="lang-zh">待定</span><span class="lang-en">TBD</span></span></li>
             </ul>
         </div>
         <div class="card p-4 mb-3">
-            <h6 class="fw-bold">澳大利亚分司</h6>
-            <p class="mb-0" style="color:var(--text-secondary);font-size:0.85rem">新帆航空澳大利亚分司运营中，执飞机型：</p>
+            <h6 class="fw-bold"><span class="lang-zh">澳大利亚分司</span><span class="lang-en">Australia Division</span></h6>
+            <p class="mb-0" style="color:var(--text-secondary);font-size:0.85rem"><span class="lang-zh">新帆航空澳大利亚分司运营中，执飞机型：</span><span class="lang-en">Xinfan Airlines Australia Division in operation:</span></p>
             <span class="badge me-1 mt-1 bg-secondary">B737-800</span>
             <span class="badge me-1 mt-1 bg-secondary">EMB 120</span>
             <span class="badge me-1 mt-1 bg-secondary">CRJ-100</span>
         </div>
         <div class="card p-4">
-            <h6 class="fw-bold">联系我们</h6>
-            <p class="mb-0" style="color:var(--text-secondary);font-size:0.88rem"><i class="bi bi-discord"></i> <a href="https://discord.gg/xNCBJVPsmR" target="_blank">加入 Discord</a></p>
-            <p class="mb-0" style="color:var(--text-secondary);font-size:0.88rem">Roblox: <a href="https://www.roblox.com/communities/16064021/Xinfan-Airlines#!/about" target="_blank">Xinfan Airlines 社区</a></p>
+            <h6 class="fw-bold"><span class="lang-zh">联系我们</span><span class="lang-en">Contact</span></h6>
+            <p class="mb-0" style="color:var(--text-secondary);font-size:0.88rem"><i class="bi bi-discord"></i> <a href="https://discord.gg/xNCBJVPsmR" target="_blank"><span class="lang-zh">加入 Discord</span><span class="lang-en">Join Discord</span></a></p>
+            <p class="mb-0" style="color:var(--text-secondary);font-size:0.88rem">Roblox: <a href="https://www.roblox.com/communities/16064021/Xinfan-Airlines#!/about" target="_blank">Xinfan Airlines</a></p>
         </div>
     </div>
 </div>

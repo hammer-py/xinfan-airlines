@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
-{% block title %}登录 — 新帆航空{% endblock %}
+{% block title %}Login | 登录 — Xinfan Airlines{% endblock %}
 {% block extra_head %}
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 {% endblock %}
 {% block content %}
 <div class="row justify-content-center"><div class="col-md-5">
 <div class="card p-4">
-<h3 class="text-center mb-3">登录账户</h3>
+<h3 class="text-center mb-3"><span class="lang-zh">登录账户</span><span class="lang-en">Sign In</span></h3>
 <form method="post" id="loginForm">
     {% csrf_token %}
-    <div class="mb-3"><label class="form-label">用户名</label><input type="text" name="username" class="form-control" required></div>
-    <div class="mb-3"><label class="form-label">密码</label><input type="password" name="password" class="form-control" required></div>
+    <div class="mb-3"><label class="form-label"><span class="lang-zh">用户名</span><span class="lang-en">Username</span></label><input type="text" name="username" class="form-control" required></div>
+    <div class="mb-3"><label class="form-label"><span class="lang-zh">密码</span><span class="lang-en">Password</span></label><input type="password" name="password" class="form-control" required></div>
     <div class="mb-3 d-flex justify-content-center">
         <div class="cf-turnstile" data-sitekey="0x4AAAAAADnKla0lQkl2FCZM" data-theme="dark"></div>
     </div>
-    <button type="submit" class="btn btn-primary w-100">登录</button>
+    <button type="submit" class="btn btn-primary w-100"><span class="lang-zh">登录</span><span class="lang-en">Sign In</span></button>
 </form>
-<p class="text-center mt-3 mb-0">还没有账户？<a href="{% url 'register' %}">立即注册</a></p>
+<p class="text-center mt-3 mb-0"><span class="lang-zh">还没有账户？</span><span class="lang-en">Don't have an account? </span><a href="{% url 'register' %}"><span class="lang-zh">立即注册</span><span class="lang-en">Register</span></a></p>
 </div>
 </div></div>
 {% endblock %}

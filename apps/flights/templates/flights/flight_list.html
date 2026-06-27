@@ -1,18 +1,20 @@
 {% extends 'base.html' %}
-{% block title %}航班信息 — 新帆航空{% endblock %}
+{% block title %}Flights | 航班信息 — Xinfan Airlines{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="mb-0"><i class="bi bi-airplane"></i> 航班信息</h2>
+    <h2 class="mb-0"><i class="bi bi-airplane"></i> <span class="lang-zh">航班信息</span><span class="lang-en">Flights</span></h2>
     <div class="d-flex gap-2">
         {% if user.is_authenticated and user.profile.role in 'business,first_class,investor,uinv,admin' %}
-        <a href="{% url 'private_flight_request' %}" class="btn btn-outline-primary btn-sm">+ 私人航班申请</a>
+        <a href="{% url 'private_flight_request' %}" class="btn btn-outline-primary btn-sm"><span class="lang-zh">+ 私人航班申请</span><span class="lang-en">+ Private Flight Request</span></a>
         {% endif %}
-        {% if user.profile.has_staff_access %}<a href="{% url 'flight_create' %}" class="btn btn-primary btn-sm">+ 创建航班</a>{% endif %}
+        {% if user.profile.has_staff_access %}<a href="{% url 'flight_create' %}" class="btn btn-primary btn-sm"><span class="lang-zh">+ 创建航班</span><span class="lang-en">+ Create Flight</span></a>{% endif %}
     </div>
 </div>
 <div class="card p-3 mb-3">
     <form method="get" class="row g-2">
-        <div class="col-auto"><select name="status" class="form-select"><option value="">全部状态</option><option value="scheduled" {% if request.GET.status == 'scheduled' %}selected{% endif %}>已排班</option><option value="departed" {% if request.GET.status == 'departed' %}selected{% endif %}>已起飞</option><option value="arrived" {% if request.GET.status == 'arrived' %}selected{% endif %}>已到达</option></select></div>
+        <div class="col-auto"><select name="status" class="form-select"><option value=""><span class="lang-zh">全部状态</span><span class="lang-en">All Status</span></option><option value="scheduled" {% if request.GET.status == 'scheduled' %}selected{% endif %}><span class="lang-zh">已排班</span><span class="lang-en">Scheduled</span></option><option value="departed" {% if request.GET.status == 'departed' %}selected{% endif %}><span class="lang-zh">已起飞</span><span class="lang-en">Departed</span></option><option value="arrived" {% if request.GET.status == 'arrived' %}selected{% endif %}><span class="lang-zh">已到达</span><span class="lang-en">Arrived</span></option></select></div>
+        <div class="col-auto"><select name="route" class="form-select"><option value=""><span class="lang-zh">全部类型</span><span class="lang-en">All Types</span></option><option value="domestic" {% if request.GET.route == 'domestic' %}selected{% endif %}><span class="lang-zh">国内</span><span class="lang-en">Domestic</span></option><option value="international" {% if request.GET.route == 'international' %}selected{% endif %}><span class="lang-zh">国际</span><span class="lang-en">International</span></option></select></div>
+        <div class="col-auto"><button type="submit" class="btn btn-outline-primary"><span class="lang-zh">筛选</span><span class="lang-en">Filter</span></button></div>
         <div class="col-auto"><select name="route" class="form-select"><option value="">全部类型</option><option value="domestic" {% if request.GET.route == 'domestic' %}selected{% endif %}>国内</option><option value="international" {% if request.GET.route == 'international' %}selected{% endif %}>国际</option></select></div>
         <div class="col-auto"><button type="submit" class="btn btn-outline-primary">筛选</button></div>
     </form>
@@ -32,15 +34,15 @@
     </div>
 </div>
 {% empty %}
-<div class="col-12 text-center py-5" style="color:var(--text-muted)"><i class="bi bi-calendar-x display-1"></i><p>暂无航班</p></div>
+<div class="col-12 text-center py-5" style="color:var(--text-muted)"><i class="bi bi-calendar-x display-1"></i><p><span class="lang-zh">暂无航班</span><span class="lang-en">No flights available</span></p></div>
 {% endfor %}
 </div>
 
 {% if private_flights %}
 <div class="mt-5">
     <div class="d-flex align-items-center gap-2 mb-3">
-        <span class="badge" style="background:var(--accent);color:#171717;font-size:0.75rem">私人航班</span>
-        <p class="section-label mb-0">Private Flights</p>
+        <span class="badge" style="background:var(--accent);color:#171717;font-size:0.75rem"><span class="lang-zh">私人航班</span><span class="lang-en">Private</span></span>
+        <p class="section-label mb-0"><span class="lang-zh">Private Flights</span><span class="lang-en">Private Flights</span></p>
     </div>
     <div class="row g-3">
     {% for flight in private_flights %}

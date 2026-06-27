@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
-{% block title %}注册 — 新帆航空{% endblock %}
+{% block title %}Register | 注册 — Xinfan Airlines{% endblock %}
 {% block extra_head %}
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 {% endblock %}
 {% block content %}
 <div class="row justify-content-center"><div class="col-md-5">
 <div class="card p-4">
-<h3 class="text-center mb-3">创建账户</h3>
+<h3 class="text-center mb-3"><span class="lang-zh">创建账户</span><span class="lang-en">Create Account</span></h3>
 <form method="post" id="registerForm">
     {% csrf_token %}
-    <div class="mb-3"><label class="form-label">用户名 *</label><input type="text" name="username" class="form-control" required minlength="2"></div>
-    <div class="mb-3"><label class="form-label">邮箱 *</label><input type="email" name="email" class="form-control" required></div>
-    <div class="mb-3"><label class="form-label">密码 *</label><input type="password" name="password" class="form-control" required minlength="6"></div>
-    <div class="mb-3"><label class="form-label">确认密码 *</label><input type="password" name="confirm_password" class="form-control" required></div>
+    <div class="mb-3"><label class="form-label"><span class="lang-zh">用户名</span><span class="lang-en">Username</span> *</label><input type="text" name="username" class="form-control" required minlength="2"></div>
+    <div class="mb-3"><label class="form-label"><span class="lang-zh">邮箱</span><span class="lang-en">Email</span> *</label><input type="email" name="email" class="form-control" required></div>
+    <div class="mb-3"><label class="form-label"><span class="lang-zh">密码</span><span class="lang-en">Password</span> *</label><input type="password" name="password" class="form-control" required minlength="6"></div>
+    <div class="mb-3"><label class="form-label"><span class="lang-zh">确认密码</span><span class="lang-en">Confirm Password</span> *</label><input type="password" name="confirm_password" class="form-control" required></div>
     <div class="mb-3 d-flex justify-content-center">
         <div class="cf-turnstile" data-sitekey="0x4AAAAAADnKla0lQkl2FCZM" data-theme="dark"></div>
     </div>
-    <button type="submit" class="btn btn-primary w-100">注册</button>
+    <button type="submit" class="btn btn-primary w-100"><span class="lang-zh">注册</span><span class="lang-en">Register</span></button>
 </form>
-<p class="text-center mt-3 mb-0">已有账户？<a href="{% url 'login' %}">立即登录</a></p>
+<p class="text-center mt-3 mb-0"><span class="lang-zh">已有账户？</span><span class="lang-en">Already have an account? </span><a href="{% url 'login' %}"><span class="lang-zh">立即登录</span><span class="lang-en">Sign In</span></a></p>
 </div>
 </div></div>
 {% endblock %}
