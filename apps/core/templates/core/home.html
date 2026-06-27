@@ -263,50 +263,10 @@
         slides[i].classList.add('active');
         dots[current].classList.remove('active'); dots[i].classList.add('active');
         current = i; resetAuto();
-        setTimeout(() => animateChars(slides[i].querySelector('.hero-title')), 150);
     }
     function nextSlide() { goTo((current + 1) % total); }
     function prevSlide() { goTo((current - 1 + total) % total); }
     function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(nextSlide, 6000); }
-    function animateChars(title) {
-        // Always clear and re-create so language switch re-triggers
-        title.querySelectorAll('.char').forEach(el => el.remove());
-        const nodes = [];
-        function walk(parent) {
-            for (const node of parent.childNodes) {
-                if (node.nodeType === 3) { for (const ch of node.textContent) nodes.push(ch === ' ' ? ' ' : ch); }
-                else if (node.nodeType === 1) {
-                    if (node.tagName === 'BR') { nodes.push('<br>'); continue; }
-                    const cls = node.className; for (const ch of node.textContent) nodes.push({ cls, ch: ch === ' ' ? ' ' : ch });
-                }
-            }
-        }
-        const visible = title.querySelector('.lang-zh') ? (document.documentElement.lang !== 'en' ? title.querySelector('.lang-zh') : title.querySelector('.lang-en')) : title;
-        walk(visible); visible.innerHTML = ''; let idx = 0;
-        for (const n of nodes) {
-            if (n === '<br>') { visible.appendChild(document.createElement('br')); continue; }
-            const span = document.createElement('span'); span.className = 'char';
-            if (typeof n === 'object' && n.cls) span.classList.add(n.cls.split(' ')[0]);
-            span.style.animationDelay = (0.05 * idx) + 's';
-            span.textContent = typeof n === 'string' ? n : n.ch;
-            visible.appendChild(span); idx++;
-        }
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        const t = document.querySelector('.slide.active .hero-title');
-        if (t) animateChars(t);
-    });
     autoTimer = setInterval(nextSlide, 6000);
-
-    // Re-run char flip on language switch
-    const origToggleLang = toggleLang;
-    toggleLang = function() {
-        origToggleLang();
-        setTimeout(() => {
-            document.querySelectorAll('.slide .hero-title .char').forEach(el => el.remove());
-            const t = document.querySelector('.slide.active .hero-title');
-            if (t) animateChars(t);
-        }, 400);
-    };
 </script>
 {% endblock %}
