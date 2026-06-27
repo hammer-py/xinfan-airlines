@@ -1,318 +1,66 @@
 {% extends 'base.html' %}
-{% block title %}人员管理 — 新帆航空{% endblock %}
+{% block title %}<span class="lang-zh">人员管理</span><span class="lang-en">User Management</span>{% endblock %}
 {% block content %}
-<h2 class="mb-3"><i class="bi bi-people me-2"></i>人员管理</h2>
+<h2 class="mb-3"><i class="bi bi-people me-2"></i><span class="lang-zh">人员管理</span><span class="lang-en">User Management</span></h2>
+<form class="row g-2 mb-3"><div class="col-md-4"><input type="text" name="q" class="form-control" placeholder="{% verbatim %}<span class='lang-zh'>搜索用户名或邮箱...</span><span class='lang-en'>Search username or email...</span>{% endverbatim %}" value="{{ search_query }}"></div>
+<div class="col-md-3"><select name="role" class="form-select"><option value="">{% verbatim %}<span class='lang-zh'>全部角色</span><span class='lang-en'>All Roles</span>{% endverbatim %}</option>{% for val, label in role_choices %}<option value="{{ val }}" {% if role_filter == val %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+<div class="col-auto"><button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i> <span class="lang-zh">筛选</span><span class="lang-en">Filter</span></button>{% if search_query or role_filter %}<a href="{% url 'admin_users' %}" class="btn btn-outline-secondary"><span class="lang-zh">清除</span><span class="lang-en">Clear</span></a>{% endif %}</div></form>
 
-<!-- 搜索 & 过滤 -->
-<form class="row g-2 mb-3">
-    <div class="col-md-4">
-        <input type="text" name="q" class="form-control" placeholder="搜索用户名或邮箱..." value="{{ search_query }}">
-    </div>
-    <div class="col-md-3">
-        <select name="role" class="form-select">
-            <option value="">全部角色</option>
-            {% for val, label in role_choices %}
-            <option value="{{ val }}" {% if role_filter == val %}selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="col-auto">
-        <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i> 筛选</button>
-        {% if search_query or role_filter %}
-        <a href="{% url 'admin_users' %}" class="btn btn-outline-secondary">清除</a>
-        {% endif %}
-    </div>
-</form>
+<div class="mb-3"><button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#createUserForm"><i class="bi bi-person-plus"></i> <span class="lang-zh">创建用户</span><span class="lang-en">Create User</span></button>
+<div class="collapse mt-3" id="createUserForm"><div class="card p-3"><form method="post">{% csrf_token %}<input type="hidden" name="action" value="create_user"><div class="row g-3">
+<div class="col-md-3"><label class="form-label"><span class="lang-zh">用户名</span><span class="lang-en">Username</span></label><input type="text" name="username" class="form-control" required minlength="2"></div>
+<div class="col-md-3"><label class="form-label"><span class="lang-zh">邮箱</span><span class="lang-en">Email</span></label><input type="email" name="email" class="form-control" required></div>
+<div class="col-md-2"><label class="form-label"><span class="lang-zh">密码</span><span class="lang-en">Password</span></label><input type="password" name="password" class="form-control" required minlength="6"></div>
+<div class="col-md-2"><label class="form-label"><span class="lang-zh">角色</span><span class="lang-en">Role</span></label><select name="role" class="form-select">
+<optgroup label="User Levels | 用户等级"><option value="economy">Economy | 经济舱旅客</option><option value="business">Business | 商务舱旅客</option><option value="first_class">First Class | 头等舱旅客</option><option value="investor">Investor | 投资者</option><option value="uinv">Top Investor | 顶级投资者</option></optgroup>
+<optgroup label="Trainee | 实习"><option value="trainee_cabin_crew">Trainee Cabin Crew | 实习空乘</option><option value="trainee_first_officer">Trainee First Officer | 实习副驾驶</option><option value="trainee_captain">Trainee Captain | 实习机长</option><option value="trainee_ground">Trainee Ground Staff | 实习地勤</option></optgroup>
+<optgroup label="Staff | 正式员工"><option value="cabin_crew">Cabin Crew | 正式空乘</option><option value="first_officer">First Officer | 正式副驾驶</option><option value="captain">Captain | 正式机长</option><option value="ground_staff">Ground Staff | 正式地勤</option></optgroup>
+<optgroup label="Admin (Full) | 管理员（全部权限）"><option value="admin">Admin | 管理员</option><option value="hod">HOD | 部门主管</option><option value="shr">SHR | 高级管理</option><option value="vice_chairman">Vice Chairman | 副董事长</option><option value="chairman">Chairman | 董事长</option><option value="group_owner">Group Owner | 集团所有者</option></optgroup>
+<optgroup label="Admin (Limited) | 管理员（有限权限）"><option value="flight_host">Flight Host | 飞行经理</option></optgroup>
+</select></div>
+<div class="col-md-2 d-flex align-items-end"><button type="submit" class="btn btn-success w-100"><span class="lang-zh">创建</span><span class="lang-en">Create</span></button></div></div></form></div></div></div>
 
-<!-- 创建用户 -->
-<div class="mb-3">
-    <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#createUserForm">
-        <i class="bi bi-person-plus"></i> 创建用户
-    </button>
-    <div class="collapse mt-3" id="createUserForm">
-        <div class="card p-3">
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="create_user">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <label class="form-label">用户名</label>
-                        <input type="text" name="username" class="form-control" required minlength="2">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">邮箱</label>
-                        <input type="email" name="email" class="form-control" required>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">密码</label>
-                        <input type="password" name="password" class="form-control" required minlength="6">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">角色</label>
-                        <select name="role" class="form-select">
-                            <optgroup label="—— 用户等级 ——">
-                                <option value="economy">经济舱旅客</option>
-                                <option value="business">商务舱旅客</option>
-                                <option value="first_class">头等舱旅客</option>
-                                <option value="investor">投资者</option>
-                                <option value="uinv">顶级投资者</option>
-                            </optgroup>
-                            <optgroup label="—— 员工等级（实习） ——">
-                                <option value="trainee_cabin_crew">实习空乘</option>
-                                <option value="trainee_first_officer">实习副驾驶</option>
-                                <option value="trainee_captain">实习机长</option>
-                                <option value="trainee_ground">实习地勤</option>
-                            </optgroup>
-                            <optgroup label="—— 员工等级（正式） ——">
-                                <option value="cabin_crew">正式空乘</option>
-                                <option value="first_officer">正式副驾驶</option>
-                                <option value="captain">正式机长</option>
-                                <option value="ground_staff">正式地勤</option>
-                            </optgroup>
-                            <optgroup label="—— 管理员（全部权限） ——">
-                                <option value="admin">管理员</option>
-                                <option value="hod">HOD-部门主管</option>
-                                <option value="shr">SHR-高级管理</option>
-                                <option value="vice_chairman">Vice Chairman-副董事长</option>
-                                <option value="chairman">Chairman-董事长</option>
-                                <option value="group_owner">Group Owner-集团所有者</option>
-                            </optgroup>
-                            <optgroup label="—— 管理员（有限权限） ——">
-                                <option value="flight_host">Flight Host-飞行经理</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-success w-100">创建</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- 批量操作工具栏 -->
 <div class="d-flex gap-2 align-items-center mb-2" id="batchToolbar" style="display:none">
-    <span class="text-muted small" id="batchCount">已选 0 项</span>
-    <select class="form-select form-select-sm w-auto" id="batchRole">
-        <option value="">-- 批量设置角色 --</option>
-        <optgroup label="—— 用户等级 ——">
-            <option value="economy">经济舱旅客</option>
-            <option value="business">商务舱旅客</option>
-            <option value="first_class">头等舱旅客</option>
-            <option value="investor">投资者</option>
-            <option value="uinv">顶级投资者</option>
-        </optgroup>
-        <optgroup label="—— 员工等级（实习） ——">
-            <option value="trainee_cabin_crew">实习空乘</option>
-            <option value="trainee_first_officer">实习副驾驶</option>
-            <option value="trainee_captain">实习机长</option>
-            <option value="trainee_ground">实习地勤</option>
-        </optgroup>
-        <optgroup label="—— 员工等级（正式） ——">
-            <option value="cabin_crew">正式空乘</option>
-            <option value="first_officer">正式副驾驶</option>
-            <option value="captain">正式机长</option>
-            <option value="ground_staff">正式地勤</option>
-        </optgroup>
-        <optgroup label="—— 管理员（全部权限） ——">
-            <option value="admin">管理员</option>
-            <option value="hod">部门主管</option>
-            <option value="shr">高级管理</option>
-            <option value="vice_chairman">Vice Chairman-副董事长</option>
-            <option value="chairman">Chairman-董事长</option>
-            <option value="group_owner">Group Owner-集团所有者</option>
-        </optgroup>
-        <optgroup label="—— 管理员（有限权限） ——">
-            <option value="flight_host">Flight Host-飞行经理</option>
-        </optgroup>
-    </select>
-    <button type="button" class="btn btn-sm btn-primary" onclick="submitBatchUpdate()">应用</button>
-    <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmBatchDelete()">
-        <i class="bi bi-trash"></i> 批量删除
-    </button>
-</div>
+    <span class="text-muted small" id="batchCount"><span class="lang-zh">已选</span><span class="lang-en">Selected</span> 0</span>
+    <select class="form-select form-select-sm w-auto" id="batchRole"><option value="">-- <span class="lang-zh">批量设置角色</span><span class="lang-en">Batch Set Role</span> --</option>
+<optgroup label="User | 用户"><option value="economy">Economy | 经济舱旅客</option><option value="business">Business | 商务舱旅客</option><option value="first_class">First Class | 头等舱旅客</option><option value="investor">Investor | 投资者</option><option value="uinv">Top Investor | 顶级投资者</option></optgroup>
+<optgroup label="Trainee | 实习"><option value="trainee_cabin_crew">Trainee Cabin Crew | 实习空乘</option><option value="trainee_first_officer">Trainee First Officer | 实习副驾驶</option><option value="trainee_captain">Trainee Captain | 实习机长</option><option value="trainee_ground">Trainee Ground Staff | 实习地勤</option></optgroup>
+<optgroup label="Staff | 正式"><option value="cabin_crew">Cabin Crew | 正式空乘</option><option value="first_officer">First Officer | 正式副驾驶</option><option value="captain">Captain | 正式机长</option><option value="ground_staff">Ground Staff | 正式地勤</option></optgroup>
+<optgroup label="Admin Full | 管理员全权限"><option value="admin">Admin | 管理员</option><option value="hod">HOD | 部门主管</option><option value="shr">SHR | 高级管理</option><option value="vice_chairman">Vice Chairman | 副董事长</option><option value="chairman">Chairman | 董事长</option><option value="group_owner">Group Owner | 集团所有者</option></optgroup>
+<optgroup label="Admin Limited | 管理员有限权限"><option value="flight_host">Flight Host | 飞行经理</option></optgroup>
+</select>
+<button type="button" class="btn btn-sm btn-primary" onclick="submitBatchUpdate()"><span class="lang-zh">应用</span><span class="lang-en">Apply</span></button>
+<button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmBatchDelete()"><i class="bi bi-trash"></i> <span class="lang-zh">批量删除</span><span class="lang-en">Batch Delete</span></button></div>
 
-<!-- 用户列表 -->
-<div class="card p-3">
-<table class="table table-hover mb-0 align-middle">
-<thead>
-    <tr>
-        <th style="width:36px"><input type="checkbox" id="selectAll" onchange="toggleAll(this)"></th>
-        <th>ID</th><th>用户名</th><th>邮箱</th><th>角色</th><th>里程</th><th>注册时间</th><th style="min-width:280px">操作</th>
-    </tr>
-</thead>
-<tbody>
-{% for u in users %}
-<tr>
-    <td><input type="checkbox" class="user-checkbox" value="{{ u.id }}" onchange="onCheckChange()" {% if u.id == request.user.id %}disabled{% endif %}></td>
-    <td>{{ u.id }}</td>
-    <td>{{ u.username }}</td>
-    <td>{{ u.email|default:'—' }}</td>
-    <td><span class="badge {% if u.profile.is_admin %}bg-danger{% elif u.profile.role == 'flight_host' %}bg-warning text-dark{% elif 'trainee' in u.profile.role %}bg-warning text-dark{% elif u.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif u.profile.role == 'investor' or u.profile.role == 'uinv' %}bg-info text-dark{% else %}bg-secondary{% endif %}">{{ u.profile.get_role_display }}</span></td>
-    <td>{{ u.profile.miles }}</td>
-    <td>{{ u.date_joined|date:"Y-m-d" }}</td>
-    <td>
-        <form method="post" class="d-flex gap-1">{% csrf_token %}
-            <input type="hidden" name="action" value="update_role">
-            <input type="hidden" name="user_id" value="{{ u.id }}">
-            <select name="role" class="form-select form-select-sm w-auto">
-                <optgroup label="—— 用户等级 ——">
-                    <option value="economy" {% if u.profile.role == 'economy' %}selected{% endif %}>经济舱旅客</option>
-                    <option value="business" {% if u.profile.role == 'business' %}selected{% endif %}>商务舱旅客</option>
-                    <option value="first_class" {% if u.profile.role == 'first_class' %}selected{% endif %}>头等舱旅客</option>
-                    <option value="investor" {% if u.profile.role == 'investor' %}selected{% endif %}>投资者</option>
-                    <option value="uinv" {% if u.profile.role == 'uinv' %}selected{% endif %}>顶级投资者</option>
-                </optgroup>
-                <optgroup label="—— 员工等级（实习） ——">
-                    <option value="trainee_cabin_crew" {% if u.profile.role == 'trainee_cabin_crew' %}selected{% endif %}>实习空乘</option>
-                    <option value="trainee_first_officer" {% if u.profile.role == 'trainee_first_officer' %}selected{% endif %}>实习副驾驶</option>
-                    <option value="trainee_captain" {% if u.profile.role == 'trainee_captain' %}selected{% endif %}>实习机长</option>
-                    <option value="trainee_ground" {% if u.profile.role == 'trainee_ground' %}selected{% endif %}>实习地勤</option>
-                </optgroup>
-                <optgroup label="—— 员工等级（正式） ——">
-                    <option value="cabin_crew" {% if u.profile.role == 'cabin_crew' %}selected{% endif %}>正式空乘</option>
-                    <option value="first_officer" {% if u.profile.role == 'first_officer' %}selected{% endif %}>正式副驾驶</option>
-                    <option value="captain" {% if u.profile.role == 'captain' %}selected{% endif %}>正式机长</option>
-                    <option value="ground_staff" {% if u.profile.role == 'ground_staff' %}selected{% endif %}>正式地勤</option>
-                </optgroup>
-                <optgroup label="—— 管理员（全部权限） ——">
-                    <option value="admin" {% if u.profile.role == 'admin' %}selected{% endif %}>管理员</option>
-                    <option value="hod" {% if u.profile.role == 'hod' %}selected{% endif %}>HOD-部门主管</option>
-                    <option value="shr" {% if u.profile.role == 'shr' %}selected{% endif %}>SHR-高级管理</option>
-                    <option value="vice_chairman" {% if u.profile.role == 'vice_chairman' %}selected{% endif %}>Vice Chairman-副董事长</option>
-                    <option value="chairman" {% if u.profile.role == 'chairman' %}selected{% endif %}>Chairman-董事长</option>
-                    <option value="group_owner" {% if u.profile.role == 'group_owner' %}selected{% endif %}>Group Owner-集团所有者</option>
-                </optgroup>
-                <optgroup label="—— 管理员（有限权限） ——">
-                    <option value="flight_host" {% if u.profile.role == 'flight_host' %}selected{% endif %}>Flight Host-飞行经理</option>
-                </optgroup>
-            </select>
-            <button type="submit" class="btn btn-sm btn-primary">更新</button>
-            {% if u.id != request.user.id %}
-            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-user-id="{{ u.id }}" data-username="{{ u.username|escapejs }}">
-                <i class="bi bi-trash"></i>
-            </button>
-            {% endif %}
-        </form>
-    </td>
-</tr>
-{% empty %}
-<tr><td colspan="8" class="text-center text-muted py-4">没有找到匹配的用户</td></tr>
-{% endfor %}
-</tbody>
-</table>
-</div>
+<div class="card p-3"><table class="table table-hover mb-0 align-middle"><thead><tr><th style="width:36px"><input type="checkbox" id="selectAll" onchange="toggleAll(this)"></th><th>ID</th><th><span class="lang-zh">用户名</span><span class="lang-en">Username</span></th><th><span class="lang-zh">邮箱</span><span class="lang-en">Email</span></th><th><span class="lang-zh">角色</span><span class="lang-en">Role</span></th><th><span class="lang-zh">里程</span><span class="lang-en">Miles</span></th><th><span class="lang-zh">注册时间</span><span class="lang-en">Registered</span></th><th style="min-width:280px"><span class="lang-zh">操作</span><span class="lang-en">Action</span></th></tr></thead>
+<tbody>{% for u in users %}<tr>
+<td><input type="checkbox" class="user-checkbox" value="{{ u.id }}" onchange="onCheckChange()" {% if u.id == request.user.id %}disabled{% endif %}></td><td>{{ u.id }}</td><td>{{ u.username }}</td><td>{{ u.email|default:'—' }}</td>
+<td><span class="badge {% if u.profile.is_admin %}bg-danger{% elif u.profile.role == 'flight_host' %}bg-warning text-dark{% elif 'trainee' in u.profile.role %}bg-warning text-dark{% elif u.profile.role in 'cabin_crew,first_officer,captain,ground_staff' %}bg-success{% elif u.profile.role == 'investor' or u.profile.role == 'uinv' %}bg-info text-dark{% else %}bg-secondary{% endif %}">{{ u.profile.get_role_display }}</span></td>
+<td>{{ u.profile.miles }}</td><td>{{ u.date_joined|date:"Y-m-d" }}</td>
+<td><form method="post" class="d-flex gap-1">{% csrf_token %}<input type="hidden" name="action" value="update_role"><input type="hidden" name="user_id" value="{{ u.id }}">
+<select name="role" class="form-select form-select-sm w-auto">
+<optgroup label="User | 用户"><option value="economy" {% if u.profile.role == 'economy' %}selected{% endif %}>Economy</option><option value="business" {% if u.profile.role == 'business' %}selected{% endif %}>Business</option><option value="first_class" {% if u.profile.role == 'first_class' %}selected{% endif %}>First Class</option><option value="investor" {% if u.profile.role == 'investor' %}selected{% endif %}>Investor</option><option value="uinv" {% if u.profile.role == 'uinv' %}selected{% endif %}>Top Investor</option></optgroup>
+<optgroup label="Trainee | 实习"><option value="trainee_cabin_crew" {% if u.profile.role == 'trainee_cabin_crew' %}selected{% endif %}>Trainee Cabin Crew</option><option value="trainee_first_officer" {% if u.profile.role == 'trainee_first_officer' %}selected{% endif %}>Trainee First Officer</option><option value="trainee_captain" {% if u.profile.role == 'trainee_captain' %}selected{% endif %}>Trainee Captain</option><option value="trainee_ground" {% if u.profile.role == 'trainee_ground' %}selected{% endif %}>Trainee Ground Staff</option></optgroup>
+<optgroup label="Staff | 正式"><option value="cabin_crew" {% if u.profile.role == 'cabin_crew' %}selected{% endif %}>Cabin Crew</option><option value="first_officer" {% if u.profile.role == 'first_officer' %}selected{% endif %}>First Officer</option><option value="captain" {% if u.profile.role == 'captain' %}selected{% endif %}>Captain</option><option value="ground_staff" {% if u.profile.role == 'ground_staff' %}selected{% endif %}>Ground Staff</option></optgroup>
+<optgroup label="Admin Full | 管理全权限"><option value="admin" {% if u.profile.role == 'admin' %}selected{% endif %}>Admin</option><option value="hod" {% if u.profile.role == 'hod' %}selected{% endif %}>HOD</option><option value="shr" {% if u.profile.role == 'shr' %}selected{% endif %}>SHR</option><option value="vice_chairman" {% if u.profile.role == 'vice_chairman' %}selected{% endif %}>Vice Chairman</option><option value="chairman" {% if u.profile.role == 'chairman' %}selected{% endif %}>Chairman</option><option value="group_owner" {% if u.profile.role == 'group_owner' %}selected{% endif %}>Group Owner</option></optgroup>
+<optgroup label="Admin Limited | 管理有限"><option value="flight_host" {% if u.profile.role == 'flight_host' %}selected{% endif %}>Flight Host</option></optgroup>
+</select>
+<button type="submit" class="btn btn-sm btn-primary"><span class="lang-zh">更新</span><span class="lang-en">Update</span></button>
+{% if u.id != request.user.id %}<button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-user-id="{{ u.id }}" data-username="{{ u.username|escapejs }}"><i class="bi bi-trash"></i></button>{% endif %}</form></td></tr>
+{% empty %}<tr><td colspan="8" class="text-center text-muted py-4"><span class="lang-zh">没有找到匹配的用户</span><span class="lang-en">No matching users found</span></td></tr>{% endfor %}</tbody></table></div>
+<a href="{% url 'admin_panel' %}" class="btn btn-outline-secondary mt-3">← <span class="lang-zh">返回管理后台</span><span class="lang-en">Back to Admin</span></a>
 
-<a href="{% url 'admin_panel' %}" class="btn btn-outline-secondary mt-3">← 返回管理后台</a>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header border-bottom-0 pb-0"><h5 class="modal-title"><span class="lang-zh">确认删除</span><span class="lang-en">Confirm Delete</span></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p class="mb-0"><span class="lang-zh">确定要删除用户</span><span class="lang-en">Are you sure you want to delete user </span><strong id="deleteUsername"></strong>？<span class="lang-zh">此操作不可撤销。</span><span class="lang-en">This action cannot be undone.</span></p></div><div class="modal-footer border-top-0 pt-0"><button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal"><span class="lang-zh">取消</span><span class="lang-en">Cancel</span></button><form method="post" class="d-inline">{% csrf_token %}<input type="hidden" name="action" value="delete_user"><input type="hidden" name="user_id" id="deleteUserId"><button type="submit" class="btn btn-danger btn-sm"><span class="lang-zh">确认删除</span><span class="lang-en">Confirm</span></button></form></div></div></div></div>
 
-<!-- 单个删除 Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title">确认删除</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p class="mb-0">确定要删除用户 <strong id="deleteUsername"></strong> 吗？此操作不可撤销。</p>
-            </div>
-            <div class="modal-footer border-top-0 pt-0">
-                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">取消</button>
-                <form method="post" class="d-inline">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="delete_user">
-                    <input type="hidden" name="user_id" id="deleteUserId">
-                    <button type="submit" class="btn btn-danger btn-sm">确认删除</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<div class="modal fade" id="batchDeleteModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header border-bottom-0 pb-0"><h5 class="modal-title"><span class="lang-zh">批量删除</span><span class="lang-en">Batch Delete</span></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p class="mb-0"><span class="lang-zh">确定要删除选中的</span><span class="lang-en">Are you sure you want to delete the selected </span><strong id="batchDeleteCount"></strong> <span class="lang-zh">个用户吗？此操作不可撤销。</span><span class="lang-en">users? This action cannot be undone.</span></p></div><div class="modal-footer border-top-0 pt-0"><button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal"><span class="lang-zh">取消</span><span class="lang-en">Cancel</span></button><form method="post" id="batchDeleteForm" class="d-inline">{% csrf_token %}<input type="hidden" name="action" value="batch_delete"><div id="batchDeleteInputs"></div><button type="submit" class="btn btn-danger btn-sm"><span class="lang-zh">确认删除</span><span class="lang-en">Confirm</span></button></form></div></div></div></div>
 
-<!-- 批量删除 Modal -->
-<div class="modal fade" id="batchDeleteModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title">批量删除</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p class="mb-0">确定要删除选中的 <strong id="batchDeleteCount"></strong> 个用户吗？此操作不可撤销。</p>
-            </div>
-            <div class="modal-footer border-top-0 pt-0">
-                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">取消</button>
-                <form method="post" id="batchDeleteForm" class="d-inline">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="batch_delete">
-                    <div id="batchDeleteInputs"></div>
-                    <button type="submit" class="btn btn-danger btn-sm">确认删除</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<form method="post" id="batchUpdateForm" style="display:none">{% csrf_token %}<input type="hidden" name="action" value="batch_update_role"><input type="hidden" name="role" id="batchUpdateRole"><div id="batchUpdateInputs"></div></form>
 
-<!-- 批量更新角色 Form -->
-<form method="post" id="batchUpdateForm" style="display:none">
-    {% csrf_token %}
-    <input type="hidden" name="action" value="batch_update_role">
-    <input type="hidden" name="role" id="batchUpdateRole">
-    <div id="batchUpdateInputs"></div>
-</form>
-
-<script>
-function getChecked() { return document.querySelectorAll('.user-checkbox:checked'); }
-
-function toggleAll(el) {
-    document.querySelectorAll('.user-checkbox:not([disabled])').forEach(cb => cb.checked = el.checked);
-    onCheckChange();
-}
-
-function onCheckChange() {
-    var checked = getChecked();
-    var bar = document.getElementById('batchToolbar');
-    var count = document.getElementById('batchCount');
-    if (!bar || !count) return;
-    if (checked.length > 0) {
-        bar.style.display = 'flex';
-        count.textContent = '已选 ' + checked.length + ' 项';
-    } else {
-        bar.style.display = 'none';
-    }
-}
-
-function collectIds() {
-    return Array.from(getChecked()).map(cb => '<input type="hidden" name="user_ids" value="' + cb.value + '">').join('');
-}
-
-function submitBatchUpdate() {
-    var role = document.getElementById('batchRole').value;
-    if (!role) { alert('请选择要设置的角色'); return; }
-    if (getChecked().length === 0) { alert('请先选择用户'); return; }
-    document.getElementById('batchUpdateRole').value = role;
-    document.getElementById('batchUpdateInputs').innerHTML = collectIds();
-    document.getElementById('batchUpdateForm').submit();
-}
-
-function confirmBatchDelete() {
-    if (getChecked().length === 0) { alert('请先选择用户'); return; }
-    document.getElementById('batchDeleteCount').textContent = getChecked().length;
-    document.getElementById('batchDeleteInputs').innerHTML = collectIds();
-    new bootstrap.Modal(document.getElementById('batchDeleteModal')).show();
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    var delModal = document.getElementById('deleteModal');
-    if (delModal) {
-        delModal.addEventListener('show.bs.modal', function(event) {
-            var btn = event.relatedTarget;
-            if (!btn) return;
-            document.getElementById('deleteUserId').value = btn.getAttribute('data-user-id') || '';
-            document.getElementById('deleteUsername').textContent = btn.getAttribute('data-username') || '';
-        });
-    }
-});
-</script>
-{% endblock %}
+<script>function getChecked(){return document.querySelectorAll('.user-checkbox:checked')}
+function toggleAll(el){document.querySelectorAll('.user-checkbox:not([disabled])').forEach(cb=>cb.checked=el.checked);onCheckChange()}
+function onCheckChange(){var checked=getChecked();var bar=document.getElementById('batchToolbar');var count=document.getElementById('batchCount');if(!bar||!count)return;if(checked.length>0){bar.style.display='flex';count.textContent=(document.documentElement.lang==='en'?'Selected ':'已选 ')+checked.length}else{bar.style.display='none'}}
+function collectIds(){return Array.from(getChecked()).map(cb=>'<input type="hidden" name="user_ids" value="'+cb.value+'">').join('')}
+function submitBatchUpdate(){var role=document.getElementById('batchRole').value;if(!role){alert(document.documentElement.lang==='en'?'Please select a role':'请选择要设置的角色');return}if(getChecked().length===0){alert(document.documentElement.lang==='en'?'Please select users first':'请先选择用户');return}document.getElementById('batchUpdateRole').value=role;document.getElementById('batchUpdateInputs').innerHTML=collectIds();document.getElementById('batchUpdateForm').submit()}
+function confirmBatchDelete(){if(getChecked().length===0){alert(document.documentElement.lang==='en'?'Please select users first':'请先选择用户');return}document.getElementById('batchDeleteCount').textContent=getChecked().length;document.getElementById('batchDeleteInputs').innerHTML=collectIds();new bootstrap.Modal(document.getElementById('batchDeleteModal')).show()}
+document.addEventListener('DOMContentLoaded',function(){var delModal=document.getElementById('deleteModal');if(delModal){delModal.addEventListener('show.bs.modal',function(event){var btn=event.relatedTarget;if(!btn)return;document.getElementById('deleteUserId').value=btn.getAttribute('data-user-id')||'';document.getElementById('deleteUsername').textContent=btn.getAttribute('data-username')||''})}});
+</script>{% endblock %}

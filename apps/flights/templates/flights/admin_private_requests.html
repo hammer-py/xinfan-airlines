@@ -1,63 +1,19 @@
 {% extends 'base.html' %}
-{% block title %}私人航班审批 — 新帆航空{% endblock %}
+{% block title %}<span class="lang-zh">私人航班审批</span><span class="lang-en">Private Flight Approvals</span>{% endblock %}
 {% block content %}
-
 <p class="section-label">Admin</p>
-<h2 class="page-heading">私人航班审批</h2>
-
+<h2 class="page-heading"><span class="lang-zh">私人航班审批</span><span class="lang-en">Private Flight Approvals</span></h2>
 <div class="mb-3 d-flex gap-2">
-    <a href="{% url 'admin_private_requests' %}" class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-outline-secondary{% endif %}">全部</a>
-    <a href="?status=pending" class="btn btn-sm {% if status_filter == 'pending' %}btn-primary{% else %}btn-outline-secondary{% endif %}">待审批</a>
-    <a href="?status=approved" class="btn btn-sm {% if status_filter == 'approved' %}btn-primary{% else %}btn-outline-secondary{% endif %}">已通过</a>
-    <a href="?status=rejected" class="btn btn-sm {% if status_filter == 'rejected' %}btn-primary{% else %}btn-outline-secondary{% endif %}">已拒绝</a>
+    <a href="{% url 'admin_private_requests' %}" class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-outline-secondary{% endif %}"><span class="lang-zh">全部</span><span class="lang-en">All</span></a>
+    <a href="?status=pending" class="btn btn-sm {% if status_filter == 'pending' %}btn-primary{% else %}btn-outline-secondary{% endif %}"><span class="lang-zh">待审批</span><span class="lang-en">Pending</span></a>
+    <a href="?status=approved" class="btn btn-sm {% if status_filter == 'approved' %}btn-primary{% else %}btn-outline-secondary{% endif %}"><span class="lang-zh">已通过</span><span class="lang-en">Approved</span></a>
+    <a href="?status=rejected" class="btn btn-sm {% if status_filter == 'rejected' %}btn-primary{% else %}btn-outline-secondary{% endif %}"><span class="lang-zh">已拒绝</span><span class="lang-en">Rejected</span></a>
 </div>
-
 <div class="card p-3">
-<table class="table table-hover mb-0">
-<thead><tr><th>申请人</th><th>航班号</th><th>路线</th><th>机型</th><th>起飞时间</th><th>目的</th><th>状态</th><th>操作</th></tr></thead>
-<tbody>
-{% for r in requests %}
-<tr>
-    <td>{{ r.user.username }}</td>
-    <td><strong>{{ r.flight_number }}</strong></td>
-    <td>{{ r.origin }} → {{ r.destination }}</td>
-    <td>{{ r.aircraft }}</td>
-    <td>{{ r.departure_time|date:"Y-m-d H:i" }}</td>
-    <td>{{ r.purpose|truncatechars:30 }}</td>
-    <td>
-        <span class="badge {% if r.status == 'approved' %}bg-success{% elif r.status == 'rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ r.get_status_display }}</span>
-    </td>
-    <td>
-        {% if r.status == 'pending' %}
-        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#req{{ r.id }}">处理</button>
-        {% else %}
-        <small style="color:var(--text-muted)">{{ r.reviewed_by.username|default:'—' }} / {{ r.reviewed_at|date:"m-d H:i"|default:'—' }}</small>
-        {% endif %}
-    </td>
-</tr>
-<tr class="collapse" id="req{{ r.id }}">
-    <td colspan="8">
-        <div class="p-3" style="background:var(--surface-light);border-radius:var(--radius-sm)">
-            <div class="row mb-2">
-                <div class="col-sm-6"><strong>飞行目的：</strong><br>{{ r.purpose }}</div>
-                <div class="col-sm-3"><strong>乘客人数：</strong>{{ r.passenger_count }}</div>
-                <div class="col-sm-3"><strong>到达时间：</strong><br>{{ r.arrival_time|date:"Y-m-d H:i" }}</div>
-            </div>
-            {% if r.notes %}<p class="mb-2"><strong>补充说明：</strong>{{ r.notes }}</p>{% endif %}
-            <form method="post" class="d-flex gap-2 align-items-center mt-2">{% csrf_token %}
-                <input type="hidden" name="request_id" value="{{ r.id }}">
-                <input type="text" name="review_note" class="form-control form-control-sm" placeholder="审批备注（拒绝时可选填）" style="max-width:260px">
-                <button name="action" value="approve" class="btn btn-sm btn-success">通过并创建航班</button>
-                <button name="action" value="reject" class="btn btn-sm btn-danger">拒绝</button>
-            </form>
-        </div>
-    </td>
-</tr>
-{% empty %}
-<tr><td colspan="8" class="text-center py-4" style="color:var(--text-muted)">暂无私人航班申请</td></tr>
-{% endfor %}
-</tbody></table>
-</div>
-
-<a href="{% url 'admin_panel' %}" class="btn btn-outline-secondary mt-3">← 返回管理后台</a>
-{% endblock %}
+<table class="table table-hover mb-0"><thead><tr><th><span class="lang-zh">申请人</span><span class="lang-en">Applicant</span></th><th><span class="lang-zh">航班号</span><span class="lang-en">Flight No.</span></th><th><span class="lang-zh">路线</span><span class="lang-en">Route</span></th><th><span class="lang-zh">机型</span><span class="lang-en">Aircraft</span></th><th><span class="lang-zh">起飞时间</span><span class="lang-en">Departure</span></th><th><span class="lang-zh">目的</span><span class="lang-en">Purpose</span></th><th><span class="lang-zh">状态</span><span class="lang-en">Status</span></th><th><span class="lang-zh">操作</span><span class="lang-en">Action</span></th></tr></thead>
+<tbody>{% for r in requests %}<tr><td>{{ r.user.username }}</td><td><strong>{{ r.flight_number }}</strong></td><td>{{ r.origin }} → {{ r.destination }}</td><td>{{ r.aircraft }}</td><td>{{ r.departure_time|date:"Y-m-d H:i" }}</td><td>{{ r.purpose|truncatechars:30 }}</td><td><span class="badge {% if r.status == 'approved' %}bg-success{% elif r.status == 'rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ r.get_status_display }}</span></td>
+<td>{% if r.status == 'pending' %}<button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#req{{ r.id }}"><span class="lang-zh">处理</span><span class="lang-en">Handle</span></button>{% else %}<small style="color:var(--text-muted)">{{ r.reviewed_by.username|default:'—' }} / {{ r.reviewed_at|date:"m-d H:i"|default:'—' }}</small>{% endif %}</td></tr>
+<tr class="collapse" id="req{{ r.id }}"><td colspan="8"><div class="p-3" style="background:var(--surface-light);border-radius:var(--radius-sm)"><div class="row mb-2"><div class="col-sm-6"><strong><span class="lang-zh">飞行目的</span><span class="lang-en">Purpose</span>：</strong><br>{{ r.purpose }}</div><div class="col-sm-3"><strong><span class="lang-zh">乘客人数</span><span class="lang-en">Passengers</span>：</strong>{{ r.passenger_count }}</div><div class="col-sm-3"><strong><span class="lang-zh">到达时间</span><span class="lang-en">Arrival</span>：</strong><br>{{ r.arrival_time|date:"Y-m-d H:i" }}</div></div>{% if r.notes %}<p class="mb-2"><strong><span class="lang-zh">补充说明</span><span class="lang-en">Notes</span>：</strong>{{ r.notes }}</p>{% endif %}<form method="post" class="d-flex gap-2 align-items-center mt-2">{% csrf_token %}<input type="hidden" name="request_id" value="{{ r.id }}"><input type="text" name="review_note" class="form-control form-control-sm" placeholder="<span class="lang-zh">审批备注（拒绝时可选填）</span><span class="lang-en">Review note (optional for rejection)</span>" style="max-width:260px"><button name="action" value="approve" class="btn btn-sm btn-success"><span class="lang-zh">通过并创建航班</span><span class="lang-en">Approve & Create Flight</span></button><button name="action" value="reject" class="btn btn-sm btn-danger"><span class="lang-zh">拒绝</span><span class="lang-en">Reject</span></button></form></div></td></tr>
+{% empty %}<tr><td colspan="8" class="text-center py-4" style="color:var(--text-muted)"><span class="lang-zh">暂无私人航班申请</span><span class="lang-en">No private flight requests</span></td></tr>{% endfor %}
+</tbody></table></div>
+<a href="{% url 'admin_panel' %}" class="btn btn-outline-secondary mt-3">← <span class="lang-zh">返回管理后台</span><span class="lang-en">Back to Admin</span></a>{% endblock %}
