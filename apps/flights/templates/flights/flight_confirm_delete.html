@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
-{% block title %}删除航班 — 新帆航空{% endblock %}
+{% block title %}Delete Flight | 删除航班 — Xinfan Airlines{% endblock %}
 {% block content %}
 <div class="row justify-content-center"><div class="col-md-5"><div class="card p-4 text-center">
-<h4 class="mb-3">确认删除</h4>
-<p>确定要删除航班 <strong>{{ flight.flight_number }}</strong>（{{ flight.origin }} → {{ flight.destination }}）吗？此操作不可撤销。</p>
+<h4 class="mb-3"><span class="lang-zh">确认删除</span><span class="lang-en">Confirm Deletion</span></h4>
+<p><span class="lang-zh">确定要删除航班</span><span class="lang-en">Are you sure you want to delete flight </span><strong>{{ flight.flight_number }}</strong>（{{ flight.origin }} → {{ flight.destination }}）<span class="lang-zh">吗？此操作不可撤销。</span><span class="lang-en">? This action cannot be undone.</span></p>
 <form method="post">{% csrf_token %}
-    <button type="submit" class="btn btn-danger">确认删除</button>
-    <a href="{% url 'flight_detail' flight.pk %}" class="btn btn-outline-secondary">取消</a>
+    <button type="submit" class="btn btn-danger"><span class="lang-zh">确认删除</span><span class="lang-en">Confirm Delete</span></button>
+    <a href="{% url 'flight_detail' flight.pk %}" class="btn btn-outline-secondary"><span class="lang-zh">取消</span><span class="lang-en">Cancel</span></a>
 </form>
-</div></div></div>
-{% endblock %}
+</div></div></div>{% endblock %}

@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}申请 {{ job.title }} — 新帆航空{% endblock %}
+{% block title %}{{ job.title }} | Apply — Xinfan Airlines{% endblock %}
 {% block content %}
 <div class="row justify-content-center"><div class="col-md-7"><div class="card p-4">
-<h4 class="mb-3">申请：{{ job.title }}</h4>
+<h4 class="mb-3"><span class="lang-zh">申请：{{ job.title }}</span><span class="lang-en">Apply: {{ job.title }}</span></h4>
 <p class="text-muted">{{ job.get_department_display }} · {{ job.location }}</p>
 <form method="post">{% csrf_token %}
-    <div class="mb-3"><label class="form-label">申请理由 *</label><textarea name="cover_letter" class="form-control" rows="4" placeholder="请说明你为什么想加入新帆航空以及为什么适合这个职位..." required></textarea></div>
-    <div class="mb-3"><label class="form-label">个人经历 *</label><textarea name="resume" class="form-control" rows="4" placeholder="请介绍你在 Roblox 或其他平台的航空相关经验..." required></textarea></div>
-    <button type="submit" class="btn btn-primary">提交申请</button>
-    <a href="{% url 'job_detail' job.pk %}" class="btn btn-outline-secondary">取消</a>
+    <div class="mb-3"><label class="form-label"><span class="lang-zh">申请理由</span><span class="lang-en">Cover Letter</span> *</label><textarea name="cover_letter" class="form-control" rows="4" placeholder="请说明你为什么想加入新帆航空以及为什么适合这个职位..." required></textarea></div>
+    <div class="mb-3"><label class="form-label"><span class="lang-zh">个人经历</span><span class="lang-en">Resume</span> *</label><textarea name="resume" class="form-control" rows="4" placeholder="请介绍你在 Roblox 或其他平台的航空相关经验..." required></textarea></div>
+    <button type="submit" class="btn btn-primary"><span class="lang-zh">提交申请</span><span class="lang-en">Submit Application</span></button>
+    <a href="{% url 'job_detail' job.pk %}" class="btn btn-outline-secondary"><span class="lang-zh">取消</span><span class="lang-en">Cancel</span></a>
 </form>
-</div></div></div>
-{% endblock %}
+</div></div></div>{% endblock %}

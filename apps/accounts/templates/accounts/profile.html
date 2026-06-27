@@ -1,29 +1,29 @@
 {% extends 'base.html' %}
-{% block title %}个人中心 — 新帆航空{% endblock %}
+{% block title %}Profile | 个人中心 — Xinfan Airlines{% endblock %}
 {% block content %}
-<h2 class="mb-4"><i class="bi bi-person-badge me-2"></i>个人中心</h2>
+<h2 class="mb-4"><i class="bi bi-person-badge me-2"></i><span class="lang-zh">个人中心</span><span class="lang-en">Profile</span></h2>
 <div class="row g-4">
     <div class="col-md-4">
         <div class="card p-4 text-center">
-            <i class="bi bi-person-circle" style="font-size:4rem;color:var(--vaa-green)"></i>
+            <i class="bi bi-person-circle" style="font-size:4rem;color:var(--accent)"></i>
             <h4 class="mt-2">{{ user.username }}</h4>
             <span class="badge bg-primary fs-6">{{ user.profile.get_role_display }}</span>
             <p class="text-muted mt-2 mb-1">{{ user.email }}</p>
             {% if user.profile.phone %}<p class="text-muted"><i class="bi bi-phone me-1" style="font-size:0.75rem"></i>{{ user.profile.phone }}</p>{% endif %}
             {% if user.profile.bio %}<p class="text-muted small">{{ user.profile.bio }}</p>{% endif %}
-            <a href="{% url 'profile_edit' %}" class="btn btn-outline-primary btn-sm mt-2">编辑资料</a>
+            <a href="{% url 'profile_edit' %}" class="btn btn-outline-primary btn-sm mt-2"><span class="lang-zh">编辑资料</span><span class="lang-en">Edit Profile</span></a>
         </div>
     </div>
     <div class="col-md-8">
         <div class="card p-4 mb-3">
-            <h5><i class="bi bi-airplane me-2" style="color:var(--vaa-green)"></i>累计里程</h5>
-            <p class="display-6 text-primary mb-0">{{ user.profile.miles|default:0 }} <small class="fs-6 text-muted">英里</small></p>
+            <h5><i class="bi bi-airplane me-2" style="color:var(--accent)"></i><span class="lang-zh">累计里程</span><span class="lang-en">Total Miles</span></h5>
+            <p class="display-6 text-primary mb-0">{{ user.profile.miles|default:0 }} <small class="fs-6 text-muted"><span class="lang-zh">英里</span><span class="lang-en">miles</span></small></p>
         </div>
         <div class="card p-4 mb-3">
-            <h5><i class="bi bi-calendar-week me-2" style="color:var(--vaa-green)"></i>最近活动</h5>
-            <p class="text-muted">注册时间：{{ user.date_joined|date:"Y-m-d H:i" }}</p>
-            <a href="{% url 'mileage_list' %}" class="btn btn-sm btn-outline-primary">查看里程记录</a>
-            <a href="{% url 'my_applications' %}" class="btn btn-sm btn-outline-primary">我的申请</a>
+            <h5><i class="bi bi-calendar-week me-2" style="color:var(--accent)"></i><span class="lang-zh">最近活动</span><span class="lang-en">Recent Activity</span></h5>
+            <p class="text-muted"><span class="lang-zh">注册时间</span><span class="lang-en">Registered</span>：{{ user.date_joined|date:"Y-m-d H:i" }}</p>
+            <a href="{% url 'mileage_list' %}" class="btn btn-sm btn-outline-primary"><span class="lang-zh">查看里程记录</span><span class="lang-en">Mileage Records</span></a>
+            <a href="{% url 'my_applications' %}" class="btn btn-sm btn-outline-primary"><span class="lang-zh">我的申请</span><span class="lang-en">My Applications</span></a>
         </div>
     </div>
 </div>

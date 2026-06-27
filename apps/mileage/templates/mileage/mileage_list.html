@@ -1,23 +1,15 @@
 {% extends 'base.html' %}
-{% block title %}里程记录 — 新帆航空{% endblock %}
+{% block title %}Mileage | 里程记录 — Xinfan Airlines{% endblock %}
 {% block content %}
-<h3 class="mb-3"><i class="bi bi-airplane me-2"></i>里程记录</h3>
+<h3 class="mb-3"><i class="bi bi-airplane me-2"></i><span class="lang-zh">里程记录</span><span class="lang-en">Mileage Records</span></h3>
 <div class="card p-4 mb-4">
-    <h5>累计里程</h5>
-    <p class="display-4 text-primary mb-0">{{ total|default:0 }} <small class="fs-5 text-muted">英里</small></p>
-    <a href="{% url 'mileage_redeem' %}" class="btn btn-primary mt-2">兑换里程</a>
+    <h5><span class="lang-zh">累计里程</span><span class="lang-en">Total Miles</span></h5>
+    <p class="display-4 text-primary mb-0">{{ total|default:0 }} <small class="fs-5 text-muted"><span class="lang-zh">英里</span><span class="lang-en">miles</span></small></p>
+    <a href="{% url 'mileage_redeem' %}" class="btn btn-primary mt-2"><span class="lang-zh">兑换里程</span><span class="lang-en">Redeem</span></a>
 </div>
 <div class="card p-3">
-<table class="table table-hover mb-0"><thead><tr><th>类型</th><th>里程</th><th>说明</th><th>时间</th></tr></thead>
-<tbody>
-{% for r in records %}
-<tr>
-    <td><span class="badge {% if r.type == 'earn' %}bg-success{% else %}bg-warning{% endif %}">{{ r.get_type_display }}</span></td>
-    <td><strong class="{% if r.amount > 0 %}text-success{% else %}text-danger{% endif %}">{% if r.amount > 0 %}+{% endif %}{{ r.amount }}</strong></td>
-    <td>{{ r.description }}</td>
-    <td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
-</tr>
-{% empty %}<tr><td colspan="4" class="text-center py-4 text-muted">暂无里程记录</td></tr>{% endfor %}
+<table class="table table-hover mb-0"><thead><tr><th><span class="lang-zh">类型</span><span class="lang-en">Type</span></th><th><span class="lang-zh">里程</span><span class="lang-en">Miles</span></th><th><span class="lang-zh">说明</span><span class="lang-en">Description</span></th><th><span class="lang-zh">时间</span><span class="lang-en">Date</span></th></tr></thead>
+<tbody>{% for r in records %}<tr><td><span class="badge {% if r.type == 'earn' %}bg-success{% else %}bg-warning{% endif %}">{{ r.get_type_display }}</span></td><td><strong class="{% if r.amount > 0 %}text-success{% else %}text-danger{% endif %}">{% if r.amount > 0 %}+{% endif %}{{ r.amount }}</strong></td><td>{{ r.description }}</td><td>{{ r.created_at|date:"Y-m-d H:i" }}</td></tr>
+{% empty %}<tr><td colspan="4" class="text-center py-4 text-muted"><span class="lang-zh">暂无里程记录</span><span class="lang-en">No records yet</span></td></tr>{% endfor %}
 </tbody></table>
-</div>
-{% endblock %}
+</div>{% endblock %}

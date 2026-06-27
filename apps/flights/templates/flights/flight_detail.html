@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}{{ flight.flight_number }} — 新帆航空{% endblock %}
+{% block title %}{{ flight.flight_number }} — Xinfan Airlines{% endblock %}
 {% block content %}
 <div class="row g-4">
     <div class="col-lg-8">
@@ -7,56 +7,51 @@
             <div class="d-flex justify-content-between align-items-start mb-3">
                 <div>
                     <h3>{{ flight.flight_number }}
-                        {% if flight.is_private %}<span class="badge ms-2" style="background:var(--accent-dim);color:var(--accent);font-size:0.7rem">私人航班</span>{% endif %}
+                        {% if flight.is_private %}<span class="badge ms-2" style="background:var(--accent-dim);color:var(--accent);font-size:0.7rem"><span class="lang-zh">私人航班</span><span class="lang-en">Private</span></span>{% endif %}
                     </h3>
                 </div>
                 <span class="badge {% if flight.status == 'scheduled' %}bg-primary{% elif flight.status == 'arrived' %}bg-success{% elif flight.status == 'cancelled' %}bg-danger{% elif flight.status == 'departed' %}bg-info{% else %}bg-warning text-dark{% endif %} fs-6">{{ flight.get_status_display }}</span>
             </div>
-
             {% if flight.is_private and applicant and applicant == user %}
             <div class="p-3 mb-3" style="background:var(--accent-dim);border-radius:var(--radius-sm);font-size:0.88rem">
-                <span style="color:var(--accent);font-weight:600">你的私人航班</span>
+                <span style="color:var(--accent);font-weight:600"><span class="lang-zh">你的私人航班</span><span class="lang-en">Your Private Flight</span></span>
                 {% if flight.source_request %}
-                <div class="mt-1" style="color:var(--text-secondary)">飞行目的：{{ flight.source_request.purpose }}</div>
+                <div class="mt-1" style="color:var(--text-secondary)"><span class="lang-zh">飞行目的：{{ flight.source_request.purpose }}</span><span class="lang-en">Purpose: {{ flight.source_request.purpose }}</span></div>
                 {% endif %}
             </div>
             {% endif %}
-
             <div class="row g-3 mb-3">
-                <div class="col-5 text-center"><h4>{{ flight.origin }}</h4><small class="text-muted">出发地</small></div>
+                <div class="col-5 text-center"><h4>{{ flight.origin }}</h4><small class="text-muted"><span class="lang-zh">出发地</span><span class="lang-en">Origin</span></small></div>
                 <div class="col-2 text-center"><i class="bi bi-arrow-right fs-3 text-primary"></i></div>
-                <div class="col-5 text-center"><h4>{{ flight.destination }}</h4><small class="text-muted">目的地</small></div>
+                <div class="col-5 text-center"><h4>{{ flight.destination }}</h4><small class="text-muted"><span class="lang-zh">目的地</span><span class="lang-en">Destination</span></small></div>
             </div>
             <table class="table"><tbody>
-                <tr><td width="120">计划起飞</td><td><strong>{{ flight.departure_time|date:"Y-m-d H:i" }}</strong></td></tr>
-                <tr><td>计划到达</td><td><strong>{{ flight.arrival_time|date:"Y-m-d H:i" }}</strong></td></tr>
-                <tr><td>机型</td><td>{{ flight.aircraft }}</td></tr>
-                <tr><td>登机口</td><td>{{ flight.gate|default:'待定' }}</td></tr>
-                <tr><td>航线类型</td><td>{{ flight.get_route_type_display }}</td></tr>
-                {% if flight.notes %}<tr><td>备注</td><td>{{ flight.notes }}</td></tr>{% endif %}
+                <tr><td width="120"><span class="lang-zh">计划起飞</span><span class="lang-en">Departure</span></td><td><strong>{{ flight.departure_time|date:"Y-m-d H:i" }}</strong></td></tr>
+                <tr><td><span class="lang-zh">计划到达</span><span class="lang-en">Arrival</span></td><td><strong>{{ flight.arrival_time|date:"Y-m-d H:i" }}</strong></td></tr>
+                <tr><td><span class="lang-zh">机型</span><span class="lang-en">Aircraft</span></td><td>{{ flight.aircraft }}</td></tr>
+                <tr><td><span class="lang-zh">登机口</span><span class="lang-en">Gate</span></td><td>{{ flight.gate|default:'<span class="lang-zh">待定</span><span class="lang-en">TBD</span>' }}</td></tr>
+                <tr><td><span class="lang-zh">航线类型</span><span class="lang-en">Route Type</span></td><td>{{ flight.get_route_type_display }}</td></tr>
+                {% if flight.notes %}<tr><td><span class="lang-zh">备注</span><span class="lang-en">Notes</span></td><td>{{ flight.notes }}</td></tr>{% endif %}
             </tbody></table>
             {% if user.profile.is_admin %}
             <div class="d-flex gap-2">
-                <a href="{% url 'flight_edit' flight.pk %}" class="btn btn-outline-primary btn-sm">编辑</a>
-                <a href="{% url 'flight_delete' flight.pk %}" class="btn btn-outline-danger btn-sm">删除</a>
+                <a href="{% url 'flight_edit' flight.pk %}" class="btn btn-outline-primary btn-sm"><span class="lang-zh">编辑</span><span class="lang-en">Edit</span></a>
+                <a href="{% url 'flight_delete' flight.pk %}" class="btn btn-outline-danger btn-sm"><span class="lang-zh">删除</span><span class="lang-en">Delete</span></a>
             </div>
             {% endif %}
         </div>
     </div>
     <div class="col-lg-4">
         <div class="card p-4 mb-3">
-            <h5>机组报名</h5>
-            {% if signups %}
-                {% for s in signups %}
-                <div class="d-flex justify-content-between py-1 border-bottom"><span>{{ s.user.username }}</span><small class="text-muted">{{ s.get_role_display }}</small></div>
-                {% endfor %}
-            {% else %}<p class="text-muted mb-0">暂无报名的机组人员</p>{% endif %}
+            <h5><span class="lang-zh">机组报名</span><span class="lang-en">Crew Signups</span></h5>
+            {% if signups %}{% for s in signups %}<div class="d-flex justify-content-between py-1 border-bottom"><span>{{ s.user.username }}</span><small class="text-muted">{{ s.get_role_display }}</small></div>{% endfor %}
+            {% else %}<p class="text-muted mb-0"><span class="lang-zh">暂无报名的机组人员</span><span class="lang-en">No crew signups yet</span></p>{% endif %}
         </div>
         {% if user.profile.is_employee %}
             {% if user_signup %}
-                <div class="alert alert-info">你已报名该航班（{{ user_signup.get_role_display }} — {{ user_signup.get_status_display }}）</div>
+                <div class="alert alert-info"><span class="lang-zh">你已报名该航班（{{ user_signup.get_role_display }} — {{ user_signup.get_status_display }}）</span><span class="lang-en">You signed up for this flight ({{ user_signup.get_role_display }} — {{ user_signup.get_status_display }})</span></div>
             {% else %}
-                <a href="{% url 'flight_signup' flight.pk %}" class="btn btn-primary w-100">报名参加此航班</a>
+                <a href="{% url 'flight_signup' flight.pk %}" class="btn btn-primary w-100"><span class="lang-zh">报名参加此航班</span><span class="lang-en">Sign Up for This Flight</span></a>
             {% endif %}
         {% endif %}
     </div>

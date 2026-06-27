@@ -1,27 +1,7 @@
 {% extends 'base.html' %}
-{% block title %}里程兑换 — 新帆航空{% endblock %}
+{% block title %}Redeem | 里程兑换 — Xinfan Airlines{% endblock %}
 {% block content %}
-<h3 class="mb-3"><i class="bi bi-gift me-2"></i>里程兑换</h3>
-<p class="text-muted mb-3">当前里程：<strong class="text-primary">{{ user.profile.miles }}</strong> 英里</p>
-<div class="row g-3">
-{% for item in items %}
-<div class="col-md-6">
-    <div class="card p-3">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center gap-2">
-                <i class="{{ item.icon }}" style="font-size:1.5rem;color:var(--vaa-green)"></i> <strong>{{ item.name }}</strong>
-            </div>
-            <span class="badge bg-primary fs-6">{{ item.cost }} 英里</span>
-        </div>
-        <form method="post" class="mt-2">{% csrf_token %}
-            <input type="hidden" name="item" value="{{ item.key }}">
-            <button type="submit" class="btn btn-outline-primary btn-sm w-100" {% if user.profile.miles < item.cost %}disabled{% endif %}>
-                {% if user.profile.miles >= item.cost %}立即兑换{% else %}里程不足{% endif %}
-            </button>
-        </form>
-    </div>
-</div>
-{% endfor %}
-</div>
-<a href="{% url 'mileage_list' %}" class="btn btn-outline-secondary mt-3">← 返回里程记录</a>
-{% endblock %}
+<h3 class="mb-3"><i class="bi bi-gift me-2"></i><span class="lang-zh">里程兑换</span><span class="lang-en">Redeem Miles</span></h3>
+<p class="text-muted mb-3"><span class="lang-zh">当前里程</span><span class="lang-en">Current Balance</span>：<strong class="text-primary">{{ user.profile.miles }}</strong> <span class="lang-zh">英里</span><span class="lang-en">miles</span></p>
+<div class="row g-3">{% for item in items %}<div class="col-md-6"><div class="card p-3"><div class="d-flex justify-content-between align-items-center"><div class="d-flex align-items-center gap-2"><i class="{{ item.icon }}" style="font-size:1.5rem;color:var(--accent)"></i> <strong>{{ item.name }}</strong></div><span class="badge bg-primary fs-6">{{ item.cost }} <span class="lang-zh">英里</span><span class="lang-en">miles</span></span></div><form method="post" class="mt-2">{% csrf_token %}<input type="hidden" name="item" value="{{ item.key }}"><button type="submit" class="btn btn-outline-primary btn-sm w-100" {% if user.profile.miles < item.cost %}disabled{% endif %}>{% if user.profile.miles >= item.cost %}<span class="lang-zh">立即兑换</span><span class="lang-en">Redeem</span>{% else %}<span class="lang-zh">里程不足</span><span class="lang-en">Insufficient</span>{% endif %}</button></form></div></div>{% endfor %}</div>
+<a href="{% url 'mileage_list' %}" class="btn btn-outline-secondary mt-3">← <span class="lang-zh">返回里程记录</span><span class="lang-en">Back to Records</span></a>{% endblock %}

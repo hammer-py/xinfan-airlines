@@ -1,26 +1,25 @@
 {% extends 'base.html' %}
-{% block title %}管理后台 — 新帆航空{% endblock %}
+{% block title %}Admin | 管理后台 — Xinfan Airlines{% endblock %}
 {% block content %}
-<h2 class="mb-4"><i class="bi bi-speedometer2 me-2"></i>管理后台</h2>
+<h2 class="mb-4"><i class="bi bi-speedometer2 me-2"></i><span class="lang-zh">管理后台</span><span class="lang-en">Admin Dashboard</span></h2>
 <div class="row g-4 mb-4">
-    <div class="col-md-3"><div class="card p-3 text-center"><h3 class="text-primary">{{ total_users }}</h3><p class="mb-0 text-muted">注册用户</p></div></div>
-    <div class="col-md-3"><div class="card p-3 text-center"><h3 class="text-primary">{{ total_flights|default:0 }}</h3><p class="mb-0 text-muted">航班总数</p></div></div>
-    <div class="col-md-3"><div class="card p-3 text-center"><h3 class="text-warning">{{ pending_signups|default:0 }}</h3><p class="mb-0 text-muted">待审批报名</p></div></div>
-    <div class="col-md-3"><div class="card p-3 text-center"><h3 class="text-warning">{{ pending_applications|default:0 }}</h3><p class="mb-0 text-muted">待审核申请</p></div></div>
+    <div class="col-md-3"><div class="card p-3 text-center"><h3 class="text-primary">{{ total_users }}</h3><p class="mb-0 text-muted"><span class="lang-zh">注册用户</span><span class="lang-en">Users</span></p></div></div>
+    <div class="col-md-3"><div class="card p-3 text-center"><h3 class="text-primary">{{ total_flights|default:0 }}</h3><p class="mb-0 text-muted"><span class="lang-zh">航班总数</span><span class="lang-en">Flights</span></p></div></div>
+    <div class="col-md-3"><div class="card p-3 text-center"><h3 class="text-warning">{{ pending_signups|default:0 }}</h3><p class="mb-0 text-muted"><span class="lang-zh">待审批报名</span><span class="lang-en">Pending Signups</span></p></div></div>
+    <div class="col-md-3"><div class="card p-3 text-center"><h3 class="text-warning">{{ pending_applications|default:0 }}</h3><p class="mb-0 text-muted"><span class="lang-zh">待审核申请</span><span class="lang-en">Pending Apps</span></p></div></div>
 </div>
-
-<h4 class="mb-3">快捷操作</h4>
+<h4 class="mb-3"><span class="lang-zh">快捷操作</span><span class="lang-en">Quick Actions</span></h4>
 <div class="row g-3">
     {% if is_full_admin %}
-    <div class="col-md-3"><a href="{% url 'admin_users' %}" class="card p-3 text-decoration-none"><i class="bi bi-people fs-3"></i><span class="ms-2">人员管理</span></a></div>
+    <div class="col-md-3"><a href="{% url 'admin_users' %}" class="card p-3 text-decoration-none"><i class="bi bi-people fs-3"></i><span class="ms-2"><span class="lang-zh">人员管理</span><span class="lang-en">User Mgmt</span></span></a></div>
     {% endif %}
-    <div class="col-md-3"><a href="{% url 'flight_create' %}" class="card p-3 text-decoration-none"><i class="bi bi-plus-circle fs-3"></i><span class="ms-2">创建航班</span></a></div>
-    <div class="col-md-3"><a href="{% url 'admin_signups' %}" class="card p-3 text-decoration-none"><i class="bi bi-check-circle fs-3"></i><span class="ms-2">审批报名</span></a></div>
+    <div class="col-md-3"><a href="{% url 'flight_create' %}" class="card p-3 text-decoration-none"><i class="bi bi-plus-circle fs-3"></i><span class="ms-2"><span class="lang-zh">创建航班</span><span class="lang-en">Create Flight</span></span></a></div>
+    <div class="col-md-3"><a href="{% url 'admin_signups' %}" class="card p-3 text-decoration-none"><i class="bi bi-check-circle fs-3"></i><span class="ms-2"><span class="lang-zh">审批报名</span><span class="lang-en">Approve Signups</span></span></a></div>
     {% if is_full_admin %}
-    <div class="col-md-3"><a href="{% url 'admin_recruitment' %}" class="card p-3 text-decoration-none"><i class="bi bi-briefcase fs-3"></i><span class="ms-2">招聘管理</span></a></div>
-    <div class="col-md-3"><a href="{% url 'admin_applications' %}" class="card p-3 text-decoration-none"><i class="bi bi-file-earmark-text fs-3"></i><span class="ms-2">审核申请</span></a></div>
+    <div class="col-md-3"><a href="{% url 'admin_recruitment' %}" class="card p-3 text-decoration-none"><i class="bi bi-briefcase fs-3"></i><span class="ms-2"><span class="lang-zh">招聘管理</span><span class="lang-en">Recruitment</span></span></a></div>
+    <div class="col-md-3"><a href="{% url 'admin_applications' %}" class="card p-3 text-decoration-none"><i class="bi bi-file-earmark-text fs-3"></i><span class="ms-2"><span class="lang-zh">审核申请</span><span class="lang-en">Review Apps</span></span></a></div>
     {% endif %}
-    <div class="col-md-3"><a href="{% url 'admin_private_requests' %}" class="card p-3 text-decoration-none"><i class="bi bi-shield-check fs-3"></i><span class="ms-2">私人航班审批</span></a></div>
-    <div class="col-md-3"><a href="{% url 'mileage_grant' %}" class="card p-3 text-decoration-none"><i class="bi bi-gift fs-3"></i><span class="ms-2">发放里程</span></a></div>
+    <div class="col-md-3"><a href="{% url 'admin_private_requests' %}" class="card p-3 text-decoration-none"><i class="bi bi-shield-check fs-3"></i><span class="ms-2"><span class="lang-zh">私人航班审批</span><span class="lang-en">Private Flights</span></span></a></div>
+    <div class="col-md-3"><a href="{% url 'mileage_grant' %}" class="card p-3 text-decoration-none"><i class="bi bi-gift fs-3"></i><span class="ms-2"><span class="lang-zh">发放里程</span><span class="lang-en">Grant Miles</span></span></a></div>
 </div>
 {% endblock %}
