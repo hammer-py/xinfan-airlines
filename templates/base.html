@@ -376,18 +376,52 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const I18N = {
+            '管理员':'Admin','经济舱旅客':'Economy','商务舱旅客':'Business','头等舱旅客':'First Class','投资者':'Investor','顶级投资者':'Top Investor',
+            '实习空乘':'Trainee Cabin Crew','实习副驾驶':'Trainee First Officer','实习机长':'Trainee Captain','实习地勤':'Trainee Ground Staff',
+            '正式空乘':'Cabin Crew','正式副驾驶':'First Officer','正式机长':'Captain','正式地勤':'Ground Staff',
+            'HOD-部门主管':'HOD','SHR-高级管理':'SHR','Flight Host-飞行经理':'Flight Host',
+            'Vice Chairman-副董事长':'Vice Chairman','Chairman-董事长':'Chairman','Group Owner-集团所有者':'Group Owner',
+            '已排班':'Scheduled','登机中':'Boarding','已起飞':'Departed','已到达':'Arrived','已取消':'Cancelled',
+            '国内':'Domestic','国际':'International','待审批':'Pending','已通过':'Approved','已拒绝':'Rejected','通过':'Accepted',
+            '赚取':'Earned','兑换':'Redeemed','飞行部':'Flight Dept','客舱部':'Cabin Dept','地勤部':'Ground Dept',
+            '志愿者':'Volunteer','正式员工':'Staff','机长':'Captain','副驾驶':'First Officer','乘务长':'Purser','空乘':'Cabin Crew','地勤':'Ground Staff'
+        };
+        function walkText(isEn) {
+            const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+            const nodes = [];
+            while(w.nextNode()) {
+                const n = w.currentNode;
+                if (!n.textContent.trim()) continue;
+                if (n.parentElement.closest('script,style,.lang-zh,.lang-en,input,textarea,select,option,pre,code')) continue;
+                nodes.push(n);
+            }
+            nodes.forEach(n => {
+                if (isEn) {
+                    const orig = n.getAttribute('data-orig') || n.textContent;
+                    n.setAttribute('data-orig', orig);
+                    let t = orig; for(const[k,v]of Object.entries(I18N)) t = t.replaceAll(k, v);
+                    n.textContent = t;
+                } else {
+                    const orig = n.getAttribute('data-orig');
+                    if (orig) { n.textContent = orig; n.removeAttribute('data-orig'); }
+                }
+            });
+        }
         function toggleLang() {
             const html = document.documentElement;
             const isEn = html.lang === 'en';
             html.lang = isEn ? 'zh-CN' : 'en';
             localStorage.setItem('xinfan-lang', html.lang);
             document.getElementById('langToggle').textContent = isEn ? 'EN' : 'ZH';
+            walkText(!isEn);
         }
         (function() {
             const saved = localStorage.getItem('xinfan-lang');
             const html = document.documentElement;
             if (saved) { html.lang = saved; }
             document.getElementById('langToggle').textContent = html.lang === 'en' ? 'ZH' : 'EN';
+            if (html.lang === 'en') setTimeout(() => walkText(true), 300);
         })();
     </script>
     {% block extra_js %}{% endblock %}
