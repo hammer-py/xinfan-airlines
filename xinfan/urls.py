@@ -1,5 +1,7 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.conf import settings
+from django.views.static import serve
 from apps.core.views import verify_txt
 
 urlpatterns = [
@@ -11,3 +13,6 @@ urlpatterns = [
     path('mileage/', include('apps.mileage.urls')),
     path('recruitment/', include('apps.recruitment.urls')),
 ]
+
+if not settings.DEBUG:
+    urlpatterns.insert(0, re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}))
