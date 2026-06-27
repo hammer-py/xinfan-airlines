@@ -16,8 +16,8 @@
             --bg: #171717;
             --surface: #1e1e1e;
             --surface-light: #262626;
-            --accent: #2d7a3a;
-            --accent-dim: rgba(45,122,58,0.12);
+            --accent: #17f700;
+            --accent-dim: rgba(23,247,0,0.12);
             --text: #f7f7f7;
             --text-secondary: #999;
             --text-muted: #777;
@@ -73,7 +73,7 @@
             padding: 0.4rem 1rem !important; border-radius: 0.75rem; transition: all 0.2s;
         }
         .navbar .nav-link:hover { color: #fff !important; background: rgba(255,255,255,0.04); }
-        .nav-link-active { background: rgba(45,122,58,0.1) !important; color: var(--accent) !important; font-weight: 500; }
+        .nav-link-active { background: rgba(23,247,0,0.1) !important; color: var(--accent) !important; font-weight: 500; }
         .navbar-toggler { border-color: rgba(255,255,255,0.15) !important; }
         .navbar-toggler-icon { filter: invert(1); }
         .nav-divider { width:1px; height:20px; background:rgba(255,255,255,0.1); margin:0 0.25rem; flex-shrink:0; }
@@ -102,7 +102,7 @@
         /* ── Buttons ──────────────────────── */
         .btn { border-radius: 10px; font-weight: 600; font-size: 0.88rem; padding: 0.5rem 1.4rem; transition: all 0.25s; }
         .btn-primary { background: var(--accent); border-color: var(--accent); color: #171717 !important; }
-        .btn-primary:hover { background: #23602e; border-color: #23602e; box-shadow: 0 0 0 5px var(--accent-dim); }
+        .btn-primary:hover { background: #13d800; border-color: #13d800; box-shadow: 0 0 0 5px var(--accent-dim); }
         .btn-outline {
             color: #fff; border: 1px solid rgba(255,255,255,0.15); background: transparent;
         }
@@ -116,7 +116,7 @@
         .btn-lg { padding: 0.7rem 2rem; font-size: 1rem; border-radius: 12px; }
         .btn-sm { padding: 0.3rem 0.85rem; font-size: 0.8rem; border-radius: 7px; }
         .btn-success { background: var(--accent); border-color: var(--accent); color: #171717; }
-        .btn-success:hover { background: #23602e; }
+        .btn-success:hover { background: #13d800; }
         .btn-danger { background: #dc3545; border-color: #dc3545; color: #fff; }
         .btn-danger:hover { background: #c82333; }
 
@@ -172,19 +172,19 @@
 
         /* ── Hero ─────────────────────────── */
         .hero {
-            background: linear-gradient(160deg, #1a1a1a 0%, #0d1f0d 60%, #0a1a0a 100%);
+            background: linear-gradient(160deg, #1a1a1a 0%, #0f1a0f 60%, #0a1a0a 100%);
             border: 1px solid var(--border); border-radius: 2rem; padding: 5rem 2rem;
             text-align: center; position: relative; overflow: hidden;
         }
         .hero::before {
             content: ''; position: absolute; inset: 0;
-            background-image: radial-gradient(circle, rgba(45,122,58,0.06) 1px, transparent 1px);
+            background-image: radial-gradient(circle, rgba(23,247,0,0.06) 1px, transparent 1px);
             background-size: 2rem 2rem; pointer-events: none;
         }
         .hero::after {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(ellipse at 30% 20%, rgba(45,122,58,0.04) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 80%, rgba(45,122,58,0.02) 0%, transparent 50%);
+            background: radial-gradient(ellipse at 30% 20%, rgba(23,247,0,0.04) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 80%, rgba(23,247,0,0.02) 0%, transparent 50%);
             pointer-events: none;
         }
         .hero h1 { font-weight: 900; font-size: 3.2rem; letter-spacing: -1.5px; position: relative; z-index: 1; }
