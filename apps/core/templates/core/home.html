@@ -269,7 +269,8 @@
     function prevSlide() { goTo((current - 1 + total) % total); }
     function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(nextSlide, 6000); }
     function animateChars(title) {
-        if (!title || title.querySelector('.char')) return;
+        // Always clear and re-create so language switch re-triggers
+        title.querySelectorAll('.char').forEach(el => el.remove());
         const nodes = [];
         function walk(parent) {
             for (const node of parent.childNodes) {
@@ -280,7 +281,6 @@
                 }
             }
         }
-        // Only animate visible language
         const visible = title.querySelector('.lang-zh') ? (document.documentElement.lang !== 'en' ? title.querySelector('.lang-zh') : title.querySelector('.lang-en')) : title;
         walk(visible); visible.innerHTML = ''; let idx = 0;
         for (const n of nodes) {
@@ -297,5 +297,16 @@
         if (t) animateChars(t);
     });
     autoTimer = setInterval(nextSlide, 6000);
+
+    // Re-run char flip on language switch
+    const origToggleLang = toggleLang;
+    toggleLang = function() {
+        origToggleLang();
+        setTimeout(() => {
+            document.querySelectorAll('.slide .hero-title .char').forEach(el => el.remove());
+            const t = document.querySelector('.slide.active .hero-title');
+            if (t) animateChars(t);
+        }, 400);
+    };
 </script>
 {% endblock %}
