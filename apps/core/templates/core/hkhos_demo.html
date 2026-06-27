@@ -15,8 +15,8 @@
             --bg: #171717;
             --surface: #1e1e1e;
             --surface-light: #262626;
-            --accent: #2d7a3a;
-            --accent-dim: rgba(45,122,58,0.12);
+            --accent: #17f700;
+            --accent-dim: rgba(23,247,0,0.12);
             --text: #f7f7f7;
             --text-secondary: #999;
             --text-muted: #777;
@@ -57,7 +57,7 @@
             padding: 0.45rem 1rem !important; border-radius: 0.75rem; transition: all 0.2s;
         }
         .navigation .nav-link:hover { color: #fff !important; background: rgba(255,255,255,0.04); }
-        .nav-link-active { background: rgba(45,122,58,0.1) !important; color: var(--accent) !important; font-weight: 500; }
+        .nav-link-active { background: rgba(23,247,0,0.1) !important; color: var(--accent) !important; font-weight: 500; }
         .navigation .navbar-toggler { border: none; font-size: 1.3rem; color: rgba(255,255,255,0.6); padding: 0.4rem; }
 
         /* ── Slider ──────────────────────── */
@@ -79,7 +79,7 @@
         }
         .slide .overlay-grid {
             position: absolute; inset: 0;
-            background-image: radial-gradient(circle, rgba(45,122,58,0.05) 1px, transparent 1px);
+            background-image: radial-gradient(circle, rgba(23,247,0,0.05) 1px, transparent 1px);
             background-size: 2rem 2rem; pointer-events: none; z-index: 1;
         }
         .slide-content {
@@ -100,9 +100,9 @@
             background: var(--accent); color: #171717 !important;
             font-weight: 700; padding: 0.7rem 2.2rem; border-radius: 50px;
             font-size: 0.95rem; letter-spacing: 0.5px;
-            transition: all 0.3s; box-shadow: 0 4px 20px rgba(45,122,58,0.2);
+            transition: all 0.3s; box-shadow: 0 4px 20px rgba(23,247,0,0.2);
         }
-        .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(45,122,58,0.4); }
+        .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(23,247,0,0.4); }
 
         /* Slide animation variations */
         .slide.active .slide-content { animation: slideIn 0.8s cubic-bezier(0.22,1,0.36,1) both; }
@@ -167,7 +167,7 @@
         .service-block:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.1); }
         .service-block.color-bg {
             background: linear-gradient(160deg, #0f1a0f 0%, #1a2a1a 100%);
-            border-color: rgba(45,122,58,0.15); color: #fff;
+            border-color: rgba(23,247,0,0.15); color: #fff;
         }
         .service-block.color-bg p { color: rgba(255,255,255,0.6); }
         .service-icon {
@@ -176,7 +176,7 @@
             margin-bottom: 1.25rem; font-size: 1.75rem;
         }
         .service-block:not(.color-bg) .service-icon { background: var(--accent-dim); color: var(--accent); }
-        .service-block.color-bg .service-icon { background: rgba(45,122,58,0.15); color: var(--accent); }
+        .service-block.color-bg .service-icon { background: rgba(23,247,0,0.15); color: var(--accent); }
         .service-block h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem; }
         .service-block p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 0; }
 
