@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}<span class="lang-zh">招聘管理</span><span class="lang-en">Recruitment Management</span>{% endblock %}
+{% block title %}Recruitment Management | 招聘管理{% endblock %}
 {% block content %}
 <h3 class="mb-3"><i class="bi bi-clipboard-check me-2"></i><span class="lang-zh">招聘管理</span><span class="lang-en">Recruitment</span></h3>
 <div class="card p-4 mb-4"><h5><span class="lang-zh">发布新职位</span><span class="lang-en">Post New Position</span></h5><form method="post" class="row g-3">{% csrf_token %}<input type="hidden" name="action" value="create">
