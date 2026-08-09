@@ -198,6 +198,29 @@ def admin_private_requests_view(request):
             req.save()
             messages.success(request, f'已拒绝 {req.user.username} 的私人航班申请')
 
+        elif action == 'edit_request':
+            req = get_object_or_404(PrivateFlightRequest, id=request.POST.get('request_id'))
+            req.flight_number = request.POST.get('flight_number', '').strip()
+            req.origin = request.POST.get('origin', '').strip()
+            req.destination = request.POST.get('destination', '').strip()
+            req.departure_time = request.POST.get('departure_time', req.departure_time)
+            req.arrival_time = request.POST.get('arrival_time', req.arrival_time)
+            req.aircraft = request.POST.get('aircraft', '').strip()
+            req.route_type = request.POST.get('route_type', 'domestic')
+            req.purpose = request.POST.get('purpose', '').strip()
+            req.passenger_count = int(request.POST.get('passenger_count', 1))
+            req.notes = request.POST.get('notes', '').strip() or None
+            # 删除旧航班并重置为待审批
+            if req.created_flight:
+                req.created_flight.delete()
+                req.created_flight = None
+            req.status = 'pending'
+            req.reviewed_by = None
+            req.reviewed_at = None
+            req.review_note = '管理员修改后重新提交审核'
+            req.save()
+            messages.success(request, '私人航班申请已修改，请重新审批')
+
         return redirect('admin_private_requests')
 
     status_filter = request.GET.get('status', '')
