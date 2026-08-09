@@ -1,13 +1,91 @@
 {% extends 'base.html' %}
 {% block title %}VIP Club | 高舱俱乐部 — Xinfan Airlines{% endblock %}
 {% block content %}
+
 <section class="hero mb-5">
     <p class="section-label">VIP CLUB</p>
     <h1 class="text-white"><span class="lang-zh">高舱<span class="accent">俱乐部</span></span><span class="lang-en"><span class="accent">VIP</span> Club</span></h1>
-    <p class="fs-5 mb-0 mt-2" style="opacity:0.5"><span class="lang-zh">尊享商务舱与头等舱专属权益</span><span class="lang-en">Exclusive benefits for business & first class passengers</span></p>
+    <p class="fs-5 mb-0 mt-2" style="opacity:0.5"><span class="lang-zh">尊享商务舱与头等舱专属权益 — 私人航班申请</span><span class="lang-en">Exclusive benefits — Private Flight Requests</span></p>
 </section>
-<div class="text-center py-5">
-    <div style="font-size:4rem;opacity:0.15;margin-bottom:1rem"><i class="bi bi-lock"></i></div>
-    <h3 style="opacity:0.4;font-weight:400"><span class="lang-zh">暂未开通，敬请期待</span><span class="lang-en">Coming Soon</span></h3>
-    <p class="text-muted mt-2"><span class="lang-zh">高舱俱乐部正在筹划中，届时将为商务舱及以上旅客提供专属服务</span><span class="lang-en">The VIP Club is under development. Exclusive services for business class and above passengers.</span></p>
-</div>{% endblock %}
+
+<!-- Request Form -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-send me-2" style="color:var(--accent)"></i><span class="lang-zh">申请私人航班</span><span class="lang-en">Request Private Flight</span></h5>
+            <form method="post">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label"><span class="lang-zh">航班号</span><span class="lang-en">Flight No.</span> *</label>
+                        <input type="text" name="flight_number" class="form-control" placeholder="XF-VIP01" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label"><span class="lang-zh">机型</span><span class="lang-en">Aircraft</span></label>
+                        <select name="aircraft" class="form-select">
+                            <option value="Gulf Stream 650">Gulf Stream 650</option>
+                            <option value="Airbus 319 ACJ">Airbus 319 ACJ</option>
+                            <option value="Boeing 787-10">Boeing 787-10</option>
+                            <option value="Falcon 7x">Falcon 7x</option>
+                            <option value="KingC90">KingC90</option>
+                            <option value="PC-12">PC-12</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label"><span class="lang-zh">乘客人数</span><span class="lang-en">Passengers</span></label>
+                        <input type="number" name="passenger_count" class="form-control" value="1" min="1">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><span class="lang-zh">出发地</span><span class="lang-en">Origin</span> *</label>
+                        <input type="text" name="origin" class="form-control" value="香港国际机场" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><span class="lang-zh">目的地</span><span class="lang-en">Destination</span> *</label>
+                        <input type="text" name="destination" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><span class="lang-zh">计划起飞</span><span class="lang-en">Scheduled Departure</span> *</label>
+                        <input type="datetime-local" name="departure_time" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><span class="lang-zh">计划到达</span><span class="lang-en">Scheduled Arrival</span> *</label>
+                        <input type="datetime-local" name="arrival_time" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><span class="lang-zh">航线类型</span><span class="lang-en">Route Type</span></label>
+                        <select name="route_type" class="form-select">
+                            {% for val, label in route_choices %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><span class="lang-zh">飞行目的</span><span class="lang-en">Purpose of Flight</span> *</label>
+                        <textarea name="purpose" class="form-control" rows="2" placeholder="请说明申请本次私人航班的目的..." required></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label"><span class="lang-zh">补充说明</span><span class="lang-en">Additional Notes</span></label>
+                        <textarea name="notes" class="form-control" rows="2" placeholder="其他需要说明的事项（可选）"></textarea>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-send me-1"></i> <span class="lang-zh">提交申请</span><span class="lang-en">Submit Request</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- My Requests -->
+<div class="card p-4">
+    <h5 class="fw-bold mb-3"><i class="bi bi-clock-history me-2" style="color:var(--accent)"></i><span class="lang-zh">我的申请记录</span><span class="lang-en">My Requests</span></h5>
+    {% if requests %}
+    <div class="table-responsive">
+    <table class="table table-hover mb-0">
+    <thead><tr><th><span class="lang-zh">航班号</span><span class="lang-en">Flight No.</span></th><th><span class="lang-zh">路线</span><span class="lang-en">Route</span></th><th><span class="lang-zh">机型</span><span class="lang-en">Aircraft</span></th><th><span class="lang-zh">起飞时间</span><span class="lang-en">Departure</span></th><th><span class="lang-zh">状态</span><span class="lang-en">Status</span></th><th><span class="lang-zh">审批备注</span><span class="lang-en">Note</span></th><th><span class="lang-zh">申请时间</span><span class="lang-en">Date</span></th></tr></thead>
+    <tbody>{% for r in requests %}<tr><td><strong>{{ r.flight_number }}</strong></td><td>{{ r.origin }} → {{ r.destination }}</td><td>{{ r.aircraft }}</td><td>{{ r.departure_time|date:"Y-m-d H:i" }}</td><td><span class="badge {% if r.status == 'approved' %}bg-success{% elif r.status == 'rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ r.get_status_display }}</span></td><td>{{ r.review_note|default:'—' }}</td><td>{{ r.created_at|date:"Y-m-d" }}</td></tr>{% endfor %}</tbody>
+    </table>
+    </div>
+    {% else %}
+    <p class="text-muted text-center py-4 mb-0"><i class="bi bi-inbox" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:0.5rem"></i><span class="lang-zh">暂无申请记录</span><span class="lang-en">No requests yet</span></p>
+    {% endif %}
+</div>
+{% endblock %}

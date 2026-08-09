@@ -156,50 +156,11 @@ def admin_signups_view(request):
 
 @login_required
 def private_flight_request_view(request):
-    if request.user.profile.role not in PREMIUM_ROLES:
-        messages.error(request, '商务舱及以上等级用户才能申请私人航班')
-        return redirect('home')
-
-    if request.method == 'POST':
-        flight_number = request.POST.get('flight_number', '').strip()
-        origin = request.POST.get('origin', '').strip()
-        destination = request.POST.get('destination', '').strip()
-        departure_time = request.POST.get('departure_time', '')
-        arrival_time = request.POST.get('arrival_time', '')
-        aircraft = request.POST.get('aircraft', 'Gulf Stream 650').strip()
-        route_type = request.POST.get('route_type', 'domestic')
-        purpose = request.POST.get('purpose', '').strip()
-        passenger_count = request.POST.get('passenger_count', '1')
-        notes = request.POST.get('notes', '').strip() or None
-
-        if not all([flight_number, origin, destination, departure_time, arrival_time, purpose]):
-            messages.error(request, '请填写所有必填字段')
-        elif Flight.objects.filter(flight_number=flight_number).exists():
-            messages.error(request, '该航班号已存在')
-        else:
-            PrivateFlightRequest.objects.create(
-                user=request.user,
-                flight_number=flight_number, origin=origin, destination=destination,
-                departure_time=departure_time, arrival_time=arrival_time,
-                aircraft=aircraft, route_type=route_type,
-                purpose=purpose, passenger_count=int(passenger_count), notes=notes,
-            )
-            messages.success(request, '私人航班申请已提交，请等待管理员审批')
-            return redirect('my_private_requests')
-
-    return render(request, 'flights/private_flight_request.html', {
-        'route_choices': Flight.ROUTE_CHOICES,
-    })
-
+    return redirect('vip_club')
 
 @login_required
 def my_private_requests_view(request):
-    if request.user.profile.role not in PREMIUM_ROLES:
-        messages.error(request, '商务舱及以上等级用户才能查看私人航班申请')
-        return redirect('home')
-
-    requests_list = PrivateFlightRequest.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'flights/my_private_requests.html', {'requests': requests_list})
+    return redirect('vip_club')
 
 
 @login_required

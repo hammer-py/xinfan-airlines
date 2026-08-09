@@ -13,7 +13,41 @@ def vip_club_view(request):
     if not request.user.is_authenticated or request.user.profile.role not in VIP_CLUB_ROLES:
         messages.error(request, '仅商务舱及以上等级用户可访问')
         return redirect('home')
-    return render(request, 'core/vip_club.html')
+
+    from apps.flights.models import PrivateFlightRequest, Flight
+    requests_list = PrivateFlightRequest.objects.filter(user=request.user).order_by('-created_at')
+
+    if request.method == 'POST':
+        flight_number = request.POST.get('flight_number', '').strip()
+        origin = request.POST.get('origin', '').strip()
+        destination = request.POST.get('destination', '').strip()
+        departure_time = request.POST.get('departure_time', '')
+        arrival_time = request.POST.get('arrival_time', '')
+        aircraft = request.POST.get('aircraft', 'Gulf Stream 650').strip()
+        route_type = request.POST.get('route_type', 'domestic')
+        purpose = request.POST.get('purpose', '').strip()
+        passenger_count = request.POST.get('passenger_count', '1')
+        notes = request.POST.get('notes', '').strip() or None
+
+        if not all([flight_number, origin, destination, departure_time, arrival_time, purpose]):
+            messages.error(request, '请填写所有必填字段')
+        elif Flight.objects.filter(flight_number=flight_number).exists():
+            messages.error(request, '该航班号已存在')
+        else:
+            PrivateFlightRequest.objects.create(
+                user=request.user,
+                flight_number=flight_number, origin=origin, destination=destination,
+                departure_time=departure_time, arrival_time=arrival_time,
+                aircraft=aircraft, route_type=route_type,
+                purpose=purpose, passenger_count=int(passenger_count), notes=notes,
+            )
+            messages.success(request, '私人航班申请已提交，请等待管理员审批')
+            return redirect('vip_club')
+
+    return render(request, 'core/vip_club.html', {
+        'requests': requests_list,
+        'route_choices': Flight.ROUTE_CHOICES,
+    })
 
 
 def verify_txt(request):
