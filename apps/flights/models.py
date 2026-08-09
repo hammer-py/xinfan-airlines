@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+
 
 class Flight(models.Model):
     STATUS_CHOICES = [
@@ -25,6 +27,7 @@ class Flight(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='scheduled', verbose_name='状态')
     notes = models.TextField(blank=True, null=True, verbose_name='备注')
     is_private = models.BooleanField(default=False, verbose_name='私人航班')
+    status_changed_at = models.DateTimeField(null=True, blank=True, verbose_name='状态变更时间')
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='创建人')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
@@ -35,6 +38,15 @@ class Flight(models.Model):
 
     def __str__(self):
         return f"{self.flight_number}: {self.origin} → {self.destination}"
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old = Flight.objects.filter(pk=self.pk).first()
+            if old and old.status != self.status:
+                self.status_changed_at = timezone.now()
+        elif not self.status_changed_at:
+            self.status_changed_at = timezone.now()
+        super().save(*args, **kwargs)
 
 class FlightCrewSignup(models.Model):
     CREW_ROLES = [
