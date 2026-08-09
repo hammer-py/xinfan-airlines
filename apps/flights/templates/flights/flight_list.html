@@ -4,7 +4,11 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2 class="mb-0"><i class="bi bi-airplane"></i> <span class="lang-zh">航班信息</span><span class="lang-en">Flights</span></h2>
     <div class="d-flex gap-2">
-        {% if user.profile.has_staff_access %}<a href="{% url 'flight_create' %}" class="btn btn-primary btn-sm"><span class="lang-zh">+ 创建航班</span><span class="lang-en">+ Create Flight</span></a>{% endif %}
+        {% if user.profile.has_staff_access %}
+        <span class="badge bg-secondary d-none" id="batchCount" style="align-self:center"><span class="lang-zh">已选</span><span class="lang-en">Selected</span> 0</span>
+        <button class="btn btn-outline-danger btn-sm d-none" id="batchDeleteBtn" onclick="confirmBatchDelete()"><i class="bi bi-trash"></i> <span class="lang-zh">批量删除</span><span class="lang-en">Batch Delete</span></button>
+        <a href="{% url 'flight_create' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle me-1"></i><span class="lang-zh">创建航班</span><span class="lang-en">Create Flight</span></a>
+        {% endif %}
     </div>
 </div>
 <div class="card p-3 mb-3">
@@ -12,22 +16,23 @@
         <div class="col-auto"><select name="status" class="form-select"><option value=""><span class="lang-zh">全部状态</span><span class="lang-en">All Status</span></option><option value="scheduled" {% if request.GET.status == 'scheduled' %}selected{% endif %}><span class="lang-zh">已排班</span><span class="lang-en">Scheduled</span></option><option value="departed" {% if request.GET.status == 'departed' %}selected{% endif %}><span class="lang-zh">已起飞</span><span class="lang-en">Departed</span></option><option value="arrived" {% if request.GET.status == 'arrived' %}selected{% endif %}><span class="lang-zh">已到达</span><span class="lang-en">Arrived</span></option></select></div>
         <div class="col-auto"><select name="route" class="form-select"><option value=""><span class="lang-zh">全部类型</span><span class="lang-en">All Types</span></option><option value="domestic" {% if request.GET.route == 'domestic' %}selected{% endif %}><span class="lang-zh">国内</span><span class="lang-en">Domestic</span></option><option value="international" {% if request.GET.route == 'international' %}selected{% endif %}><span class="lang-zh">国际</span><span class="lang-en">International</span></option></select></div>
         <div class="col-auto"><button type="submit" class="btn btn-outline-primary"><span class="lang-zh">筛选</span><span class="lang-en">Filter</span></button></div>
-        <div class="col-auto"><select name="route" class="form-select"><option value="">全部类型</option><option value="domestic" {% if request.GET.route == 'domestic' %}selected{% endif %}>国内</option><option value="international" {% if request.GET.route == 'international' %}selected{% endif %}>国际</option></select></div>
-        <div class="col-auto"><button type="submit" class="btn btn-outline-primary">筛选</button></div>
     </form>
 </div>
 <div class="row g-3">
 {% for flight in flights %}
 <div class="col-lg-6">
-    <div class="card p-3">
+    <div class="card p-3 position-relative">
         <div class="d-flex justify-content-between">
-            <strong class="fs-5">{{ flight.flight_number }}</strong>
+            <div class="d-flex align-items-start gap-2">
+                {% if user.profile.has_staff_access %}<input type="checkbox" class="flight-checkbox" value="{{ flight.id }}" onchange="onCheckChange()" style="margin-top:0.3rem">{% endif %}
+                <strong class="fs-5">{{ flight.flight_number }}</strong>
+            </div>
             <span class="badge {% if flight.status == 'scheduled' %}bg-primary{% elif flight.status == 'arrived' %}bg-success{% elif flight.status == 'cancelled' %}bg-danger{% elif flight.status == 'departed' %}bg-info{% else %}bg-warning{% endif %}">{{ flight.get_status_display }}</span>
         </div>
         <p class="mb-1 mt-2"><strong>{{ flight.origin }}</strong> → <strong>{{ flight.destination }}</strong> <small class="text-muted">({{ flight.get_route_type_display }})</small></p>
         <p class="mb-1 text-muted small"><i class="bi bi-clock me-1" style="font-size:0.75rem"></i>{{ flight.departure_time|date:"Y-m-d H:i" }} → {{ flight.arrival_time|date:"H:i" }} | <i class="bi bi-airplane me-1" style="font-size:0.7rem"></i>{{ flight.aircraft }}</p>
         {% if flight.gate %}<p class="mb-1 text-muted small"><i class="bi bi-door-open me-1" style="font-size:0.75rem"></i>{{ flight.gate }}</p>{% endif %}
-        <a href="{% url 'flight_detail' flight.pk %}" class="stretched-link"></a>
+        <a href="{% url 'flight_detail' flight.pk %}" class="stretched-link" style="pointer-events:{% if user.profile.has_staff_access %}none{% else %}auto{% endif %}"></a>
     </div>
 </div>
 {% empty %}
@@ -46,20 +51,40 @@
     <div class="col-lg-6">
         <div class="card p-3 position-relative" style="border-color:rgba(0,200,150,0.15)">
             <div class="d-flex justify-content-between">
-                <div>
+                <div class="d-flex align-items-start gap-2">
+                    {% if user.profile.has_staff_access %}<input type="checkbox" class="flight-checkbox" value="{{ flight.id }}" onchange="onCheckChange()" style="margin-top:0.3rem">{% endif %}
                     <strong class="fs-5">{{ flight.flight_number }}</strong>
-                    <span class="badge ms-2" style="background:var(--accent-dim);color:var(--accent);font-size:0.7rem">私人</span>
                 </div>
                 <span class="badge {% if flight.status == 'scheduled' %}bg-primary{% elif flight.status == 'arrived' %}bg-success{% elif flight.status == 'cancelled' %}bg-danger{% elif flight.status == 'departed' %}bg-info{% else %}bg-warning text-dark{% endif %}">{{ flight.get_status_display }}</span>
             </div>
             <p class="mb-1 mt-2"><strong>{{ flight.origin }}</strong> → <strong>{{ flight.destination }}</strong> <small style="color:var(--text-muted)">({{ flight.get_route_type_display }})</small></p>
             <p class="mb-1" style="color:var(--text-secondary);font-size:0.85rem"><i class="bi bi-clock me-1" style="font-size:0.75rem"></i>{{ flight.departure_time|date:"Y-m-d H:i" }} → {{ flight.arrival_time|date:"H:i" }} | <i class="bi bi-airplane me-1" style="font-size:0.7rem"></i>{{ flight.aircraft }}</p>
             {% if flight.gate %}<p class="mb-1" style="color:var(--text-secondary);font-size:0.85rem"><i class="bi bi-door-open me-1" style="font-size:0.75rem"></i>{{ flight.gate }}</p>{% endif %}
-            <a href="{% url 'flight_detail' flight.pk %}" class="stretched-link"></a>
+            <a href="{% url 'flight_detail' flight.pk %}" class="stretched-link" style="pointer-events:{% if user.profile.has_staff_access %}none{% else %}auto{% endif %}"></a>
         </div>
     </div>
     {% endfor %}
     </div>
 </div>
+{% endif %}
+
+<form method="post" id="batchDeleteForm" style="display:none">{% csrf_token %}<input type="hidden" name="action" value="batch_delete"><div id="batchDeleteInputs"></div></form>
+
+{% if user.profile.has_staff_access %}
+<script>
+function getChecked(){return document.querySelectorAll('.flight-checkbox:checked')}
+function onCheckChange(){
+    var c=getChecked();var b=document.getElementById('batchDeleteBtn');var n=document.getElementById('batchCount');
+    if(c.length>0){b.classList.remove('d-none');n.classList.remove('d-none');n.textContent=(document.documentElement.lang==='en'?'Selected ':'已选 ')+c.length}
+    else{b.classList.add('d-none');n.classList.add('d-none')}
+}
+function confirmBatchDelete(){
+    if(getChecked().length===0){alert(document.documentElement.lang==='en'?'Please select flights first':'请先选择航班');return}
+    if(confirm((document.documentElement.lang==='en'?'Delete ':'确定删除选中的 ')+getChecked().length+(document.documentElement.lang==='en'?' flights?':' 个航班吗？'))){
+        document.getElementById('batchDeleteInputs').innerHTML=Array.from(getChecked()).map(cb=>'<input type="hidden" name="flight_ids" value="'+cb.value+'">').join('');
+        document.getElementById('batchDeleteForm').submit()
+    }
+}
+</script>
 {% endif %}
 {% endblock %}

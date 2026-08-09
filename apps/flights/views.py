@@ -7,6 +7,15 @@ from apps.accounts.decorators import role_required
 from apps.accounts.models import PREMIUM_ROLES, EMPLOYEE_ROLES
 
 def flight_list_view(request):
+    if request.method == 'POST' and request.POST.get('action') == 'batch_delete':
+        flight_ids = request.POST.getlist('flight_ids')
+        if request.user.is_authenticated and request.user.profile.has_staff_access:
+            qs = Flight.objects.filter(id__in=flight_ids)
+            count = qs.count()
+            qs.delete()
+            messages.success(request, f'已删除 {count} 个航班')
+        return redirect('flight_list')
+
     flights = Flight.objects.select_related('created_by').filter(is_private=False)
     can_see_private = (
         request.user.is_authenticated and (
