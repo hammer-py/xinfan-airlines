@@ -18,6 +18,39 @@ def vip_club_view(request):
     requests_list = PrivateFlightRequest.objects.filter(user=request.user).order_by('-created_at')
 
     if request.method == 'POST':
+        action = request.POST.get('action', 'create')
+
+        # ── Edit & resubmit ────────────────────────────
+        if action == 'edit_request':
+            req_id = request.POST.get('request_id')
+            req = PrivateFlightRequest.objects.filter(id=req_id, user=request.user).first()
+            if not req or req.status not in ('rejected', 'approved'):
+                messages.error(request, '无法修改该申请')
+                return redirect('vip_club')
+
+            req.flight_number = request.POST.get('flight_number', '').strip()
+            req.origin = request.POST.get('origin', '').strip()
+            req.destination = request.POST.get('destination', '').strip()
+            req.departure_time = request.POST.get('departure_time', req.departure_time)
+            req.arrival_time = request.POST.get('arrival_time', req.arrival_time)
+            req.aircraft = request.POST.get('aircraft', '').strip()
+            req.route_type = request.POST.get('route_type', 'domestic')
+            req.purpose = request.POST.get('purpose', '').strip()
+            req.passenger_count = int(request.POST.get('passenger_count', 1))
+            req.notes = request.POST.get('notes', '').strip() or None
+
+            if req.created_flight:
+                req.created_flight.delete()
+                req.created_flight = None
+            req.status = 'pending'
+            req.reviewed_by = None
+            req.reviewed_at = None
+            req.review_note = '用户修改后重新提交审核'
+            req.save()
+            messages.success(request, '申请已修改并重新提交审核')
+            return redirect('vip_club')
+
+        # ── Create new ─────────────────────────────────
         flight_number = request.POST.get('flight_number', '').strip()
         origin = request.POST.get('origin', '').strip()
         destination = request.POST.get('destination', '').strip()
