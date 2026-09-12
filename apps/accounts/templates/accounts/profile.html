@@ -1,17 +1,12 @@
 {% extends 'base.html' %}
+{% load avatar_tags %}
 {% block title %}Profile | 个人中心 — Xinfan Airlines{% endblock %}
 {% block content %}
 <h2 class="mb-4"><i class="bi bi-person-badge me-2"></i><span class="lang-zh">个人中心</span><span class="lang-en">Profile</span></h2>
 <div class="row g-4">
     <div class="col-md-4">
         <div class="card p-4 text-center">
-            {% with avatar_url=user.profile.avatar_url %}
-            {% if avatar_url %}
-            <img src="{{ avatar_url }}" alt="Avatar" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);box-shadow: 0 0 20px var(--accent-dim)">
-            {% else %}
-            <i class="bi bi-person-circle" style="font-size:4rem;color:var(--accent)"></i>
-            {% endif %}
-            {% endwith %}
+            {% avatar user.profile 100 3 %}
             <h4 class="mt-2">{{ user.username }}</h4>
             <span class="badge bg-primary fs-6">{{ user.profile.get_role_display }}</span>
             <p class="text-muted mt-2 mb-1">{{ user.email }}</p>

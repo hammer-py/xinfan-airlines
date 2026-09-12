@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load avatar_tags %}
 {% block title %}Profile | 编辑资料 — Xinfan Airlines{% endblock %}
 {% block content %}
 <div class="row justify-content-center"><div class="col-md-6">
@@ -9,13 +10,7 @@
     <!-- Avatar -->
     <div class="mb-3 text-center">
         <div class="mb-2">
-            {% with avatar_url=profile.avatar_url %}
-            {% if avatar_url %}
-            <img src="{{ avatar_url }}" alt="Avatar" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)">
-            {% else %}
-            <i class="bi bi-person-circle" style="font-size:5rem;color:var(--accent)"></i>
-            {% endif %}
-            {% endwith %}
+            {% avatar profile 80 2 %}
         </div>
         <span class="text-muted" style="font-size:0.78rem">
             {% if profile.avatar %}<span class="lang-zh">自定义头像</span><span class="lang-en">Custom Avatar</span>

@@ -135,11 +135,15 @@ TIME_ZONE = 'Asia/Shanghai'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = 'media/'
+# 必须带前导斜杠：Django 把它当基址直接拼接。
+# 写成 'media/' 会生成相对路径 media/avatars/x.png，
+# 在 /accounts/profile/ 这类深层页面上浏览器会解析成
+# /accounts/media/... 从而 404，导致所有自定义头像显示为破图。
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
