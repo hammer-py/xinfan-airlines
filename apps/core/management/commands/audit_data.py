@@ -49,10 +49,12 @@ class Command(BaseCommand):
 
         if requests:
             say('-- 全部私人航班申请 --')
+            say('(提交时间用于判断是否在时区修复之前写入)')
             for r in PrivateFlightRequest.objects.all()[:20]:
-                say('%s | %s | %s -> %s | %s' % (
+                say('%s | %s | 起飞 %s -> 到达 %s | %s | 提交于 %s' % (
                     r.flight_number, r.user.username,
-                    local(r.departure_time), local(r.arrival_time), r.status))
+                    local(r.departure_time), local(r.arrival_time),
+                    r.status, local(r.created_at)))
         else:
             say('私人航班申请表为空。')
         say('')
