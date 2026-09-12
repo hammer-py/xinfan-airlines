@@ -56,14 +56,19 @@ python manage.py check
 python manage.py migrate
 python manage.py collectstatic --noinput
 
-# 6. 清掉上次泄漏的订阅地址（该文件在仓库里已清，服务器上可能还有残留）
+# 6. 确认媒体目录存在且属主正确（用户头像上传到这里）
+mkdir -p media/avatars
+chown -R www-data:www-data media    # 属主按你的服务运行用户调整
+chmod -R 755 media
+
+# 7. 清掉上次泄漏的订阅地址（该文件在仓库里已清，服务器上可能还有残留）
 sed -i '/subscribe?token/d' 5245070195fc163a6d7e3927ecac8193.txt
 cat 5245070195fc163a6d7e3927ecac8193.txt   # 应该只剩一行校验串
 
-# 7. 重启服务
+# 8. 重启服务
 systemctl restart <你的服务名>
 
-# 8. 验证
+# 9. 验证
 curl -s -o /dev/null -w "%{http_code}\n" -H "Host: xinfan.199265.xyz" http://127.0.0.1/
 curl -s -H "Host: xinfan.199265.xyz" http://127.0.0.1/5245070195fc163a6d7e3927ecac8193.txt
 journalctl -u <你的服务名> -n 30 --no-pager
@@ -80,6 +85,34 @@ journalctl -u <你的服务名> -n 30 --no-pager
 - `https://xinfan.199265.xyz/login/` → 验证码应正常显示
   - 验证码空白/报错 → `TURNSTILE_SITE_KEY` 没配对
   - 提交时提示「人机验证失败」→ `TURNSTILE_SECRET_KEY` 没配对
+
+登录后打开 `https://xinfan.199265.xyz/accounts/profile/` 检查头像：
+
+- 上传过头像的用户应看到图片。**页面源码里的地址应是 `/media/avatars/...`**
+  （绝对路径），而不是 `media/avatars/...`（相对路径）
+- 在页面上右键头像 →「在新标签页打开」应能正常显示；若 404，说明
+  nginx 没有把 `/media/` 映射到 `MEDIA_ROOT`（见下方 nginx 片段）
+
+验证媒体文件是否真的存在：
+
+```bash
+ls -la media/avatars/
+```
+
+> 如果 `media/` 是空的，那"头像修好了但图还是不出来"就是**文件本身不存在**，
+> 不是代码问题 —— 让用户重新上传一次即可。
+
+nginx 需要能提供 `/media/`（若尚未配置）：
+
+```nginx
+location /media/ {
+    alias /opt/xinfan-airlines/media/;
+}
+
+location /static/ {
+    alias /opt/xinfan-airlines/staticfiles/;
+}
+```
 
 ---
 
