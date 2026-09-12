@@ -149,6 +149,11 @@ def vip_club_view(request):
 
 
 def verify_txt(request):
+    """站点归属校验文件。
+
+    只返回校验串，不要在此处追加任何密钥/订阅地址：
+    该路径是公开可读的，写进来的内容等同于公开发布。
+    """
     return HttpResponse('7d13c19ea2635efa621af4db13ff59f9e04643ff', content_type='text/plain')
 
 def home_view(request):
