@@ -13,25 +13,41 @@
             {% avatar profile 80 2 %}
         </div>
         <span class="text-muted" style="font-size:0.78rem">
-            {% if profile.avatar %}<span class="lang-zh">自定义头像</span><span class="lang-en">Custom Avatar</span>
-            {% elif profile.qq_number %}<span class="lang-zh">QQ 头像</span><span class="lang-en">QQ Avatar</span> ({{ profile.qq_number }})
+            {% if profile.avatar %}<span class="lang-zh">当前头像</span><span class="lang-en">Current Avatar</span>
             {% else %}<span class="lang-zh">默认头像</span><span class="lang-en">Default Avatar</span>{% endif %}
         </span>
     </div>
 
     <!-- Upload custom avatar -->
     <div class="mb-3">
-        <label class="form-label"><span class="lang-zh">自定义头像</span><span class="lang-en">Custom Avatar</span></label>
+        <label class="form-label"><span class="lang-zh">上传头像</span><span class="lang-en">Upload Avatar</span></label>
         <input type="file" name="avatar" class="form-control" accept="image/*" style="font-size:0.85rem">
-        <small class="text-muted" style="font-size:0.72rem"><span class="lang-zh">支持 JPG/PNG，最大 2MB。上传自定义头像后将清除 QQ 同步。</span><span class="lang-en">JPG/PNG supported, max 2MB. Uploading a custom avatar will clear QQ sync.</span></small>
+        <small class="text-muted" style="font-size:0.72rem">
+            <span class="lang-zh">支持 JPG/PNG/GIF/WebP，最大 2MB。<strong>推荐用这个方式</strong>。</span>
+            <span class="lang-en">JPG/PNG/GIF/WebP, max 2MB. <strong>Recommended.</strong></span>
+        </small>
     </div>
 
-    <!-- QQ 号同步头像 -->
+    <!-- QQ 号（可选，由服务器代取） -->
     <div class="mb-3">
-        <label class="form-label"><span class="lang-zh">QQ 号同步头像</span><span class="lang-en">QQ Avatar Sync</span></label>
+        <label class="form-label"><span class="lang-zh">QQ 号</span><span class="lang-en">QQ Number</span></label>
         <input type="text" name="qq_number" class="form-control" value="{{ profile.qq_number|default:'' }}" placeholder="e.g. 741507315"
                style="font-family:'SF Mono','Fira Code',monospace" pattern="[0-9]{5,15}">
-        <small class="text-muted" style="font-size:0.72rem"><span class="lang-zh">输入 QQ 号自动获取 QQ 头像。输入后将清除自定义头像。</span><span class="lang-en">Enter your QQ number to sync your QQ avatar. This will clear any custom avatar.</span></small>
+        <small class="text-muted" style="font-size:0.72rem">
+            <span class="lang-zh">仅用于展示联系方式。</span>
+            <span class="lang-en">Shown on your profile only.</span>
+        </small>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-check-label">
+            <input type="checkbox" name="use_qq_avatar" value="1" class="form-check-input">
+            <span class="lang-zh">用 QQ 头像作为我的头像</span><span class="lang-en">Use my QQ avatar as my picture</span>
+        </label>
+        <div class="text-muted" style="font-size:0.72rem">
+            <span class="lang-zh">由服务器代取并保存到本站。<strong>注意：腾讯头像服务在部分网络下无法访问</strong>，若取不到会提示你，此时请改用上面的上传方式。上传了图片时此项忽略。</span>
+            <span class="lang-en">Fetched by our server and stored locally. <strong>Tencent's avatar service is unreachable on some networks</strong>; if it fails you will be told, so upload an image instead. Ignored when you upload a file.</span>
+        </div>
     </div>
 
     <hr>

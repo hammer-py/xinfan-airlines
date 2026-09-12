@@ -74,10 +74,14 @@ class UserProfile(models.Model):
 
     @property
     def avatar_url(self):
+        """只返回本地文件地址。
+
+        不要把 qlogo.cn 的地址直接交给浏览器：qlogo.cn 在部分网络下
+        完全不可达（TLS 握手被重置），客户端拿不到图片。QQ 头像改为
+        保存资料时由服务端下载并存成本地文件，见 apps/accounts/qq_avatar.py。
+        """
         if self.avatar:
             return self.avatar.url
-        if self.qq_number:
-            return f'https://q1.qlogo.cn/g?b=qq&nk={self.qq_number}&s=100'
         return None
 
     @property

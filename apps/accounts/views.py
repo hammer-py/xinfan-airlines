@@ -122,6 +122,26 @@ def profile_view(request):
     return render(request, 'accounts/profile.html', {'profile': profile})
 
 
+def _looks_like_image(upload):
+    """按文件头判断是不是图片，不信任客户端提交的 content_type。"""
+    try:
+        head = upload.read(12)
+        upload.seek(0)
+    except Exception:
+        return False
+    if isinstance(head, str):
+        head = head.encode('utf-8', 'ignore')
+    if head.startswith(b'\xff\xd8\xff'):          # JPEG
+        return True
+    if head.startswith(b'\x89PNG\r\n\x1a\n'):     # PNG
+        return True
+    if head.startswith(b'GIF87a') or head.startswith(b'GIF89a'):
+        return True
+    if head[:4] == b'RIFF' and head[8:12] == b'WEBP':
+        return True
+    return False
+
+
 @login_required
 def profile_edit_view(request):
     profile = request.user.profile
@@ -129,35 +149,53 @@ def profile_edit_view(request):
         profile.phone = request.POST.get('phone', '').strip() or None
         profile.bio = request.POST.get('bio', '').strip() or None
 
-        # QQ 号同步头像
-        qq_number = request.POST.get('qq_number', '').strip() or None
-        if qq_number != profile.qq_number:
-            profile.qq_number = qq_number
-            # 设置 QQ 号时清除自定义头像
-            if qq_number:
-                profile.avatar = None
-
-        # 自定义头像上传
         avatar_file = request.FILES.get('avatar')
+        clear_avatar = request.POST.get('clear_avatar') == '1'
+        want_qq = request.POST.get('use_qq_avatar') == '1'
+        qq_number = request.POST.get('qq_number', '').strip() or None
+
+        # 校验自定义头像
         if avatar_file:
-            # 验证文件类型
-            if not avatar_file.content_type.startswith('image/'):
-                messages.error(request, '<span class="lang-zh">仅支持图片文件</span><span class="lang-en">Only image files are supported</span>')
+            if not _looks_like_image(avatar_file):
+                messages.error(request, '仅支持 JPG/PNG/GIF/WebP 图片文件')
                 return render(request, 'accounts/profile_edit.html', {'profile': profile})
             if avatar_file.size > 2 * 1024 * 1024:
-                messages.error(request, '<span class="lang-zh">图片大小不能超过 2MB</span><span class="lang-en">Image size must be under 2MB</span>')
+                messages.error(request, '图片大小不能超过 2MB')
                 return render(request, 'accounts/profile_edit.html', {'profile': profile})
-            profile.avatar = avatar_file
-            # 上传自定义头像时清除 QQ 号
-            profile.qq_number = None
 
-        # 清除头像
-        if request.POST.get('clear_avatar') == '1':
+        # 校验 QQ 号格式
+        if qq_number and not (qq_number.isdigit() and 5 <= len(qq_number) <= 15):
+            messages.error(request, 'QQ 号必须是 5-15 位数字')
+            return render(request, 'accounts/profile_edit.html', {'profile': profile})
+
+        profile.qq_number = qq_number
+
+        if avatar_file:
+            # 上传的文件优先，QQ 头像只作为补充来源
+            profile.avatar = avatar_file
+            messages.success(request, '资料已更新')
+        elif clear_avatar:
             profile.avatar = None
-            profile.qq_number = None
+            messages.success(request, '资料已更新')
+        elif want_qq and qq_number:
+            # 勾选了"用 QQ 头像"才由服务端去取，避免把 qlogo.cn 交给浏览器
+            from .qq_avatar import fetch_qq_avatar
+
+            fetched = fetch_qq_avatar(qq_number)
+            if fetched is None:
+                messages.warning(
+                    request,
+                    '无法获取该 QQ 号的头像（可能是该 QQ 未设置头像、隐私设置限制，'
+                    '或服务器无法访问腾讯头像服务）。已保留你当前的头像，'
+                    '建议改用"上传头像"。'
+                )
+            else:
+                profile.avatar = fetched
+                messages.success(request, '资料已更新（已同步 QQ 头像）')
+        else:
+            messages.success(request, '资料已更新')
 
         profile.save()
-        messages.success(request, '<span class="lang-zh">资料已更新</span><span class="lang-en">Profile updated</span>')
         return redirect('profile')
     return render(request, 'accounts/profile_edit.html', {'profile': profile})
 
