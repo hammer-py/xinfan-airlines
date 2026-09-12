@@ -102,7 +102,7 @@ ls -la media/avatars/
 > 如果 `media/` 是空的，那"头像修好了但图还是不出来"就是**文件本身不存在**，
 > 不是代码问题 —— 让用户重新上传一次即可。
 
-nginx 需要能提供 `/media/`（若尚未配置）：
+nginx 需要能提供 `/media/`：
 
 ```nginx
 location /media/ {
@@ -113,6 +113,20 @@ location /static/ {
     alias /opt/xinfan-airlines/staticfiles/;
 }
 ```
+
+> ⚠️ **`alias` 结尾的斜杠不能省。** 生产环境踩过一次：写成
+> `alias /opt/xinfan-airlines/media;`（无结尾斜杠）时，nginx 会把请求
+> `/media/avatars/headshot.png` 拼成 `/opt/xinfan-airlines/mediaavatars/headshot.png`
+> —— `media` 和 `avatars` 之间的斜杠丢失，所有头像 404。
+>
+> 排查这类问题的**最快方法**是看 nginx 的 error log，它会直接打印拼错的完整路径：
+>
+> ```bash
+> tail -30 /var/log/nginx/error.log
+> ```
+>
+> 看到 `open() ".../mediaavatars/..." failed (2: No such file or directory)`
+> 就是这个问题。修复后务必 `nginx -t` 再 `systemctl reload nginx`。
 
 ---
 
