@@ -9,10 +9,11 @@
 <h3 class="text-center mb-3"><span class="lang-zh">登录账户</span><span class="lang-en">Sign In</span></h3>
 <form method="post" id="loginForm">
     {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
     <div class="mb-3"><label class="form-label"><span class="lang-zh">用户名</span><span class="lang-en">Username</span></label><input type="text" name="username" class="form-control" required></div>
     <div class="mb-3"><label class="form-label"><span class="lang-zh">密码</span><span class="lang-en">Password</span></label><input type="password" name="password" class="form-control" required></div>
     <div class="mb-3 d-flex justify-content-center">
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAADnKla0lQkl2FCZM" data-theme="dark"></div>
+        <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}" data-theme="dark"></div>
     </div>
     <button type="submit" class="btn btn-primary w-100"><span class="lang-zh">登录</span><span class="lang-en">Sign In</span></button>
 </form>

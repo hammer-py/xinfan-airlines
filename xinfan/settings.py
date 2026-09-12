@@ -9,14 +9,56 @@ except ImportError:
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production-abc12345')
-
 DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
+
+_INSECURE_SECRET_KEY = 'django-insecure-dev-key-change-in-production-abc12345'
+SECRET_KEY = os.environ.get('SECRET_KEY') or _INSECURE_SECRET_KEY
+
+if not DEBUG and SECRET_KEY == _INSECURE_SECRET_KEY:
+    raise RuntimeError(
+        'SECRET_KEY 未配置：生产环境（DEBUG=False）必须通过环境变量设置 SECRET_KEY。'
+    )
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1 localhost').split()
 
-_csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', os.environ.get('ALLOWED_HOSTS', 'http://127.0.0.1 http://localhost'))
-CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in _csrf_origins.split() if origin.strip()]
+if not DEBUG and not ALLOWED_HOSTS:
+    raise RuntimeError(
+        'ALLOWED_HOSTS 未配置：生产环境（DEBUG=False）必须通过环境变量设置 ALLOWED_HOSTS。'
+    )
+
+# 生产环境通过 HTTPS（Cloudflare / Nginx）访问
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+# Cloudflare Turnstile 人机验证密钥（必须通过环境变量配置）
+TURNSTILE_SITE_KEY = os.environ.get('TURNSTILE_SITE_KEY', '')
+TURNSTILE_SECRET_KEY = os.environ.get('TURNSTILE_SECRET_KEY', '')
+
+_csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+
+
+def _csrf_trusted_origins():
+    """CSRF_TRUSTED_ORIGINS 必须是带协议的完整来源（Django 4.0+ 强制要求）。
+
+    未显式配置时从 ALLOWED_HOSTS 推导，并自动补上协议，
+    否则 Django 启动时会直接抛 4_0.E001 并导致所有 POST 请求失败。
+    """
+    items = _csrf_origins.split() if _csrf_origins.strip() else list(ALLOWED_HOSTS)
+    default_scheme = 'http' if DEBUG else 'https'
+    origins = []
+    for item in items:
+        item = item.strip()
+        if not item:
+            continue
+        if '://' not in item:
+            item = f'{default_scheme}://{item}'
+        origins.append(item)
+    return origins
+
+
+CSRF_TRUSTED_ORIGINS = _csrf_trusted_origins()
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -55,6 +97,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.core.context_processors.turnstile',
             ],
         },
     },

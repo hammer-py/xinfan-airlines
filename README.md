@@ -16,6 +16,32 @@ Roblox 虚拟航空公司官方网站，基于 Python + Django 全栈开发。
 | 认证 | Django Auth + 自定义角色系统 + Cloudflare Turnstile 人机验证 |
 | 部署 | Gunicorn + Nginx + Cloudflare CDN |
 
+## 环境变量
+
+生产部署（`DEBUG=False`）必须配置以下变量，否则应用会拒绝启动：
+
+| 变量 | 说明 |
+|------|------|
+| `DEBUG` | 生产环境必须为 `False` |
+| `SECRET_KEY` | 生产环境必须显式设置（留空会拒绝启动） |
+| `ALLOWED_HOSTS` | 空格分隔的域名列表，如 `xinfan.199265.xyz` |
+| `CSRF_TRUSTED_ORIGINS` | 可选；未设置时自动从 `ALLOWED_HOSTS` 推导并补全协议 |
+| `TURNSTILE_SITE_KEY` | Cloudflare Turnstile 站点密钥（前端） |
+| `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile 私钥（服务端校验，未设置时验证一律不通过） |
+| `DB_NAME` / `DB_USER` / `DB_PASSWORD` / `DB_HOST` / `DB_PORT` | MySQL 连接信息 |
+
+本地开发：不设置 `DB_PASSWORD` 时自动使用 SQLite（`USE_SQLITE` 默认为 `True`）。
+
+## 管理命令
+
+```bash
+python manage.py migrate
+python manage.py setup_demo            # 仅本地演示数据，DEBUG=False 时会拒绝执行
+python manage.py cleanup_flights       # 清理到达超过 1 天的航班
+```
+
+> `cleanup_flights` 需要配合 cron 定时执行，例如 `0 4 * * *`。
+
 ## 首页
 
 - 5 张全屏轮播图，每张有独特的滑动动画（zoom / slideRight / scaleUp）
@@ -23,7 +49,7 @@ Roblox 虚拟航空公司官方网站，基于 Python + Django 全栈开发。
 - 关于我们 / 服务介绍 / 理念与目标 / 运营数据 / 社交链接
 - 手机端全适配
 
-## 角色体系（21 种）
+## 角色体系（19 种）
 
 ### 用户等级
 

@@ -1,10 +1,24 @@
-from django.core.management.base import BaseCommand
+from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 
 class Command(BaseCommand):
     help = '创建演示账户并初始化示例航班和招聘职位'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--force',
+            action='store_true',
+            help='在生产环境（DEBUG=False）也允许创建演示数据与弱口令管理员',
+        )
+
     def handle(self, *args, **options):
+        if not settings.DEBUG and not options['force']:
+            raise CommandError(
+                '拒绝在 DEBUG=False 的生产环境创建演示数据（其中包含 admin / admin123 弱口令超级用户）。'
+                '如确认要执行，请显式添加 --force。'
+            )
+
         # Create admin user
         if not User.objects.filter(username='admin').exists():
             user = User.objects.create_superuser(
@@ -50,6 +64,8 @@ class Command(BaseCommand):
 
         # Create demo flights
         from apps.flights.models import Flight
+        from apps.flights.views import _parse_dt
+
         if Flight.objects.count() == 0:
             admin = User.objects.get(username='admin')
             flights = [
@@ -62,7 +78,8 @@ class Command(BaseCommand):
             for fn, orig, dest, dep, arr, ac, rtype in flights:
                 Flight.objects.create(
                     flight_number=fn, origin=orig, destination=dest,
-                    departure_time=dep, arrival_time=arr, aircraft=ac,
+                    departure_time=_parse_dt(dep), arrival_time=_parse_dt(arr),
+                    aircraft=ac,
                     route_type=rtype, created_by=admin, notes='初始化演示航班'
                 )
             self.stdout.write(self.style.SUCCESS(f'{len(flights)} 个演示航班已创建'))

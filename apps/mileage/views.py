@@ -41,15 +41,32 @@ def mileage_redeem_view(request):
 def mileage_grant_view(request):
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
-        amount = int(request.POST.get('amount', 0))
-        description = request.POST.get('description', '管理员发放').strip()
+        raw_amount = request.POST.get('amount', '').strip()
+        description = request.POST.get('description', '').strip() or '管理员发放'
+
+        if not username:
+            messages.error(request, '请填写用户名')
+            return redirect('mileage_grant')
+
+        try:
+            amount = int(raw_amount)
+        except (TypeError, ValueError):
+            messages.error(request, f'里程数必须是整数，收到: {raw_amount}')
+            return redirect('mileage_grant')
+
         try:
             user = User.objects.get(username=username)
-            user.profile.miles += amount
-            user.profile.save()
-            MileageRecord.objects.create(user=user, amount=amount, type='earn', description=description)
-            messages.success(request, f'已向 {username} 发放 {amount} 英里')
         except User.DoesNotExist:
             messages.error(request, f'用户 {username} 不存在')
+            return redirect('mileage_grant')
+
+        if user.profile.miles + amount < 0:
+            messages.error(request, f'{username} 当前里程为 {user.profile.miles}，扣减后不能为负数')
+            return redirect('mileage_grant')
+
+        user.profile.miles += amount
+        user.profile.save()
+        MileageRecord.objects.create(user=user, amount=amount, type='earn', description=description)
+        messages.success(request, f'已向 {username} 发放 {amount} 英里')
         return redirect('mileage_grant')
     return render(request, 'mileage/grant.html')

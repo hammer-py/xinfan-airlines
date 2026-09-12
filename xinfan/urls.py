@@ -16,3 +16,6 @@ urlpatterns = [
 
 if not settings.DEBUG:
     urlpatterns.insert(0, re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}))
+
+handler404 = 'apps.core.views.error_404_view'
+handler500 = 'apps.core.views.error_500_view'

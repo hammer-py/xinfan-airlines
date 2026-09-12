@@ -41,6 +41,8 @@ STAFF_ROLES = {'cabin_crew', 'first_officer', 'captain', 'ground_staff'}
 ADMIN_ROLES = {'admin', 'hod', 'shr', 'vice_chairman', 'chairman', 'group_owner'}
 ALL_STAFF_ROLES = ADMIN_ROLES | {'flight_host'}
 PREMIUM_ROLES = {'business', 'first_class', 'investor', 'uinv'} | ADMIN_ROLES
+# 高舱旅客 + 全体员工（含实习）都可以查看私人航班
+PRIVATE_FLIGHT_VIEWER_ROLES = PREMIUM_ROLES | EMPLOYEE_ROLES | ALL_STAFF_ROLES
 
 
 def is_employee(role):
@@ -100,9 +102,8 @@ class UserProfile(models.Model):
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
+    UserProfile.objects.get_or_create(user=instance)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+    UserProfile.objects.get_or_create(user=instance)[0].save()

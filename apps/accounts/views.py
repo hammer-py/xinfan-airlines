@@ -3,21 +3,36 @@ from django.contrib.auth import login, logout, authenticate, update_session_auth
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
+from django.urls import reverse
 from django.utils.decorators import method_decorator
+from django.utils.http import url_has_allowed_host_and_scheme
 from .models import UserProfile, ROLE_CHOICES, ADMIN_ROLES
 from .decorators import role_required
 import json
 import urllib.request
 
-TURNSTILE_SECRET = '0x4AAAAAADnKlcEsR3ju3SUhf65od20RxUU'
+
+def _safe_next_url(request):
+    """只允许跳转到本站地址，避免开放重定向。"""
+    next_url = request.POST.get('next') or request.GET.get('next') or ''
+    if next_url and url_has_allowed_host_and_scheme(
+        next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()
+    ):
+        return next_url
+    return reverse('home')
 
 
 def _verify_turnstile(token):
+    secret = settings.TURNSTILE_SECRET_KEY
     if not token:
         return False
-    data = json.dumps({'secret': TURNSTILE_SECRET, 'response': token}).encode()
+    if not secret:
+        # 未配置密钥时不能放行，否则人机验证形同虚设
+        return False
+    data = json.dumps({'secret': secret, 'response': token}).encode()
     req = urllib.request.Request(
         'https://challenges.cloudflare.com/turnstile/v0/siteverify',
         data=data, headers={'Content-Type': 'application/json'}
@@ -73,6 +88,8 @@ def login_view(request):
     if request.user.is_authenticated:
         return redirect('home')
 
+    next_url = request.POST.get('next') or request.GET.get('next') or ''
+
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '')
@@ -80,18 +97,17 @@ def login_view(request):
 
         if not _verify_turnstile(turnstile_token):
             messages.error(request, '人机验证失败，请重试')
-            return render(request, 'accounts/login.html')
+            return render(request, 'accounts/login.html', {'next': next_url})
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             messages.success(request, f'欢迎回来，{user.username}！')
-            next_url = request.GET.get('next', 'home')
-            return redirect(next_url)
+            return redirect(_safe_next_url(request))
         else:
             messages.error(request, '用户名或密码错误')
 
-    return render(request, 'accounts/login.html')
+    return render(request, 'accounts/login.html', {'next': next_url})
 
 
 def logout_view(request):
@@ -151,21 +167,13 @@ def profile_edit_view(request):
 @login_required
 @role_required(['staff'])
 def admin_panel_view(request):
+    from apps.flights.models import Flight, FlightCrewSignup
+    from apps.recruitment.models import JobApplication
+
     total_users = User.objects.count()
-    total_flights = 0
-    pending_signups = 0
-    pending_applications = 0
-    try:
-        from apps.flights.models import Flight, FlightCrewSignup
-        total_flights = Flight.objects.count()
-        pending_signups = FlightCrewSignup.objects.filter(status='pending').count()
-    except Exception:
-        pass
-    try:
-        from apps.recruitment.models import JobApplication
-        pending_applications = JobApplication.objects.filter(status='pending').count()
-    except Exception:
-        pass
+    total_flights = Flight.objects.count()
+    pending_signups = FlightCrewSignup.objects.filter(status='pending').count()
+    pending_applications = JobApplication.objects.filter(status='pending').count()
 
     is_full_admin = request.user.profile.role in ADMIN_ROLES
     ctx = {
@@ -247,11 +255,10 @@ def admin_users_view(request):
             target = get_object_or_404(User, id=request.POST.get('user_id'))
             new_role = request.POST.get('role')
             if new_role in role_choices:
-                if not hasattr(target, 'profile'):
-                    UserProfile.objects.create(user=target)
-                target.profile.role = new_role
-                target.profile.save()
-                messages.success(request, f'{target.username} 的角色已更新为 {target.profile.get_role_display()}')
+                profile, _ = UserProfile.objects.get_or_create(user=target)
+                profile.role = new_role
+                profile.save()
+                messages.success(request, f'{target.username} 的角色已更新为 {profile.get_role_display()}')
             return redirect('admin_users')
 
         if action == 'batch_update_role':
@@ -264,10 +271,9 @@ def admin_users_view(request):
             else:
                 count = 0
                 for user in User.objects.filter(id__in=user_ids).exclude(id=request.user.id):
-                    if not hasattr(user, 'profile'):
-                        UserProfile.objects.create(user=user)
-                    user.profile.role = new_role
-                    user.profile.save()
+                    profile, _ = UserProfile.objects.get_or_create(user=user)
+                    profile.role = new_role
+                    profile.save()
                     count += 1
                 messages.success(request, f'已将 {count} 个用户的角色更新为 {role_choices[new_role]}')
             return redirect('admin_users')

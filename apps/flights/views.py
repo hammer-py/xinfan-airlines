@@ -1,10 +1,54 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db import IntegrityError, transaction
 from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 from .models import Flight, FlightCrewSignup, PrivateFlightRequest
 from apps.accounts.decorators import role_required
-from apps.accounts.models import PREMIUM_ROLES, EMPLOYEE_ROLES
+from apps.accounts.models import PREMIUM_ROLES, PRIVATE_FLIGHT_VIEWER_ROLES
+
+
+def _parse_int(value, default=1, minimum=1):
+    """安全地把表单字符串转成整数，非法输入回退到默认值。"""
+    try:
+        number = int(str(value).strip())
+    except (TypeError, ValueError):
+        return default
+    return max(number, minimum)
+
+
+def _parse_dt(value):
+    """把 datetime-local 表单值解析为当前时区的 aware datetime。
+
+    USE_TZ=True 时，naive datetime 会被当作 UTC 直接写库，
+    导致用户输入的本地时间在页面上偏移 8 小时（Asia/Shanghai）。
+    """
+    if not value:
+        return None
+    if hasattr(value, 'tzinfo'):
+        return value if timezone.is_aware(value) else timezone.make_aware(value)
+    text = str(value).strip().replace('T', ' ')
+    parsed = parse_datetime(text)
+    if parsed is None:
+        for fmt in ('%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d'):
+            try:
+                parsed = timezone.datetime.strptime(text, fmt)
+                break
+            except ValueError:
+                continue
+    if parsed is None:
+        return None
+    if timezone.is_naive(parsed):
+        parsed = timezone.make_aware(parsed, timezone.get_current_timezone())
+    return parsed
+
+
+def _flight_number_taken(flight_number, exclude_pk=None):
+    qs = Flight.objects.filter(flight_number=flight_number)
+    if exclude_pk:
+        qs = qs.exclude(pk=exclude_pk)
+    return qs.exists()
 
 def flight_list_view(request):
     if request.method == 'POST' and request.POST.get('action') == 'batch_delete':
@@ -18,11 +62,8 @@ def flight_list_view(request):
 
     flights = Flight.objects.select_related('created_by').filter(is_private=False)
     can_see_private = (
-        request.user.is_authenticated and (
-            request.user.profile.role in PREMIUM_ROLES or
-            request.user.profile.role in EMPLOYEE_ROLES or
-            request.user.profile.role == 'admin'
-        )
+        request.user.is_authenticated
+        and request.user.profile.role in PRIVATE_FLIGHT_VIEWER_ROLES
     )
     private_flights = Flight.objects.select_related('created_by').filter(is_private=True, status='scheduled') if can_see_private else Flight.objects.none()
     status = request.GET.get('status', '')
@@ -42,8 +83,8 @@ def flight_detail_view(request, pk):
     flight = get_object_or_404(Flight, pk=pk)
 
     if flight.is_private and (
-        not request.user.is_authenticated or
-        request.user.profile.role == 'economy'
+        not request.user.is_authenticated
+        or request.user.profile.role not in PRIVATE_FLIGHT_VIEWER_ROLES
     ):
         messages.error(request, '你没有权限查看此航班')
         return redirect('flight_list')
@@ -64,24 +105,41 @@ def flight_detail_view(request, pk):
 @role_required(['staff'])
 def flight_create_view(request):
     if request.method == 'POST':
+        flight_number = request.POST.get('flight_number', '').strip()
+        if not flight_number:
+            messages.error(request, '航班号不能为空')
+            return render(request, 'flights/flight_form.html')
+        if _flight_number_taken(flight_number):
+            messages.error(request, f'航班号 {flight_number} 已存在')
+            return render(request, 'flights/flight_form.html')
+        departure_time = _parse_dt(request.POST.get('departure_time'))
+        arrival_time = _parse_dt(request.POST.get('arrival_time'))
+        if not departure_time or not arrival_time:
+            messages.error(request, '请填写有效的计划起飞/到达时间')
+            return render(request, 'flights/flight_form.html')
+        if arrival_time < departure_time:
+            messages.error(request, '计划到达时间不能早于计划起飞时间')
+            return render(request, 'flights/flight_form.html')
         try:
-            flight = Flight.objects.create(
-                flight_number=request.POST.get('flight_number', '').strip(),
-                origin=request.POST.get('origin', '').strip(),
-                destination=request.POST.get('destination', '').strip(),
-                departure_time=request.POST.get('departure_time'),
-                arrival_time=request.POST.get('arrival_time'),
-                aircraft=request.POST.get('aircraft', 'Boeing 737-800').strip(),
-                gate=request.POST.get('gate', '').strip() or None,
-                route_type=request.POST.get('route_type', 'domestic'),
-                status=request.POST.get('status', 'scheduled'),
-                notes=request.POST.get('notes', '').strip() or None,
-                created_by=request.user,
-            )
-            messages.success(request, f'航班 {flight.flight_number} 已创建')
-            return redirect('flight_detail', flight.pk)
-        except Exception as e:
+            with transaction.atomic():
+                flight = Flight.objects.create(
+                    flight_number=flight_number,
+                    origin=request.POST.get('origin', '').strip(),
+                    destination=request.POST.get('destination', '').strip(),
+                    departure_time=departure_time,
+                    arrival_time=arrival_time,
+                    aircraft=request.POST.get('aircraft', 'Boeing 737-800').strip(),
+                    gate=request.POST.get('gate', '').strip() or None,
+                    route_type=request.POST.get('route_type', 'domestic'),
+                    status=request.POST.get('status', 'scheduled'),
+                    notes=request.POST.get('notes', '').strip() or None,
+                    created_by=request.user,
+                )
+        except (IntegrityError, ValueError) as e:
             messages.error(request, f'创建失败: {e}')
+            return render(request, 'flights/flight_form.html')
+        messages.success(request, f'航班 {flight.flight_number} 已创建')
+        return redirect('flight_detail', flight.pk)
     return render(request, 'flights/flight_form.html')
 
 @login_required
@@ -89,11 +147,24 @@ def flight_create_view(request):
 def flight_edit_view(request, pk):
     flight = get_object_or_404(Flight, pk=pk)
     if request.method == 'POST':
-        flight.flight_number = request.POST.get('flight_number', flight.flight_number)
+        flight_number = request.POST.get('flight_number', '').strip() or flight.flight_number
+        if _flight_number_taken(flight_number, exclude_pk=flight.pk):
+            messages.error(request, f'航班号 {flight_number} 已被其他航班使用')
+            return render(request, 'flights/flight_form.html', {'flight': flight, 'editing': True})
+
+        flight.flight_number = flight_number
         flight.origin = request.POST.get('origin', flight.origin)
         flight.destination = request.POST.get('destination', flight.destination)
-        flight.departure_time = request.POST.get('departure_time', flight.departure_time)
-        flight.arrival_time = request.POST.get('arrival_time', flight.arrival_time)
+        departure_time = _parse_dt(request.POST.get('departure_time'))
+        arrival_time = _parse_dt(request.POST.get('arrival_time'))
+        if not departure_time or not arrival_time:
+            messages.error(request, '请填写有效的计划起飞/到达时间')
+            return render(request, 'flights/flight_form.html', {'flight': flight, 'editing': True})
+        if arrival_time < departure_time:
+            messages.error(request, '计划到达时间不能早于计划起飞时间')
+            return render(request, 'flights/flight_form.html', {'flight': flight, 'editing': True})
+        flight.departure_time = departure_time
+        flight.arrival_time = arrival_time
         flight.aircraft = request.POST.get('aircraft', flight.aircraft)
         flight.gate = request.POST.get('gate', '').strip() or None
         flight.route_type = request.POST.get('route_type', flight.route_type)
@@ -116,7 +187,7 @@ def flight_delete_view(request, pk):
     return render(request, 'flights/flight_confirm_delete.html', {'flight': flight})
 
 @login_required
-@role_required(['employee', 'admin'])
+@role_required(['employee'])
 def flight_signup_view(request, pk):
     flight = get_object_or_404(Flight, pk=pk)
     if request.method == 'POST':
@@ -183,20 +254,28 @@ def admin_private_requests_view(request):
         req = get_object_or_404(PrivateFlightRequest, id=req_id)
 
         if action == 'approve':
-            flight = Flight.objects.create(
-                flight_number=req.flight_number,
-                origin=req.origin, destination=req.destination,
-                departure_time=req.departure_time, arrival_time=req.arrival_time,
-                aircraft=req.aircraft, route_type=req.route_type,
-                status='scheduled', is_private=True,
-                notes=f'私人航班 — {req.user.username} 申请\n目的: {req.purpose}',
-                created_by=req.user,
-            )
-            req.status = 'approved'
-            req.reviewed_by = request.user
-            req.reviewed_at = timezone.now()
-            req.created_flight = flight
-            req.save()
+            if _flight_number_taken(req.flight_number):
+                messages.error(request, f'航班号 {req.flight_number} 已存在，无法创建航班')
+                return redirect('admin_private_requests')
+            try:
+                with transaction.atomic():
+                    flight = Flight.objects.create(
+                        flight_number=req.flight_number,
+                        origin=req.origin, destination=req.destination,
+                        departure_time=req.departure_time, arrival_time=req.arrival_time,
+                        aircraft=req.aircraft, route_type=req.route_type,
+                        status='scheduled', is_private=True,
+                        notes=f'私人航班 — {req.user.username} 申请\n目的: {req.purpose}',
+                        created_by=req.user,
+                    )
+                    req.status = 'approved'
+                    req.reviewed_by = request.user
+                    req.reviewed_at = timezone.now()
+                    req.created_flight = flight
+                    req.save()
+            except IntegrityError:
+                messages.error(request, f'航班号 {req.flight_number} 已存在，无法创建航班')
+                return redirect('admin_private_requests')
             messages.success(request, f'已通过 {req.user.username} 的私人航班申请，航班 {req.flight_number} 已创建')
 
         elif action == 'reject':
@@ -208,16 +287,23 @@ def admin_private_requests_view(request):
             messages.success(request, f'已拒绝 {req.user.username} 的私人航班申请')
 
         elif action == 'edit_request':
-            req = get_object_or_404(PrivateFlightRequest, id=request.POST.get('request_id'))
-            req.flight_number = request.POST.get('flight_number', '').strip()
+            flight_number = request.POST.get('flight_number', '').strip()
+            if not flight_number:
+                messages.error(request, '航班号不能为空')
+                return redirect('admin_private_requests')
+            if _flight_number_taken(flight_number, exclude_pk=req.created_flight_id):
+                messages.error(request, f'航班号 {flight_number} 已被其他航班使用')
+                return redirect('admin_private_requests')
+
+            req.flight_number = flight_number
             req.origin = request.POST.get('origin', '').strip()
             req.destination = request.POST.get('destination', '').strip()
-            req.departure_time = request.POST.get('departure_time', req.departure_time)
-            req.arrival_time = request.POST.get('arrival_time', req.arrival_time)
+            req.departure_time = _parse_dt(request.POST.get('departure_time')) or req.departure_time
+            req.arrival_time = _parse_dt(request.POST.get('arrival_time')) or req.arrival_time
             req.aircraft = request.POST.get('aircraft', '').strip()
             req.route_type = request.POST.get('route_type', 'domestic')
             req.purpose = request.POST.get('purpose', '').strip()
-            req.passenger_count = int(request.POST.get('passenger_count', 1))
+            req.passenger_count = _parse_int(request.POST.get('passenger_count'), default=1)
             req.notes = request.POST.get('notes', '').strip() or None
             # 删除旧航班并重置为待审批
             if req.created_flight:
