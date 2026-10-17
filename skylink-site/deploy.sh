@@ -101,6 +101,30 @@ else
 fi
 ok "files published"
 
+# ---- 2b. asset versioning ------------------------------------------------
+# 给 HTML 里引用的静态资源加上 "?v=<内容哈希>"。
+# 原因：Cloudflare 会把 /assets/* 缓存到它自己的 TTL（这里 4 小时），
+# 而改 CSS 时 URL 没变，CDN 无从知道内容变了 —— 结果就是新 HTML 配旧 CSS，
+# 页面样式直接错乱，且服务端自测一切正常、极难排查。
+# 内容变了哈希才变，因此只在真正改动时让缓存失效。
+step "Stamping asset versions"
+if [ "$DRY_RUN" = "1" ]; then
+    info "[dry-run] 为 index.html 中的 assets/* 追加内容哈希"
+else
+    cd "$WEB_ROOT"
+    stamped=0
+    # 先清掉旧的 ?v=，避免叠加
+    sed -i -E 's#(assets/[A-Za-z0-9._/-]+\.(css|js|png|jpe?g|svg|webp))(\?v=[A-Za-z0-9]+)?#\1#g' index.html
+    for f in $(grep -oE 'assets/[A-Za-z0-9._/-]+\.(css|js|png|jpe?g|svg|webp)' index.html 2>/dev/null | sort -u || true); do
+        [ -f "$f" ] || continue
+        hash=$(md5sum "$f" | cut -c1-8)
+        sed -i "s#${f}\([\"']\)#${f}?v=${hash}\1#g" index.html
+        stamped=$((stamped + 1))
+    done
+    cd - >/dev/null
+    ok "stamped $stamped asset URLs"
+fi
+
 # ---- 3. permissions ------------------------------------------------------
 step "Setting permissions"
 run chown -R www-data:www-data "$WEB_ROOT"
