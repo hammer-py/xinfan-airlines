@@ -480,10 +480,21 @@ p { margin: 0 0 1em; }
 .join__art {
   background: #fff;
   border-radius: var(--radius);
-  padding: 1.7rem;
+  padding: 2rem 1.7rem;
   box-shadow: 0 24px 60px rgba(0, 0, 0, .28);
+  text-align: center;
 }
-.join__art img { width: 100%; }
+.join__art img {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.join__art-note {
+  margin: 1.1rem 0 0;
+  font-size: .8rem;
+  letter-spacing: .04em;
+  color: #7e93a8;
+}
 
 /* ---------- footer ---------- */
 
