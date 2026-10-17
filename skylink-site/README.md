@@ -91,14 +91,26 @@ cd /opt/xinfan-airlines && bash skylink-site/deploy.sh
 |---|---|---|
 | 首屏 | `#top` | 标语、按钮、三个统计数字 |
 | 关于联盟 | `#about` | 联盟简介、成立日期等事实表 |
-| 成员航空公司 | `#members` | 成员卡片（增删成员改这里） |
+| 成员航空公司 | `#members` | 分「核心成员 / 成员」两层，见下 |
 | 会员权益 | `#benefits` | 三张权益卡片 |
 | 加入我们 | `#join` | 招募文案与联系方式 |
 | 页脚 | — | 导航、版权 |
 
-**新增成员**：复制 `#members` 里任意一个 `<article class="member">`，改 logo 路径、名称和描述，
-把 logo 图片放进 `assets/img/`。创始成员用 `<span class="tag tag--founding">创始成员</span>`，
-普通成员用 `<span class="tag">成员</span>`。
+### 成员分层
+
+联盟分为**两个层级**，与官方成员名单一致：
+
+| 层级 | 锚点 | 当前成员 |
+|---|---|---|
+| 核心成员 Core Allies | `.tier` 第一层 | 广湖航空（创始成员）、新帆航空 |
+| 成员 Allies | `.tier` 第二层 | 暂无，显示「即将加入」占位卡 |
+
+**新增核心成员**：复制第一层里的 `<article class="member">`，改 logo、名称、描述。
+标签用 `<span class="tag tag--founding">创始成员</span>` 或 `<span class="tag">核心成员</span>`。
+
+**新增普通成员**：把第二层的 `.tier__empty` 占位块替换成 `<div class="members">` 加成员卡片，
+卡片结构同核心成员，标签用 `<span class="tag">成员</span>`。
+成员超过 2 家时网格会自动换行（`grid-template-columns: repeat(auto-fit, minmax(320px, 1fr))`）。
 
 ## 设计说明
 
