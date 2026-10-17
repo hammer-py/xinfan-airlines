@@ -1,8 +1,32 @@
 # 服务器部署说明（xinfan.199265.xyz）
 
-目标提交：`3c6fb18`（GitHub `main` 已是这个版本，服务器 pull 即得到）
+## 一条命令部署
+
+```bash
+cd /opt/xinfan-airlines && bash deploy/deploy.sh
+```
+
+它会依次完成：检查工作区是否干净 → `git pull` → 依赖变化时装依赖 →
+`manage.py check` → `migrate` → `collectstatic` → 同步 nginx 配置（有变化时 →
+`nginx -t` → reload）→ 重启 `xinfan.service` → 健康检查（`/` 和 `/about/` 必须 200）。
+
+任何一步失败都会**立即中止**，不会留下半更新的状态。
+
+```bash
+# 只看会做什么，不改任何东西
+bash deploy/deploy.sh --dry-run
+
+# 自定义路径/服务名
+PROJECT_DIR=/opt/xinfan-airlines SERVICE=xinfan.service bash deploy/deploy.sh
+```
+
+> 脚本默认假设：项目在 `/opt/xinfan-airlines`、服务名 `xinfan.service`、
+> nginx 配置在 `/etc/nginx/sites-enabled/xinfan.conf`。
+> 不符时用环境变量覆盖。
 
 ---
+
+## 手动部署（脚本不适用时）
 
 ## ⚠️ 顺序很重要，别反过来
 
