@@ -1,0 +1,22 @@
+{
+  "name": "SKY LINK 蓝天联盟",
+  "short_name": "SKY LINK",
+  "description": "蓝天联盟（SKY LINK）成立于 2022 年 9 月 30 日，联结 Roblox 航空，为旅客提供一致的旅行体验。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3bb8f0",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "assets/img/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/img/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
