@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}About | 公司介绍 — Xinfan Airlines{% endblock %}
 {% block content %}
 <p class="section-label">About</p>
@@ -84,6 +85,64 @@
             <h6 class="fw-bold"><span class="lang-zh">联系我们</span><span class="lang-en">Contact</span></h6>
             <p class="mb-0" style="color:var(--text-secondary);font-size:0.88rem"><i class="bi bi-discord"></i> <a href="https://discord.gg/xNCBJVPsmR" target="_blank"><span class="lang-zh">加入 Discord</span><span class="lang-en">Join Discord</span></a></p>
             <p class="mb-0" style="color:var(--text-secondary);font-size:0.88rem">Roblox: <a href="https://www.roblox.com/communities/16064021/Xinfan-Airlines#!/about" target="_blank">Xinfan Airlines</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- 联盟成员 / Alliance -->
+<div class="card p-4 p-lg-5 mt-4" style="position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),transparent)"></div>
+
+    <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+        <span class="badge" style="background:var(--accent-dim);color:var(--accent);border:1px solid rgba(0,200,150,0.25);padding:0.35rem 0.8rem">
+            <span class="lang-zh">联盟成员</span><span class="lang-en">Alliance Member</span>
+        </span>
+        <span style="color:var(--text-secondary);font-size:0.82rem">
+            <span class="lang-zh">成立于 2022 年 9 月 30 日</span>
+            <span class="lang-en">Founded 30 September 2022</span>
+        </span>
+    </div>
+
+    <h4 class="fw-bold mb-1"><span class="lang-zh">蓝天联盟 SKY LINK</span><span class="lang-en">SKY LINK Alliance</span></h4>
+    <p class="mb-4" style="color:var(--text-secondary);font-size:0.9rem">
+        <span class="lang-zh">新帆航空是蓝天联盟的成员航空公司之一。</span>
+        <span class="lang-en">Xinfan Airlines is a member airline of the SKY LINK alliance.</span>
+    </p>
+
+    <!-- 品牌标识：联盟 logo 为浅色底深色字，放在白底上以保证对比度 -->
+    <div class="mb-4 text-center" style="background:#fff;border-radius:var(--radius-sm);padding:1.75rem 1.5rem">
+        <img src="{% static 'images/sky-link/skylink-logo.png' %}" alt="SKY LINK"
+             style="max-width:100%;width:320px;height:auto;display:block;margin:0 auto 1.25rem">
+        <img src="{% static 'images/sky-link/skylink-member-banner.jpg' %}" alt="a member of SKY LINK"
+             style="max-width:100%;width:420px;height:auto;display:block;margin:0 auto">
+    </div>
+
+    <p style="color:var(--text-secondary);font-size:0.92rem;line-height:1.75" class="mb-4">
+        <span class="lang-zh">蓝天联盟（SKY LINK）成立于 2022 年 9 月 30 日，旨在联结 Roblox 航空，其成员航空公司合力协作，提供一致、超卓、完美的旅行体验。飞行常客享有特别的优待和奖励，包括在整个联盟网络内赢取和兑换里程和积分。联盟会员享有机场贵宾休息室的使用权，还可在某些机场使用快速安检通道。</span>
+        <span class="lang-en">SKY LINK was founded on 30 September 2022 to connect airlines across Roblox. Its member airlines work together to deliver a consistent, outstanding and seamless travel experience. Frequent flyers enjoy special privileges and rewards, including the ability to earn and redeem miles and points across the entire alliance network. Alliance members also have access to airport lounges, and can use fast-track security at selected airports.</span>
+    </p>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="h-100" style="background:var(--surface-light);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem">
+                <div style="color:var(--accent);font-size:1.1rem;margin-bottom:0.4rem"><i class="bi bi-ticket-perforated"></i></div>
+                <div class="fw-bold mb-1" style="font-size:0.9rem"><span class="lang-zh">里程互通</span><span class="lang-en">Earn &amp; Redeem</span></div>
+                <div style="color:var(--text-secondary);font-size:0.82rem"><span class="lang-zh">在联盟网络内赢取和兑换里程与积分</span><span class="lang-en">Earn and redeem miles across the network</span></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="h-100" style="background:var(--surface-light);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem">
+                <div style="color:var(--accent);font-size:1.1rem;margin-bottom:0.4rem"><i class="bi bi-cup-hot"></i></div>
+                <div class="fw-bold mb-1" style="font-size:0.9rem"><span class="lang-zh">贵宾休息室</span><span class="lang-en">Lounge Access</span></div>
+                <div style="color:var(--text-secondary);font-size:0.82rem"><span class="lang-zh">联盟会员享有机场贵宾休息室使用权</span><span class="lang-en">Members enjoy airport lounge access</span></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="h-100" style="background:var(--surface-light);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem">
+                <div style="color:var(--accent);font-size:1.1rem;margin-bottom:0.4rem"><i class="bi bi-shield-check"></i></div>
+                <div class="fw-bold mb-1" style="font-size:0.9rem"><span class="lang-zh">快速安检</span><span class="lang-en">Fast-track Security</span></div>
+                <div style="color:var(--text-secondary);font-size:0.82rem"><span class="lang-zh">可在部分机场使用快速安检通道</span><span class="lang-en">Fast-track security at selected airports</span></div>
+            </div>
         </div>
     </div>
 </div>
