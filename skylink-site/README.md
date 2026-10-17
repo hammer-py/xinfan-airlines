@@ -27,50 +27,61 @@ python3 -m http.server 8080
 
 直接双击 `index.html` 也能看，但用 HTTP 服务更接近线上环境。
 
-## 部署到 nginx
+## 部署
 
-把整个 `skylink-site/` 目录上传到服务器，例如 `/var/www/skylink`：
+**线上地址**：https://skylink.199265.xyz
 
-```bash
-scp -r skylink-site/* root@<服务器IP>:/var/www/skylink/
-```
+| 项 | 值 |
+|---|---|
+| 域名 | `skylink.199265.xyz`（Cloudflare 代理） |
+| 服务器 | `69.12.65.118` |
+| 站点根目录 | `/var/www/skylink` |
+| nginx 配置 | `/etc/nginx/sites-enabled/skylink.conf` |
 
-nginx 配置（`/etc/nginx/sites-enabled/skylink.conf`）：
+### 一条命令部署
 
-```nginx
-server {
-    listen 80;
-    server_name skylink.example.com;
-
-    root /var/www/skylink;
-    index index.html;
-
-    # 静态资源缓存 1 小时（不要用 immutable + 长期，见下方说明）
-    location ~* \.(css|js|png|jpg|jpeg|svg|woff2?)$ {
-        expires 1h;
-        add_header Cache-Control "public";
-    }
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-}
-```
+服务器上首次准备好之后，每次更新只需：
 
 ```bash
-nginx -t && systemctl reload nginx
+cd /opt/xinfan-airlines && bash skylink-site/deploy.sh
 ```
 
-> **为什么缓存只给 1 小时**：`immutable` + 长期缓存会让一次错误的缓存（比如资源还没上传）在用户浏览器里停留很久，
-> 而且服务端自测一切正常、极难排查。1 小时足够快，出问题也能自动恢复。
+它会：拉取最新代码 → `rsync` 发布到 `/var/www/skylink` → 修正属主与权限 →
+同步 nginx 配置（有变化时 `nginx -t` 后 reload）→ 验证首页和两个静态资源都返回 200。
+
+```bash
+# 只看会做什么，不改任何东西
+bash skylink-site/deploy.sh --dry-run
+
+# 自定义路径/域名
+WEB_ROOT=/var/www/skylink SITE_HOST=skylink.199265.xyz bash skylink-site/deploy.sh
+```
+
+### 首次部署（新服务器）
+
+```bash
+# 1. 装依赖
+apt update && apt install -y nginx git rsync
+
+# 2. 拉代码
+git clone https://github.com/hammer-py/xinfan-airlines.git /opt/xinfan-airlines
+
+# 3. 一条命令部署
+cd /opt/xinfan-airlines && bash skylink-site/deploy.sh
+```
+
+脚本会自动创建 `/var/www/skylink`、写入 nginx 配置并 reload，不需要手工操作。
 
 ### HTTPS
 
-这个站点没有后端，用 Cloudflare 代理最省事：
+域名已配置 Cloudflare 代理（橙色云朵），源站只监听 80 端口：
 
-1. 域名 DNS 托管到 Cloudflare，添加指向服务器 IP 的 `A` 记录
-2. 打开橙色云朵（Proxied）
-3. SSL/TLS 模式选 **Flexible**（源站只监听 80）或 **Full**（源站也配证书）
+1. Cloudflare DNS：`skylink` → `A` → `69.12.65.118`，**Proxied**
+2. SSL/TLS 模式选 **Flexible**（源站只监听 80）或 **Full**（源站在 443 配证书）
+3. 建议开 **Always Use HTTPS** 和 **Automatic HTTPS Rewrites**
+
+> **为什么缓存只给 1 小时**：`immutable` + 长期缓存会让一次错误的缓存（比如资源还没上传）在用户浏览器里停留很久，
+> 而且服务端自测一切正常、极难排查。主站踩过这个坑。1 小时足够快，出问题也能自动恢复。
 
 ## 内容维护
 
